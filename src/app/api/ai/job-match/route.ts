@@ -4,6 +4,48 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateWithGemini, demoUnavailable, cleanAndParseJSON } from "@/lib/gemini";
 import { serverError } from "@/lib/api-error";
 
+function formatExperience(rawList: string[] | undefined): string {
+  if (!rawList || rawList.length === 0) return "none";
+  return rawList
+    .map((raw) => {
+      try {
+        const parsed = JSON.parse(raw);
+        return `${parsed.role} at ${parsed.company} (${parsed.duration})`;
+      } catch {
+        return raw;
+      }
+    })
+    .join("; ");
+}
+
+function formatEducation(rawList: string[] | undefined): string {
+  if (!rawList || rawList.length === 0) return "none";
+  return rawList
+    .map((raw) => {
+      try {
+        const parsed = JSON.parse(raw);
+        return `${parsed.degree} from ${parsed.school} (${parsed.year})`;
+      } catch {
+        return raw;
+      }
+    })
+    .join("; ");
+}
+
+function formatProject(rawList: string[] | undefined): string {
+  if (!rawList || rawList.length === 0) return "none";
+  return rawList
+    .map((raw) => {
+      try {
+        const parsed = JSON.parse(raw);
+        return `${parsed.name}: ${parsed.description}${parsed.link ? ` (Link: ${parsed.link})` : ""}`;
+      } catch {
+        return raw;
+      }
+    })
+    .join("; ");
+}
+
 export async function POST(req: NextRequest) {
   try {
     const user = await Checkcookie();
@@ -64,7 +106,9 @@ export async function POST(req: NextRequest) {
 Candidate: ${user.name}
 Skills: ${resume?.skills?.join(", ") || "none listed"}
 Summary: ${resume?.summary || "none"}
-Experience: ${resume?.experiences?.join("; ") || "none"}
+Experience: ${formatExperience(resume?.experiences)}
+Education: ${formatEducation(resume?.educations)}
+Projects: ${formatProject(resume?.projects)}
 
 Job: ${job.title} at ${job.company.name}
 Type: ${job.job_type} | ${job.employment_type} | ${job.location}
