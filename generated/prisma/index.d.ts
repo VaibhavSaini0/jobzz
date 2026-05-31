@@ -5598,6 +5598,8 @@ export namespace Prisma {
     status: string | null
     appliedAt: Date | null
     statusNote: string | null
+    notes: string | null
+    updatedAt: Date | null
   }
 
   export type ApplicationsMaxAggregateOutputType = {
@@ -5608,6 +5610,8 @@ export namespace Prisma {
     status: string | null
     appliedAt: Date | null
     statusNote: string | null
+    notes: string | null
+    updatedAt: Date | null
   }
 
   export type ApplicationsCountAggregateOutputType = {
@@ -5618,6 +5622,8 @@ export namespace Prisma {
     status: number
     appliedAt: number
     statusNote: number
+    notes: number
+    updatedAt: number
     _all: number
   }
 
@@ -5630,6 +5636,8 @@ export namespace Prisma {
     status?: true
     appliedAt?: true
     statusNote?: true
+    notes?: true
+    updatedAt?: true
   }
 
   export type ApplicationsMaxAggregateInputType = {
@@ -5640,6 +5648,8 @@ export namespace Prisma {
     status?: true
     appliedAt?: true
     statusNote?: true
+    notes?: true
+    updatedAt?: true
   }
 
   export type ApplicationsCountAggregateInputType = {
@@ -5650,6 +5660,8 @@ export namespace Prisma {
     status?: true
     appliedAt?: true
     statusNote?: true
+    notes?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -5733,6 +5745,8 @@ export namespace Prisma {
     status: string
     appliedAt: Date | null
     statusNote: string | null
+    notes: string | null
+    updatedAt: Date | null
     _count: ApplicationsCountAggregateOutputType | null
     _min: ApplicationsMinAggregateOutputType | null
     _max: ApplicationsMaxAggregateOutputType | null
@@ -5760,6 +5774,8 @@ export namespace Prisma {
     status?: boolean
     appliedAt?: boolean
     statusNote?: boolean
+    notes?: boolean
+    updatedAt?: boolean
     user?: boolean | userDefaultArgs<ExtArgs>
     jobs?: boolean | jobDefaultArgs<ExtArgs>
     Resume?: boolean | Applications$ResumeArgs<ExtArgs>
@@ -5775,9 +5791,11 @@ export namespace Prisma {
     status?: boolean
     appliedAt?: boolean
     statusNote?: boolean
+    notes?: boolean
+    updatedAt?: boolean
   }
 
-  export type ApplicationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "job_id" | "resumeId" | "status" | "appliedAt" | "statusNote", ExtArgs["result"]["applications"]>
+  export type ApplicationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "job_id" | "resumeId" | "status" | "appliedAt" | "statusNote" | "notes" | "updatedAt", ExtArgs["result"]["applications"]>
   export type ApplicationsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | userDefaultArgs<ExtArgs>
     jobs?: boolean | jobDefaultArgs<ExtArgs>
@@ -5799,6 +5817,8 @@ export namespace Prisma {
       status: string
       appliedAt: Date | null
       statusNote: string | null
+      notes: string | null
+      updatedAt: Date | null
     }, ExtArgs["result"]["applications"]>
     composites: {}
   }
@@ -6201,6 +6221,8 @@ export namespace Prisma {
     readonly status: FieldRef<"Applications", 'String'>
     readonly appliedAt: FieldRef<"Applications", 'DateTime'>
     readonly statusNote: FieldRef<"Applications", 'String'>
+    readonly notes: FieldRef<"Applications", 'String'>
+    readonly updatedAt: FieldRef<"Applications", 'DateTime'>
   }
     
 
@@ -7758,7 +7780,9 @@ export namespace Prisma {
     resumeId: 'resumeId',
     status: 'status',
     appliedAt: 'appliedAt',
-    statusNote: 'statusNote'
+    statusNote: 'statusNote',
+    notes: 'notes',
+    updatedAt: 'updatedAt'
   };
 
   export type ApplicationsScalarFieldEnum = (typeof ApplicationsScalarFieldEnum)[keyof typeof ApplicationsScalarFieldEnum]
@@ -8127,6 +8151,8 @@ export namespace Prisma {
     status?: StringFilter<"Applications"> | string
     appliedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
     statusNote?: StringNullableFilter<"Applications"> | string | null
+    notes?: StringNullableFilter<"Applications"> | string | null
+    updatedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     jobs?: XOR<JobScalarRelationFilter, jobWhereInput>
     Resume?: XOR<ResumeNullableScalarRelationFilter, ResumeWhereInput> | null
@@ -8140,6 +8166,8 @@ export namespace Prisma {
     status?: SortOrder
     appliedAt?: SortOrder
     statusNote?: SortOrder
+    notes?: SortOrder
+    updatedAt?: SortOrder
     user?: userOrderByWithRelationInput
     jobs?: jobOrderByWithRelationInput
     Resume?: ResumeOrderByWithRelationInput
@@ -8156,6 +8184,8 @@ export namespace Prisma {
     status?: StringFilter<"Applications"> | string
     appliedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
     statusNote?: StringNullableFilter<"Applications"> | string | null
+    notes?: StringNullableFilter<"Applications"> | string | null
+    updatedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     jobs?: XOR<JobScalarRelationFilter, jobWhereInput>
     Resume?: XOR<ResumeNullableScalarRelationFilter, ResumeWhereInput> | null
@@ -8169,6 +8199,8 @@ export namespace Prisma {
     status?: SortOrder
     appliedAt?: SortOrder
     statusNote?: SortOrder
+    notes?: SortOrder
+    updatedAt?: SortOrder
     _count?: ApplicationsCountOrderByAggregateInput
     _max?: ApplicationsMaxOrderByAggregateInput
     _min?: ApplicationsMinOrderByAggregateInput
@@ -8185,6 +8217,8 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Applications"> | string
     appliedAt?: DateTimeNullableWithAggregatesFilter<"Applications"> | Date | string | null
     statusNote?: StringNullableWithAggregatesFilter<"Applications"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"Applications"> | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"Applications"> | Date | string | null
   }
 
   export type ResumeWhereInput = {
@@ -8545,6 +8579,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
     user: userCreateNestedOneWithoutApplied_jobsInput
     jobs: jobCreateNestedOneWithoutApplicationsInput
     Resume?: ResumeCreateNestedOneWithoutApplicationsInput
@@ -8558,12 +8594,16 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type ApplicationsUpdateInput = {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: userUpdateOneRequiredWithoutApplied_jobsNestedInput
     jobs?: jobUpdateOneRequiredWithoutApplicationsNestedInput
     Resume?: ResumeUpdateOneWithoutApplicationsNestedInput
@@ -8576,6 +8616,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationsCreateManyInput = {
@@ -8586,12 +8628,16 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type ApplicationsUpdateManyMutationInput = {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyInput = {
@@ -8601,6 +8647,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ResumeCreateInput = {
@@ -8995,6 +9043,8 @@ export namespace Prisma {
     status?: SortOrder
     appliedAt?: SortOrder
     statusNote?: SortOrder
+    notes?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ApplicationsMaxOrderByAggregateInput = {
@@ -9005,6 +9055,8 @@ export namespace Prisma {
     status?: SortOrder
     appliedAt?: SortOrder
     statusNote?: SortOrder
+    notes?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ApplicationsMinOrderByAggregateInput = {
@@ -9015,6 +9067,8 @@ export namespace Prisma {
     status?: SortOrder
     appliedAt?: SortOrder
     statusNote?: SortOrder
+    notes?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9696,6 +9750,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
     jobs: jobCreateNestedOneWithoutApplicationsInput
     Resume?: ResumeCreateNestedOneWithoutApplicationsInput
   }
@@ -9707,6 +9763,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type ApplicationsCreateOrConnectWithoutUserInput = {
@@ -9810,6 +9868,8 @@ export namespace Prisma {
     status?: StringFilter<"Applications"> | string
     appliedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
     statusNote?: StringNullableFilter<"Applications"> | string | null
+    notes?: StringNullableFilter<"Applications"> | string | null
+    updatedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
   }
 
   export type ResumeUpsertWithoutUserInput = {
@@ -9985,6 +10045,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
     user: userCreateNestedOneWithoutApplied_jobsInput
     Resume?: ResumeCreateNestedOneWithoutApplicationsInput
   }
@@ -9996,6 +10058,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type ApplicationsCreateOrConnectWithoutJobsInput = {
@@ -10380,6 +10444,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
     user: userCreateNestedOneWithoutApplied_jobsInput
     jobs: jobCreateNestedOneWithoutApplicationsInput
   }
@@ -10391,6 +10457,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type ApplicationsCreateOrConnectWithoutResumeInput = {
@@ -10460,6 +10528,8 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type reviewUpdateWithoutUserInput = {
@@ -10481,6 +10551,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     jobs?: jobUpdateOneRequiredWithoutApplicationsNestedInput
     Resume?: ResumeUpdateOneWithoutApplicationsNestedInput
   }
@@ -10491,6 +10563,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyWithoutUserInput = {
@@ -10499,6 +10573,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type jobCreateManyCompanyInput = {
@@ -10576,12 +10652,16 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type ApplicationsUpdateWithoutJobsInput = {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: userUpdateOneRequiredWithoutApplied_jobsNestedInput
     Resume?: ResumeUpdateOneWithoutApplicationsNestedInput
   }
@@ -10592,6 +10672,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyWithoutJobsInput = {
@@ -10600,6 +10682,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationsCreateManyResumeInput = {
@@ -10609,12 +10693,16 @@ export namespace Prisma {
     status?: string
     appliedAt?: Date | string | null
     statusNote?: string | null
+    notes?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type ApplicationsUpdateWithoutResumeInput = {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: userUpdateOneRequiredWithoutApplied_jobsNestedInput
     jobs?: jobUpdateOneRequiredWithoutApplicationsNestedInput
   }
@@ -10625,6 +10713,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyWithoutResumeInput = {
@@ -10633,6 +10723,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     statusNote?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

@@ -69,6 +69,8 @@ model Applications {
   status     String    @default("pending")
   appliedAt  DateTime? @default(now())
   statusNote String?
+  notes      String?
+  updatedAt  DateTime? @updatedAt
 }
 
 model Resume {

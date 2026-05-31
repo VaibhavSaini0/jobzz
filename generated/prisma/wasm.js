@@ -155,7 +155,9 @@ exports.Prisma.ApplicationsScalarFieldEnum = {
   resumeId: 'resumeId',
   status: 'status',
   appliedAt: 'appliedAt',
-  statusNote: 'statusNote'
+  statusNote: 'statusNote',
+  notes: 'notes',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ResumeScalarFieldEnum = {
