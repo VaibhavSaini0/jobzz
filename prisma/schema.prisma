@@ -87,4 +87,5 @@ model Resume {
   projects     String[]
   resumePdfUrl  String?
   resumePdfName String?
+  profileImageUrl String?
 }

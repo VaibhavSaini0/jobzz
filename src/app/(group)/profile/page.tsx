@@ -8,9 +8,9 @@ import {
   Flex,
   Heading,
   Separator,
-  Tabs,
   Text,
   Badge,
+  Tabs,
 } from "@radix-ui/themes";
 import {
   Mail,
@@ -18,7 +18,6 @@ import {
   Star,
   Phone,
   Globe,
-  Calendar,
   MapPin,
   Building2,
   Sparkles,
@@ -27,6 +26,9 @@ import {
   UploadCloud,
   GraduationCap,
   FolderGit2,
+  Camera,
+  ExternalLink,
+  Briefcase,
 } from "lucide-react";
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "@/context/UserContext";
@@ -78,7 +80,9 @@ export default function ProfilePage() {
   const [summary, setSummary] = useState("");
   const [resumePdfUrl, setResumePdfUrl] = useState("");
   const [resumePdfName, setResumePdfName] = useState("");
+  const [profileImageUrl, setProfileImageUrl] = useState("");
   const [uploadingPdf, setUploadingPdf] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [skills, setSkills] = useState<string[]>([]);
   const [experiences, setExperiences] = useState<ExperienceEntry[]>([]);
   const [educations, setEducations] = useState<EducationEntry[]>([]);
@@ -104,6 +108,7 @@ export default function ProfilePage() {
           setExperiences((r.experiences || []).map(parseExperience));
           setResumePdfUrl(r.resumePdfUrl || "");
           setResumePdfName(r.resumePdfName || "");
+          setProfileImageUrl(r.profileImageUrl || "");
           setEducations((r.educations || []).map(parseEducation));
           setProjects((r.projects || []).map(parseProject));
         }
@@ -147,6 +152,39 @@ export default function ProfilePage() {
     }
   }
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast("Only image files are allowed", "error");
+      return;
+    }
+
+    setUploadingImage(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/profile/resume/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProfileImageUrl(data.data.profileImageUrl);
+        toast("Profile picture updated successfully!", "success");
+        setReloadTrigger((prev) => prev + 1);
+      } else {
+        toast(data.message || "Failed to upload image", "error");
+      }
+    } catch {
+      toast("Failed to upload image", "error");
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
   async function saveFieldDirectly(updates: any) {
     try {
       const res = await fetch("/api/profile/resume", {
@@ -162,6 +200,7 @@ export default function ProfilePage() {
           experiences: experiences.map((e) => JSON.stringify(e)),
           educations: educations.map((e) => JSON.stringify(e)),
           projects: projects.map((p) => JSON.stringify(p)),
+          profileImageUrl,
           ...updates,
         }),
       });
@@ -179,60 +218,121 @@ export default function ProfilePage() {
     return <Loading />;
   }
 
+  const isUserEmployer = isEmployer(user.role);
+
   return (
     <main className="max-w-6xl mx-auto py-10 px-4 min-h-screen text-foreground relative">
-      {/* Dynamic Glow Blobs */}
-      <div className="absolute top-[-5%] left-[10%] w-[300px] h-[300px] rounded-full bg-indigo-500/5 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[10%] right-[10%] w-[350px] h-[350px] rounded-full bg-purple-500/5 blur-[120px] pointer-events-none" />
+      {/* Background aesthetics */}
+      <div className="absolute top-[-5%] left-[5%] w-[400px] h-[400px] rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[5%] w-[450px] h-[450px] rounded-full bg-purple-500/5 blur-[140px] pointer-events-none" />
 
-      <Flex gap="8" className="flex-col md:flex-row relative z-10">
-        
-        {/* Left Column: Avatar & Skills */}
-        <Box className="w-full md:w-80 space-y-6">
-          
-          {/* Main User Card */}
-          <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300">
-            <Flex direction="column" align="center" className="text-center gap-4">
-              <Avatar
-                size="7"
-                fallback={
-                  typeof user?.name === "string" && user.name.length > 0
-                    ? user.name[0].toUpperCase()
-                    : "U"
-                }
-                radius="full"
-                className="shadow-inner border-2 border-indigo-500/20 bg-indigo-soft/10 text-indigo-600 dark:text-indigo-400 font-bold"
-              />
-              <Box className="space-y-1.5">
-                <Heading size="5" className="text-foreground">{user?.name}</Heading>
-                <Text size="2" className="text-text-muted block">{user.email}</Text>
-                
-                {/* Dynamically Styled Developer Tag */}
-                <Badge size="2" color="indigo" variant="soft" className="rounded-full mt-1.5">
-                  <Sparkles size={12} className="mr-1 inline animate-pulse" />
-                  {roleLabel(user.role)}
-                </Badge>
-              </Box>
-
-              <Separator size="4" className="my-2 bg-card-border opacity-30" />
-
-              <Flex justify="center" gap="1" className="text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-current" />
-                ))}
+      {isUserEmployer ? (
+        // EMPLOYER LAYOUT
+        <Flex gap="8" className="flex-col md:flex-row relative z-10">
+          <Box className="w-full md:w-80 space-y-6">
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300">
+              <Flex direction="column" align="center" className="text-center gap-4">
+                <Avatar
+                  size="7"
+                  fallback={
+                    typeof user?.name === "string" && user.name.length > 0
+                      ? user.name[0].toUpperCase()
+                      : "U"
+                  }
+                  radius="full"
+                  className="shadow-inner border-2 border-indigo-500/20 bg-indigo-soft/10 text-indigo-600 dark:text-indigo-400 font-bold"
+                />
+                <Box className="space-y-1.5">
+                  <Heading size="5" className="text-foreground">{user?.name}</Heading>
+                  <Text size="2" className="text-text-muted block">{user.email}</Text>
+                  <Badge size="2" color="indigo" variant="soft" className="rounded-full mt-1.5">
+                    <Sparkles size={12} className="mr-1 inline animate-pulse" />
+                    {roleLabel(user.role)}
+                  </Badge>
+                </Box>
               </Flex>
-            </Flex>
-          </Card>
+            </Card>
+          </Box>
+          <Box className="flex-1 space-y-6">
+            <Tabs.Root defaultValue="company">
+              <Tabs.List className="border-b border-card-border">
+                <Tabs.Trigger value="company" className="cursor-pointer font-semibold text-sm">Company Settings</Tabs.Trigger>
+              </Tabs.List>
+              <Tabs.Content value="company">
+                <div className="mt-4">
+                  <CompanyDetailTab />
+                </div>
+              </Tabs.Content>
+            </Tabs.Root>
+          </Box>
+        </Flex>
+      ) : (
+        // PREMIUM CANDIDATE DASHBOARD LAYOUT (All Info Grid)
+        <Flex gap="6" className="flex-col lg:flex-row relative z-10 items-start">
+          
+          {/* LEFT SIDEBAR: Avatar, S3 PDF, Contact, Skills */}
+          <Box className="w-full lg:w-[340px] space-y-6 shrink-0">
+            
+            {/* 1. Profile Avatar Card with S3 Hover Upload overlay */}
+            <Card className="p-6 border border-card-border bg-card-bg/70 backdrop-blur-md shadow-lg rounded-2xl hover:border-indigo-500/20 transition-all duration-300">
+              <Flex direction="column" align="center" className="text-center gap-4">
+                
+                {/* Interactive Avatar Wrapper */}
+                <div className="relative group w-28 h-28 rounded-full overflow-hidden border-4 border-indigo-500/10 hover:border-indigo-500/40 transition duration-300 shadow-xl bg-background flex items-center justify-center">
+                  {uploadingImage && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20">
+                      <span className="w-6 h-6 border-2 border-t-transparent border-indigo-400 rounded-full animate-spin" />
+                    </div>
+                  )}
+                  <Avatar
+                    size="8"
+                    src={profileImageUrl || undefined}
+                    fallback={
+                      typeof user?.name === "string" && user.name.length > 0
+                        ? user.name[0].toUpperCase()
+                        : "U"
+                    }
+                    radius="full"
+                    className="w-full h-full text-2xl font-bold bg-indigo-soft/10 text-indigo-600 dark:text-indigo-400 object-cover"
+                  />
+                  
+                  {/* S3 Hover Overlay trigger */}
+                  <label className="absolute inset-0 flex flex-col items-center justify-center bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer text-white z-10 text-[10px] font-semibold gap-1.5">
+                    <Camera size={18} className="text-indigo-400 animate-pulse" />
+                    <span>Upload Image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
 
-          {/* Resume PDF Card (Candidate Only) */}
-          {!isEmployer(user?.role) && (
-            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
-              <Heading size="3" className="text-foreground border-b border-card-border/50 pb-2">Resume PDF</Heading>
+                <Box className="space-y-1 w-full">
+                  <Heading size="5" className="text-foreground tracking-tight">{user?.name}</Heading>
+                  <Text size="2" className="text-text-muted block truncate mb-1">{user?.email}</Text>
+                  
+                  <Badge size="2" color="indigo" variant="soft" className="rounded-full py-0.5 px-3">
+                    <Sparkles size={11} className="mr-1.5 inline animate-pulse text-indigo-500" />
+                    {roleLabel(user?.role)}
+                  </Badge>
+                </Box>
+              </Flex>
+            </Card>
+
+            {/* 2. S3 PDF Resume Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm rounded-2xl space-y-4">
+              <Heading size="3" className="text-foreground flex items-center gap-2 border-b border-card-border/50 pb-2">
+                <FileText size={16} className="text-indigo-500" />
+                <span>Resume PDF</span>
+              </Heading>
               
               {resumePdfUrl ? (
                 <div className="space-y-3">
-                  <Flex align="center" gap="2" className="bg-indigo-soft/10 p-3 rounded-lg border border-indigo-500/20">
-                    <FileText className="text-indigo-600 dark:text-indigo-400" size={24} />
+                  <Flex align="center" gap="2" className="bg-indigo-soft/5 p-3 rounded-xl border border-indigo-500/10">
+                    <FileText className="text-indigo-500 shrink-0" size={24} />
                     <Box className="overflow-hidden flex-1">
                       <Text size="2" weight="medium" className="text-foreground truncate block">
                         {resumePdfName || "resume.pdf"}
@@ -241,15 +341,15 @@ export default function ProfilePage() {
                         href={resumePdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-indigo-600 dark:text-indigo-400 text-xs hover:underline"
+                        className="text-indigo-500 text-xs font-semibold hover:underline block mt-0.5"
                       >
                         Download PDF
                       </a>
                     </Box>
                   </Flex>
                   <label className="block">
-                    <span className="text-xs text-text-muted cursor-pointer hover:text-indigo-600 transition block text-center border border-dashed border-card-border rounded-lg p-2 bg-background/50">
-                      {uploadingPdf ? "Uploading..." : "Replace Resume PDF"}
+                    <span className="text-xs text-text-muted cursor-pointer hover:text-indigo-500 hover:border-indigo-500/30 transition block text-center border border-dashed border-card-border rounded-xl p-2.5 bg-background/30">
+                      {uploadingPdf ? "Uploading..." : "Replace PDF Resume"}
                     </span>
                     <input
                       type="file"
@@ -261,13 +361,13 @@ export default function ProfilePage() {
                   </label>
                 </div>
               ) : (
-                <div className="text-center py-4 space-y-3">
-                  <Flex direction="column" align="center" gap="2" className="border border-dashed border-card-border rounded-xl p-4 bg-background/40">
-                    <UploadCloud className="text-text-muted animate-pulse" size={32} />
-                    <Text size="1" className="text-text-muted">No resume uploaded yet (PDF only)</Text>
+                <div className="text-center py-2 space-y-3">
+                  <Flex direction="column" align="center" gap="2" className="border border-dashed border-card-border rounded-xl p-4 bg-background/20">
+                    <UploadCloud className="text-text-muted animate-pulse" size={28} />
+                    <Text size="1" className="text-text-muted">No resume uploaded (PDF only)</Text>
                   </Flex>
                   <label className="block w-full">
-                    <span className="w-full text-center block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm py-2 px-4 rounded-lg cursor-pointer transition">
+                    <span className="w-full text-center block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm py-2 px-4 rounded-xl cursor-pointer transition-colors shadow-md">
                       {uploadingPdf ? "Uploading..." : "Upload Resume PDF"}
                     </span>
                     <input
@@ -281,208 +381,221 @@ export default function ProfilePage() {
                 </div>
               )}
             </Card>
-          )}
 
-          {/* Experience / Work Card */}
-          {experiences.length > 0 && (
-            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
-              <Heading size="3" className="text-foreground border-b border-card-border/50 pb-2">Experience</Heading>
-              <div className="space-y-3">
-                {experiences.map((exp, idx) => (
-                  <Flex key={idx} justify="between" align="start" className="group">
-                    <Box className="space-y-0.5">
-                      <Text className="font-semibold text-foreground text-sm block">{exp.role}</Text>
-                      <Text size="1" className="text-text-muted block">{exp.company} · {exp.duration}</Text>
-                    </Box>
-                  </Flex>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Education Card (Candidate Only) */}
-          {!isEmployer(user?.role) && educations.length > 0 && (
-            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
-              <Heading size="3" className="text-foreground border-b border-card-border/50 pb-2">
-                <Flex align="center" gap="2">
-                  <GraduationCap size={18} className="text-indigo-500" />
-                  <span>Education</span>
-                </Flex>
+            {/* 3. Contact Info Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm rounded-2xl space-y-4">
+              <Heading size="3" className="text-foreground flex items-center gap-2 border-b border-card-border/50 pb-2">
+                <User size={16} className="text-indigo-500" />
+                <span>Contact Details</span>
               </Heading>
-              <div className="space-y-3">
-                {educations.map((edu, idx) => (
-                  <Box key={idx} className="space-y-0.5">
-                    <Text className="font-semibold text-foreground text-sm block">{edu.degree}</Text>
-                    <Text size="1" className="text-text-muted block">{edu.school} · {edu.year}</Text>
-                  </Box>
-                ))}
+              <div className="space-y-3.5">
+                <Flex align="center" gap="3">
+                  <Phone className="w-4 h-4 text-indigo-500 shrink-0" />
+                  <Text size="2" className="text-text-muted truncate">{phone || "Phone not set"}</Text>
+                </Flex>
+                <Flex align="center" gap="3">
+                  <Mail className="w-4 h-4 text-indigo-500 shrink-0" />
+                  <Text size="2" className="text-text-muted truncate">{user?.email}</Text>
+                </Flex>
+                <Flex align="center" gap="3">
+                  <MapPin className="w-4 h-4 text-red-500 shrink-0" />
+                  <Text size="2" className="text-text-muted truncate">{location || "Location not set"}</Text>
+                </Flex>
+                <Flex align="center" gap="3">
+                  <Globe className="w-4 h-4 text-indigo-500 shrink-0" />
+                  {website ? (
+                    <a
+                      href={website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-indigo-500 text-sm font-semibold hover:underline flex items-center gap-1 overflow-hidden truncate"
+                    >
+                      <span className="truncate">{website.replace(/^https?:\/\//, "")}</span>
+                      <ExternalLink size={10} className="shrink-0" />
+                    </a>
+                  ) : (
+                    <Text size="2" className="text-text-muted">Website not set</Text>
+                  )}
+                </Flex>
               </div>
             </Card>
-          )}
 
-          {/* Skills Card */}
-          {skills.length > 0 && (
-            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
-              <Heading size="3" className="text-foreground border-b border-card-border/50 pb-2">Skills</Heading>
-              <Flex gap="2" wrap="wrap">
-                {skills.map((skill) => (
-                  <Badge
-                    key={skill}
-                    size="2"
-                    color="gray"
-                    variant="surface"
-                    className="rounded-md"
-                  >
-                    <span>{skill}</span>
-                  </Badge>
-                ))}
-              </Flex>
+            {/* 4. Skills Stack Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm rounded-2xl space-y-4">
+              <Heading size="3" className="text-foreground flex items-center gap-2 border-b border-card-border/50 pb-2">
+                <Star size={16} className="text-indigo-500" />
+                <span>Skills Stack</span>
+              </Heading>
+              {skills.length > 0 ? (
+                <Flex gap="2" wrap="wrap">
+                  {skills.map((skill) => (
+                    <Badge
+                      key={skill}
+                      size="2"
+                      color="gray"
+                      variant="surface"
+                      className="rounded-lg font-medium px-2.5 py-1 text-xs border border-card-border/40"
+                    >
+                      {skill}
+                    </Badge>
+                  ))}
+                </Flex>
+              ) : (
+                <Text size="1" className="text-text-muted italic">No skills listed yet.</Text>
+              )}
             </Card>
-          )}
-        </Box>
 
-        {/* Right Column: Details & Editing tabs */}
-        <Box className="flex-1 space-y-6">
-          
-          {/* Main Welcome & Header Card */}
-          <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden">
-            <Flex justify="between" align="start">
-               <Box className="space-y-1.5">
-                <Heading size="6" className="text-foreground">{user?.name}</Heading>
-                <Text size="3" weight="medium" className="text-indigo-600 dark:text-indigo-400 block">
-                  {title || "Set Your Professional Title"}
-                </Text>
-                <Text size="2" className="text-text-muted block">
-                  <MapPin size={12} className="inline mr-1 text-red-500" />
-                  {location || "Location not set"}
-                </Text>
-              </Box>
+          </Box>
 
-              <Flex gap="2">
-                {!isEmployer(user?.role) && (
+          {/* RIGHT DETAILS COLUMN: Welcome Header, Summary, Experience, Education, Projects */}
+          <Box className="flex-1 space-y-6 w-full">
+            
+            {/* A. Welcome Banner Header Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/70 backdrop-blur-md shadow-lg rounded-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+              <Flex justify="between" align="center" className="flex-wrap gap-4">
+                <Box className="space-y-1.5">
+                  <Text size="1" className="text-indigo-500 font-bold uppercase tracking-wider">CANDIDATE DASHBOARD</Text>
+                  <Heading size="6" className="text-foreground tracking-tight font-extrabold">{user?.name}</Heading>
+                  <Text size="3" weight="bold" className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent block">
+                    {title || "Set Professional Title"}
+                  </Text>
+                </Box>
+                
+                {/* Actions */}
+                <Flex gap="2.5" align="center" className="shrink-0">
                   <Button
                     variant="soft"
                     color="purple"
                     onClick={() => setIsAiModalOpen(true)}
-                    className="cursor-pointer flex items-center gap-1"
+                    className="cursor-pointer flex items-center gap-1.5 rounded-xl font-semibold shadow-sm px-4 py-2 hover:bg-purple-500/10 transition-colors"
                   >
-                    <Sparkles size={16} /> AI Coach
+                    <Sparkles size={14} className="text-purple-500" /> AI Coach
                   </Button>
-                )}
-                {!isEmployer(user?.role) && (
                   <Button
-                    variant="outline"
+                    variant="solid"
                     color="indigo"
                     onClick={() => setIsEditModalOpen(true)}
-                    className="cursor-pointer flex items-center gap-1"
+                    className="cursor-pointer flex items-center gap-1.5 rounded-xl font-semibold shadow-md px-4 py-2 hover:bg-indigo-700 transition-all duration-300"
                   >
-                    <Edit3 size={16} /> Edit Profile
+                    <Edit3 size={14} /> Edit Profile
                   </Button>
-                )}
+                </Flex>
               </Flex>
-            </Flex>
-          </Card>
+            </Card>
 
-          {/* Interactive Info Tabs */}
-          <Tabs.Root defaultValue="about">
-            <Tabs.List className="border-b border-card-border">
-              <Tabs.Trigger value="about" className="cursor-pointer font-semibold text-sm">About Details</Tabs.Trigger>
-              {isEmployer(user?.role) && (
-                <Tabs.Trigger value="company" className="cursor-pointer font-semibold text-sm">Company Settings</Tabs.Trigger>
-              )}
-            </Tabs.List>
+            {/* B. Summary Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm rounded-2xl space-y-3">
+              <Heading size="4" className="text-foreground border-b border-card-border/50 pb-2 flex items-center gap-2">
+                <User size={18} className="text-indigo-500" />
+                <span>Professional Summary</span>
+              </Heading>
+              <Text size="2" className="text-text-muted leading-relaxed block whitespace-pre-line">
+                {summary || "Add a summary in profile editor to introduce your capabilities to employers."}
+              </Text>
+            </Card>
 
-            <Tabs.Content value="about">
-              <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm grid md:grid-cols-2 gap-8 mt-4 rounded-2xl">
-                
-                {/* Contact Info Column */}
-                <Box className="space-y-4">
-                  <Heading size="4" className="text-foreground border-b border-card-border/50 pb-2">
-                    Contact Info
-                  </Heading>
-                  <div className="space-y-3">
-                    <Flex align="center" gap="3">
-                      <Phone className="w-4 h-4 text-indigo-500 shrink-0" />
-                      <Text className="text-text-muted text-sm">{phone || "Phone not set"}</Text>
-                    </Flex>
-                    <Flex align="center" gap="3">
-                      <Mail className="w-4 h-4 text-indigo-500 shrink-0" />
-                      <Text className="text-text-muted text-sm">{user?.email}</Text>
-                    </Flex>
-                    <Flex align="center" gap="3">
-                      <Globe className="w-4 h-4 text-indigo-500 shrink-0" />
-                      {website ? (
-                        <a href={website} target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 text-sm hover:underline">
-                          {website}
-                        </a>
-                      ) : (
-                        <Text className="text-text-muted text-sm">Website not set</Text>
-                      )}
-                    </Flex>
-                  </div>
-                </Box>
-
-                {/* About Column */}
-                <Box className="space-y-4">
-                  <Heading size="4" className="text-foreground border-b border-card-border/50 pb-2">
-                    About
-                  </Heading>
-                  <div className="space-y-3">
-                    <Text className="text-text-muted text-sm leading-relaxed">
-                      {summary || "Add a summary to introduce yourself to employers."}
-                    </Text>
-                    <Flex align="center" gap="3">
-                      <Building2 className="w-4 h-4 text-indigo-500 shrink-0" />
-                      <Text className="text-text-muted text-sm">
-                        Company: {company?.name || "N/A"}
+            {/* C. Work Experience Timeline Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm rounded-2xl space-y-4">
+              <Heading size="4" className="text-foreground border-b border-card-border/50 pb-2 flex items-center gap-2">
+                <Briefcase size={18} className="text-indigo-500" />
+                <span>Work Experience</span>
+              </Heading>
+              
+              {experiences.length > 0 ? (
+                <div className="space-y-6 relative pl-4 border-l border-card-border/60 ml-2 mt-2">
+                  {experiences.map((exp, idx) => (
+                    <div key={idx} className="relative space-y-1">
+                      {/* Timeline dot */}
+                      <span className="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-indigo-500 border-2 border-background ring-4 ring-indigo-500/10" />
+                      <Heading size="3" className="text-foreground font-bold tracking-tight text-sm sm:text-base">
+                        {exp.role}
+                      </Heading>
+                      <Text size="2" className="text-indigo-500 font-semibold block">
+                        {exp.company}
                       </Text>
-                    </Flex>
-                  </div>
-                </Box>
+                      <Text size="1" className="text-text-muted block font-medium">
+                        {exp.duration}
+                      </Text>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Text size="2" className="text-text-muted italic">No professional experiences listed yet.</Text>
+              )}
+            </Card>
 
-              </Card>
+            {/* D. Education (College / University) Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm rounded-2xl space-y-4">
+              <Heading size="4" className="text-foreground border-b border-card-border/50 pb-2 flex items-center gap-2">
+                <GraduationCap size={18} className="text-indigo-500" />
+                <span>Education (College / University)</span>
+              </Heading>
+              
+              {educations.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {educations.map((edu, idx) => (
+                    <Box
+                      key={idx}
+                      className="p-4 bg-background/20 border border-card-border/50 rounded-xl space-y-1.5 hover:border-indigo-500/25 transition-all duration-300"
+                    >
+                      <Heading size="3" className="text-foreground font-bold text-sm sm:text-base">{edu.degree}</Heading>
+                      <Text size="2" className="text-indigo-500 font-medium block">{edu.school}</Text>
+                      <Text size="1" className="text-text-muted block">{edu.year}</Text>
+                    </Box>
+                  ))}
+                </div>
+              ) : (
+                <Text size="2" className="text-text-muted italic">No education history listed yet.</Text>
+              )}
+            </Card>
 
-              {/* Projects Card (Candidate Only) */}
-              {!isEmployer(user?.role) && projects.length > 0 && (
-                <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 space-y-4 mt-6 rounded-2xl">
-                  <Heading size="4" className="text-foreground border-b border-card-border/50 pb-2">
-                    <Flex align="center" gap="2">
-                      <FolderGit2 size={20} className="text-indigo-500" />
-                      <span>Portfolio Projects</span>
-                    </Flex>
-                  </Heading>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {projects.map((proj, idx) => (
-                      <Box key={idx} className="p-4 bg-background/30 border border-card-border rounded-xl space-y-2 hover:border-indigo-500/20 transition-colors">
-                        <Heading size="3" className="text-foreground">{proj.name}</Heading>
-                        <Text size="2" className="text-text-muted block leading-relaxed">{proj.description}</Text>
-                        {proj.link && (
+            {/* E. Portfolio Projects Card */}
+            <Card className="p-6 border border-card-border bg-card-bg/60 backdrop-blur-sm shadow-sm rounded-2xl space-y-4">
+              <Heading size="4" className="text-foreground border-b border-card-border/50 pb-2 flex items-center gap-2">
+                <FolderGit2 size={18} className="text-indigo-500" />
+                <span>Portfolio Projects</span>
+              </Heading>
+              
+              {projects.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {projects.map((proj, idx) => (
+                    <Box
+                      key={idx}
+                      className="p-5 bg-background/25 border border-card-border rounded-xl flex flex-col justify-between hover:border-indigo-500/30 transition-all duration-300 group hover:shadow-md"
+                    >
+                      <div className="space-y-2">
+                        <Heading size="3" className="text-foreground group-hover:text-indigo-500 transition-colors font-extrabold text-sm sm:text-base">
+                          {proj.name}
+                        </Heading>
+                        <Text size="2" className="text-text-muted leading-relaxed block">
+                          {proj.description}
+                        </Text>
+                      </div>
+                      {proj.link && (
+                        <div className="mt-4">
                           <a
                             href={proj.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 text-xs font-semibold hover:underline"
+                            className="inline-flex items-center gap-1 text-indigo-500 text-xs font-bold hover:underline"
                           >
-                            View Project
+                            <span>View Live Project</span>
+                            <ExternalLink size={10} />
                           </a>
-                        )}
-                      </Box>
-                    ))}
-                  </div>
-                </Card>
-              )}
-            </Tabs.Content>
-            
-            {isEmployer(user?.role) && (
-              <Tabs.Content value="company">
-                <div className="mt-4">
-                  <CompanyDetailTab />
+                        </div>
+                      )}
+                    </Box>
+                  ))}
                 </div>
-              </Tabs.Content>
-            )}
-          </Tabs.Root>
-        </Box>
-      </Flex>
+              ) : (
+                <Text size="2" className="text-text-muted italic">No portfolio projects listed yet.</Text>
+              )}
+            </Card>
+
+          </Box>
+        </Flex>
+      )}
 
       {/* Edit Profile Modal Dialog */}
       <EditProfileModal
@@ -498,6 +611,7 @@ export default function ProfilePage() {
           experiences,
           educations,
           projects,
+          profileImageUrl,
         }}
         onSaveSuccess={() => setReloadTrigger((prev) => prev + 1)}
       />

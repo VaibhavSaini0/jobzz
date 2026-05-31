@@ -44,6 +44,7 @@ export async function PUT(req: NextRequest) {
       experiences = [],
       educations = [],
       projects = [],
+      profileImageUrl = null,
     } = body;
 
     const resume = await prismaclient.resume.upsert({
@@ -59,6 +60,7 @@ export async function PUT(req: NextRequest) {
         experiences: Array.isArray(experiences) ? experiences.map(String) : [],
         educations: Array.isArray(educations) ? educations.map(String) : [],
         projects: Array.isArray(projects) ? projects.map(String) : [],
+        profileImageUrl: profileImageUrl ? String(profileImageUrl) : null,
       },
       update: {
         title: String(title),
@@ -70,6 +72,7 @@ export async function PUT(req: NextRequest) {
         experiences: Array.isArray(experiences) ? experiences.map(String) : [],
         educations: Array.isArray(educations) ? educations.map(String) : [],
         projects: Array.isArray(projects) ? projects.map(String) : [],
+        profileImageUrl: profileImageUrl ? String(profileImageUrl) : null,
       },
     });
 

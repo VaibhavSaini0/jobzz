@@ -171,7 +171,8 @@ exports.Prisma.ResumeScalarFieldEnum = {
   skills: 'skills',
   projects: 'projects',
   resumePdfUrl: 'resumePdfUrl',
-  resumePdfName: 'resumePdfName'
+  resumePdfName: 'resumePdfName',
+  profileImageUrl: 'profileImageUrl'
 };
 
 exports.Prisma.SortOrder = {

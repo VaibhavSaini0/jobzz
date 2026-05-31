@@ -6628,6 +6628,7 @@ export namespace Prisma {
     userId: string | null
     resumePdfUrl: string | null
     resumePdfName: string | null
+    profileImageUrl: string | null
   }
 
   export type ResumeMaxAggregateOutputType = {
@@ -6640,6 +6641,7 @@ export namespace Prisma {
     userId: string | null
     resumePdfUrl: string | null
     resumePdfName: string | null
+    profileImageUrl: string | null
   }
 
   export type ResumeCountAggregateOutputType = {
@@ -6656,6 +6658,7 @@ export namespace Prisma {
     projects: number
     resumePdfUrl: number
     resumePdfName: number
+    profileImageUrl: number
     _all: number
   }
 
@@ -6670,6 +6673,7 @@ export namespace Prisma {
     userId?: true
     resumePdfUrl?: true
     resumePdfName?: true
+    profileImageUrl?: true
   }
 
   export type ResumeMaxAggregateInputType = {
@@ -6682,6 +6686,7 @@ export namespace Prisma {
     userId?: true
     resumePdfUrl?: true
     resumePdfName?: true
+    profileImageUrl?: true
   }
 
   export type ResumeCountAggregateInputType = {
@@ -6698,6 +6703,7 @@ export namespace Prisma {
     projects?: true
     resumePdfUrl?: true
     resumePdfName?: true
+    profileImageUrl?: true
     _all?: true
   }
 
@@ -6787,6 +6793,7 @@ export namespace Prisma {
     projects: string[]
     resumePdfUrl: string | null
     resumePdfName: string | null
+    profileImageUrl: string | null
     _count: ResumeCountAggregateOutputType | null
     _min: ResumeMinAggregateOutputType | null
     _max: ResumeMaxAggregateOutputType | null
@@ -6820,6 +6827,7 @@ export namespace Prisma {
     projects?: boolean
     resumePdfUrl?: boolean
     resumePdfName?: boolean
+    profileImageUrl?: boolean
     user?: boolean | userDefaultArgs<ExtArgs>
     applications?: boolean | Resume$applicationsArgs<ExtArgs>
     _count?: boolean | ResumeCountOutputTypeDefaultArgs<ExtArgs>
@@ -6841,9 +6849,10 @@ export namespace Prisma {
     projects?: boolean
     resumePdfUrl?: boolean
     resumePdfName?: boolean
+    profileImageUrl?: boolean
   }
 
-  export type ResumeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "summary" | "phone" | "location" | "website" | "userId" | "educations" | "experiences" | "skills" | "projects" | "resumePdfUrl" | "resumePdfName", ExtArgs["result"]["resume"]>
+  export type ResumeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "summary" | "phone" | "location" | "website" | "userId" | "educations" | "experiences" | "skills" | "projects" | "resumePdfUrl" | "resumePdfName" | "profileImageUrl", ExtArgs["result"]["resume"]>
   export type ResumeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | userDefaultArgs<ExtArgs>
     applications?: boolean | Resume$applicationsArgs<ExtArgs>
@@ -6870,6 +6879,7 @@ export namespace Prisma {
       projects: string[]
       resumePdfUrl: string | null
       resumePdfName: string | null
+      profileImageUrl: string | null
     }, ExtArgs["result"]["resume"]>
     composites: {}
   }
@@ -7277,6 +7287,7 @@ export namespace Prisma {
     readonly projects: FieldRef<"Resume", 'String[]'>
     readonly resumePdfUrl: FieldRef<"Resume", 'String'>
     readonly resumePdfName: FieldRef<"Resume", 'String'>
+    readonly profileImageUrl: FieldRef<"Resume", 'String'>
   }
     
 
@@ -7766,7 +7777,8 @@ export namespace Prisma {
     skills: 'skills',
     projects: 'projects',
     resumePdfUrl: 'resumePdfUrl',
-    resumePdfName: 'resumePdfName'
+    resumePdfName: 'resumePdfName',
+    profileImageUrl: 'profileImageUrl'
   };
 
   export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum]
@@ -8192,6 +8204,7 @@ export namespace Prisma {
     projects?: StringNullableListFilter<"Resume">
     resumePdfUrl?: StringNullableFilter<"Resume"> | string | null
     resumePdfName?: StringNullableFilter<"Resume"> | string | null
+    profileImageUrl?: StringNullableFilter<"Resume"> | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     applications?: ApplicationsListRelationFilter
   }
@@ -8210,6 +8223,7 @@ export namespace Prisma {
     projects?: SortOrder
     resumePdfUrl?: SortOrder
     resumePdfName?: SortOrder
+    profileImageUrl?: SortOrder
     user?: userOrderByWithRelationInput
     applications?: ApplicationsOrderByRelationAggregateInput
   }
@@ -8231,6 +8245,7 @@ export namespace Prisma {
     projects?: StringNullableListFilter<"Resume">
     resumePdfUrl?: StringNullableFilter<"Resume"> | string | null
     resumePdfName?: StringNullableFilter<"Resume"> | string | null
+    profileImageUrl?: StringNullableFilter<"Resume"> | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     applications?: ApplicationsListRelationFilter
   }, "id" | "userId">
@@ -8249,6 +8264,7 @@ export namespace Prisma {
     projects?: SortOrder
     resumePdfUrl?: SortOrder
     resumePdfName?: SortOrder
+    profileImageUrl?: SortOrder
     _count?: ResumeCountOrderByAggregateInput
     _max?: ResumeMaxOrderByAggregateInput
     _min?: ResumeMinOrderByAggregateInput
@@ -8271,6 +8287,7 @@ export namespace Prisma {
     projects?: StringNullableListFilter<"Resume">
     resumePdfUrl?: StringNullableWithAggregatesFilter<"Resume"> | string | null
     resumePdfName?: StringNullableWithAggregatesFilter<"Resume"> | string | null
+    profileImageUrl?: StringNullableWithAggregatesFilter<"Resume"> | string | null
   }
 
   export type userCreateInput = {
@@ -8599,6 +8616,7 @@ export namespace Prisma {
     projects?: ResumeCreateprojectsInput | string[]
     resumePdfUrl?: string | null
     resumePdfName?: string | null
+    profileImageUrl?: string | null
     user: userCreateNestedOneWithoutResumeInput
     applications?: ApplicationsCreateNestedManyWithoutResumeInput
   }
@@ -8617,6 +8635,7 @@ export namespace Prisma {
     projects?: ResumeCreateprojectsInput | string[]
     resumePdfUrl?: string | null
     resumePdfName?: string | null
+    profileImageUrl?: string | null
     applications?: ApplicationsUncheckedCreateNestedManyWithoutResumeInput
   }
 
@@ -8632,6 +8651,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutResumeNestedInput
     applications?: ApplicationsUpdateManyWithoutResumeNestedInput
   }
@@ -8649,6 +8669,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationsUncheckedUpdateManyWithoutResumeNestedInput
   }
 
@@ -8666,6 +8687,7 @@ export namespace Prisma {
     projects?: ResumeCreateprojectsInput | string[]
     resumePdfUrl?: string | null
     resumePdfName?: string | null
+    profileImageUrl?: string | null
   }
 
   export type ResumeUpdateManyMutationInput = {
@@ -8680,6 +8702,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ResumeUncheckedUpdateManyInput = {
@@ -8695,6 +8718,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -9034,6 +9058,7 @@ export namespace Prisma {
     projects?: SortOrder
     resumePdfUrl?: SortOrder
     resumePdfName?: SortOrder
+    profileImageUrl?: SortOrder
   }
 
   export type ResumeMaxOrderByAggregateInput = {
@@ -9046,6 +9071,7 @@ export namespace Prisma {
     userId?: SortOrder
     resumePdfUrl?: SortOrder
     resumePdfName?: SortOrder
+    profileImageUrl?: SortOrder
   }
 
   export type ResumeMinOrderByAggregateInput = {
@@ -9058,6 +9084,7 @@ export namespace Prisma {
     userId?: SortOrder
     resumePdfUrl?: SortOrder
     resumePdfName?: SortOrder
+    profileImageUrl?: SortOrder
   }
 
   export type reviewCreateNestedManyWithoutUserInput = {
@@ -9704,6 +9731,7 @@ export namespace Prisma {
     projects?: ResumeCreateprojectsInput | string[]
     resumePdfUrl?: string | null
     resumePdfName?: string | null
+    profileImageUrl?: string | null
     applications?: ApplicationsCreateNestedManyWithoutResumeInput
   }
 
@@ -9720,6 +9748,7 @@ export namespace Prisma {
     projects?: ResumeCreateprojectsInput | string[]
     resumePdfUrl?: string | null
     resumePdfName?: string | null
+    profileImageUrl?: string | null
     applications?: ApplicationsUncheckedCreateNestedManyWithoutResumeInput
   }
 
@@ -9806,6 +9835,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationsUpdateManyWithoutResumeNestedInput
   }
 
@@ -9821,6 +9851,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationsUncheckedUpdateManyWithoutResumeNestedInput
   }
 
@@ -10186,6 +10217,7 @@ export namespace Prisma {
     projects?: ResumeCreateprojectsInput | string[]
     resumePdfUrl?: string | null
     resumePdfName?: string | null
+    profileImageUrl?: string | null
     user: userCreateNestedOneWithoutResumeInput
   }
 
@@ -10203,6 +10235,7 @@ export namespace Prisma {
     projects?: ResumeCreateprojectsInput | string[]
     resumePdfUrl?: string | null
     resumePdfName?: string | null
+    profileImageUrl?: string | null
   }
 
   export type ResumeCreateOrConnectWithoutApplicationsInput = {
@@ -10297,6 +10330,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutResumeNestedInput
   }
 
@@ -10313,6 +10347,7 @@ export namespace Prisma {
     projects?: ResumeUpdateprojectsInput | string[]
     resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type userCreateWithoutResumeInput = {

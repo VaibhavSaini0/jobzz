@@ -72,19 +72,20 @@ model Applications {
 }
 
 model Resume {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  title         String         @default("")
-  summary       String?
-  phone         String?
-  location      String?
-  website       String?
-  user          user           @relation(fields: [userId], references: [id])
-  userId        String         @unique @db.ObjectId
-  applications  Applications[]
-  educations    String[]
-  experiences   String[]
-  skills        String[]
-  projects      String[]
-  resumePdfUrl  String?
-  resumePdfName String?
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  title           String         @default("")
+  summary         String?
+  phone           String?
+  location        String?
+  website         String?
+  user            user           @relation(fields: [userId], references: [id])
+  userId          String         @unique @db.ObjectId
+  applications    Applications[]
+  educations      String[]
+  experiences     String[]
+  skills          String[]
+  projects        String[]
+  resumePdfUrl    String?
+  resumePdfName   String?
+  profileImageUrl String?
 }

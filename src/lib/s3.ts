@@ -17,9 +17,10 @@ const s3Client = new S3Client({
 export async function uploadToS3(
   fileBuffer: Buffer,
   fileName: string,
-  contentType: string
+  contentType: string,
+  folder = "resumes"
 ): Promise<string> {
-  const uniqueKey = `resumes/${Date.now()}-${fileName.replace(/\s+/g, "_")}`;
+  const uniqueKey = `${folder}/${Date.now()}-${fileName.replace(/\s+/g, "_")}`;
 
   await s3Client.send(
     new PutObjectCommand({
