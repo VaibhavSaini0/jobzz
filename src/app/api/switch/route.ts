@@ -1,9 +1,10 @@
 import prismaclient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { serverError } from "@/lib/api-error";
 
 export async function GET(req: NextRequest) {
-  let TotalUser: any[] = [];
+  const TotalUser: { id: string; name: string; email: string; role: string }[] = [];
   const existingToken = req.cookies.get("token")?.value || "";
 
   try {
@@ -13,41 +14,23 @@ export async function GET(req: NextRequest) {
     }
 
     if (existingToken) {
-      const data = JSON.parse(existingToken); 
-      // console.log(data);
-      for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-          try {
-            const decoded: any = jwt.verify(data[key], TokenKey);
-            // console.log(decoded)
-            const user = await prismaclient.user.findUnique({
-              where: { id: decoded.id },
-              omit:{
-                password:true
-              }
-            });
-
-            if (user) {
-              TotalUser.push(user);
-            }
-          } catch (err) {
-            console.error(`Token for ${key} is invalid:`, err);
-            continue;
-          }
+      const data = JSON.parse(existingToken) as Record<string, string>;
+      for (const key of Object.keys(data)) {
+        try {
+          const decoded = jwt.verify(data[key], TokenKey) as { id: string };
+          const user = await prismaclient.user.findUnique({
+            where: { id: decoded.id },
+            omit: { password: true },
+          });
+          if (user) TotalUser.push(user);
+        } catch {
+          continue;
         }
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      users: TotalUser,
-    });
-  } catch (error: any) {
-    console.error("Error in GET /api", error);
-    return NextResponse.json({
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
-    });
+    return NextResponse.json({ success: true, users: TotalUser });
+  } catch (error) {
+    return serverError("Switch list error:", error);
   }
 }

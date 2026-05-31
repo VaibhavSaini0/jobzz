@@ -18,6 +18,14 @@ export async function POST(req: NextRequest) {
       "companyId",
     ];
 
+    const user = await Checkcookie();
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized access" },
+        { status: 401 }
+      );
+    }
+
     for (const field of requiredFields) {
       if (!body[field]) {
         return NextResponse.json(
@@ -25,6 +33,20 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
+    }
+
+    const company = await prismaclient.company.findUnique({
+      where: {
+        id: body.companyId,
+        ownerId: user.id,
+      },
+    });
+
+    if (!company) {
+      return NextResponse.json(
+        { success: false, message: "You are not authorized to create a job listing for this company" },
+        { status: 403 }
+      );
     }
 
     const job = await prismaclient.job.create({
@@ -37,6 +59,7 @@ export async function POST(req: NextRequest) {
         job_type: body.job_type,
         apply_through: body.apply_through,
         companyId: body.companyId,
+        lastDate: body.lastDate ? new Date(body.lastDate) : null,
       },
     });
 

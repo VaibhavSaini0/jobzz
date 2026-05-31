@@ -1,40 +1,70 @@
 import prismaClient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { Checkcookie } from "@/HelperFun/Checkcookie";
+import { serverError } from "@/lib/api-error";
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;   
-
-  console.log("Fetching applicants for job ID:", id);
+  const { id } = await context.params;
 
   try {
-    const res = await prismaClient.applications.findMany({
+    const user = await Checkcookie();
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized access" },
+        { status: 401 }
+      );
+    }
+
+    const job = await prismaClient.job.findUnique({
+      where: { id },
+      select: { companyId: true },
+    });
+
+    if (!job) {
+      return NextResponse.json(
+        { success: false, message: "Job not found" },
+        { status: 404 }
+      );
+    }
+
+    const company = await prismaClient.company.findUnique({
+      where: { id: job.companyId, ownerId: user.id },
+    });
+
+    if (!company) {
+      return NextResponse.json(
+        { success: false, message: "Forbidden: You are not the employer for this job" },
+        { status: 403 }
+      );
+    }
+
+    const applications = await prismaClient.applications.findMany({
       where: { job_id: id },
+      orderBy: { appliedAt: "desc" },
       select: {
+        id: true,
+        status: true,
+        appliedAt: true,
+        statusNote: true,
         user: {
+          select: { id: true, name: true, email: true, role: true },
+        },
+        Resume: {
           select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
+            resumePdfUrl: true,
+            resumePdfName: true,
+            skills: true,
+            experiences: true,
           },
         },
       },
     });
 
-    const usersOnly = res.map((app) => app.user);
-
-    return NextResponse.json({
-      success: true,
-      data: usersOnly,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return NextResponse.json(
-      { success: false, message: "Something went wrong" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, data: applications });
+  } catch (error) {
+    return serverError("Applicants fetch error:", error);
   }
 }

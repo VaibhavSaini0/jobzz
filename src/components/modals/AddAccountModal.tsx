@@ -2,7 +2,7 @@
 "use client";
 import { useContext, useState } from "react";
 import { Button, Dialog, TextField, Flex, Text } from "@radix-ui/themes";
-import { UserContext } from "@/app/(group)/layout";
+import { UserContext } from "@/context/UserContext";
 import { HeaderContext } from "../headers/headerWrapper";
 
 export default function AddAccountModal()

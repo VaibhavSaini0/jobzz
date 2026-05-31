@@ -3540,6 +3540,7 @@ export namespace Prisma {
     job_type: string | null
     apply_through: string | null
     companyId: string | null
+    lastDate: Date | null
   }
 
   export type JobMaxAggregateOutputType = {
@@ -3552,6 +3553,7 @@ export namespace Prisma {
     job_type: string | null
     apply_through: string | null
     companyId: string | null
+    lastDate: Date | null
   }
 
   export type JobCountAggregateOutputType = {
@@ -3564,6 +3566,7 @@ export namespace Prisma {
     job_type: number
     apply_through: number
     companyId: number
+    lastDate: number
     _all: number
   }
 
@@ -3586,6 +3589,7 @@ export namespace Prisma {
     job_type?: true
     apply_through?: true
     companyId?: true
+    lastDate?: true
   }
 
   export type JobMaxAggregateInputType = {
@@ -3598,6 +3602,7 @@ export namespace Prisma {
     job_type?: true
     apply_through?: true
     companyId?: true
+    lastDate?: true
   }
 
   export type JobCountAggregateInputType = {
@@ -3610,6 +3615,7 @@ export namespace Prisma {
     job_type?: true
     apply_through?: true
     companyId?: true
+    lastDate?: true
     _all?: true
   }
 
@@ -3709,6 +3715,7 @@ export namespace Prisma {
     job_type: string
     apply_through: string
     companyId: string
+    lastDate: Date | null
     _count: JobCountAggregateOutputType | null
     _avg: JobAvgAggregateOutputType | null
     _sum: JobSumAggregateOutputType | null
@@ -3740,6 +3747,7 @@ export namespace Prisma {
     job_type?: boolean
     apply_through?: boolean
     companyId?: boolean
+    lastDate?: boolean
     company?: boolean | companyDefaultArgs<ExtArgs>
     applications?: boolean | job$applicationsArgs<ExtArgs>
     _count?: boolean | JobCountOutputTypeDefaultArgs<ExtArgs>
@@ -3757,9 +3765,10 @@ export namespace Prisma {
     job_type?: boolean
     apply_through?: boolean
     companyId?: boolean
+    lastDate?: boolean
   }
 
-  export type jobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "salary" | "employment_type" | "job_type" | "apply_through" | "companyId", ExtArgs["result"]["job"]>
+  export type jobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "salary" | "employment_type" | "job_type" | "apply_through" | "companyId" | "lastDate", ExtArgs["result"]["job"]>
   export type jobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | companyDefaultArgs<ExtArgs>
     applications?: boolean | job$applicationsArgs<ExtArgs>
@@ -3782,6 +3791,7 @@ export namespace Prisma {
       job_type: string
       apply_through: string
       companyId: string
+      lastDate: Date | null
     }, ExtArgs["result"]["job"]>
     composites: {}
   }
@@ -4185,6 +4195,7 @@ export namespace Prisma {
     readonly job_type: FieldRef<"job", 'String'>
     readonly apply_through: FieldRef<"job", 'String'>
     readonly companyId: FieldRef<"job", 'String'>
+    readonly lastDate: FieldRef<"job", 'DateTime'>
   }
     
 
@@ -5584,6 +5595,9 @@ export namespace Prisma {
     user_id: string | null
     job_id: string | null
     resumeId: string | null
+    status: string | null
+    appliedAt: Date | null
+    statusNote: string | null
   }
 
   export type ApplicationsMaxAggregateOutputType = {
@@ -5591,6 +5605,9 @@ export namespace Prisma {
     user_id: string | null
     job_id: string | null
     resumeId: string | null
+    status: string | null
+    appliedAt: Date | null
+    statusNote: string | null
   }
 
   export type ApplicationsCountAggregateOutputType = {
@@ -5598,6 +5615,9 @@ export namespace Prisma {
     user_id: number
     job_id: number
     resumeId: number
+    status: number
+    appliedAt: number
+    statusNote: number
     _all: number
   }
 
@@ -5607,6 +5627,9 @@ export namespace Prisma {
     user_id?: true
     job_id?: true
     resumeId?: true
+    status?: true
+    appliedAt?: true
+    statusNote?: true
   }
 
   export type ApplicationsMaxAggregateInputType = {
@@ -5614,6 +5637,9 @@ export namespace Prisma {
     user_id?: true
     job_id?: true
     resumeId?: true
+    status?: true
+    appliedAt?: true
+    statusNote?: true
   }
 
   export type ApplicationsCountAggregateInputType = {
@@ -5621,6 +5647,9 @@ export namespace Prisma {
     user_id?: true
     job_id?: true
     resumeId?: true
+    status?: true
+    appliedAt?: true
+    statusNote?: true
     _all?: true
   }
 
@@ -5701,6 +5730,9 @@ export namespace Prisma {
     user_id: string
     job_id: string
     resumeId: string | null
+    status: string
+    appliedAt: Date | null
+    statusNote: string | null
     _count: ApplicationsCountAggregateOutputType | null
     _min: ApplicationsMinAggregateOutputType | null
     _max: ApplicationsMaxAggregateOutputType | null
@@ -5725,6 +5757,9 @@ export namespace Prisma {
     user_id?: boolean
     job_id?: boolean
     resumeId?: boolean
+    status?: boolean
+    appliedAt?: boolean
+    statusNote?: boolean
     user?: boolean | userDefaultArgs<ExtArgs>
     jobs?: boolean | jobDefaultArgs<ExtArgs>
     Resume?: boolean | Applications$ResumeArgs<ExtArgs>
@@ -5737,9 +5772,12 @@ export namespace Prisma {
     user_id?: boolean
     job_id?: boolean
     resumeId?: boolean
+    status?: boolean
+    appliedAt?: boolean
+    statusNote?: boolean
   }
 
-  export type ApplicationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "job_id" | "resumeId", ExtArgs["result"]["applications"]>
+  export type ApplicationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "job_id" | "resumeId" | "status" | "appliedAt" | "statusNote", ExtArgs["result"]["applications"]>
   export type ApplicationsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | userDefaultArgs<ExtArgs>
     jobs?: boolean | jobDefaultArgs<ExtArgs>
@@ -5758,6 +5796,9 @@ export namespace Prisma {
       user_id: string
       job_id: string
       resumeId: string | null
+      status: string
+      appliedAt: Date | null
+      statusNote: string | null
     }, ExtArgs["result"]["applications"]>
     composites: {}
   }
@@ -6157,6 +6198,9 @@ export namespace Prisma {
     readonly user_id: FieldRef<"Applications", 'String'>
     readonly job_id: FieldRef<"Applications", 'String'>
     readonly resumeId: FieldRef<"Applications", 'String'>
+    readonly status: FieldRef<"Applications", 'String'>
+    readonly appliedAt: FieldRef<"Applications", 'DateTime'>
+    readonly statusNote: FieldRef<"Applications", 'String'>
   }
     
 
@@ -6578,28 +6622,40 @@ export namespace Prisma {
     id: string | null
     title: string | null
     summary: string | null
+    phone: string | null
+    location: string | null
+    website: string | null
     userId: string | null
-    applicationId: string | null
+    resumePdfUrl: string | null
+    resumePdfName: string | null
   }
 
   export type ResumeMaxAggregateOutputType = {
     id: string | null
     title: string | null
     summary: string | null
+    phone: string | null
+    location: string | null
+    website: string | null
     userId: string | null
-    applicationId: string | null
+    resumePdfUrl: string | null
+    resumePdfName: string | null
   }
 
   export type ResumeCountAggregateOutputType = {
     id: number
     title: number
     summary: number
+    phone: number
+    location: number
+    website: number
     userId: number
-    applicationId: number
     educations: number
     experiences: number
     skills: number
     projects: number
+    resumePdfUrl: number
+    resumePdfName: number
     _all: number
   }
 
@@ -6608,28 +6664,40 @@ export namespace Prisma {
     id?: true
     title?: true
     summary?: true
+    phone?: true
+    location?: true
+    website?: true
     userId?: true
-    applicationId?: true
+    resumePdfUrl?: true
+    resumePdfName?: true
   }
 
   export type ResumeMaxAggregateInputType = {
     id?: true
     title?: true
     summary?: true
+    phone?: true
+    location?: true
+    website?: true
     userId?: true
-    applicationId?: true
+    resumePdfUrl?: true
+    resumePdfName?: true
   }
 
   export type ResumeCountAggregateInputType = {
     id?: true
     title?: true
     summary?: true
+    phone?: true
+    location?: true
+    website?: true
     userId?: true
-    applicationId?: true
     educations?: true
     experiences?: true
     skills?: true
     projects?: true
+    resumePdfUrl?: true
+    resumePdfName?: true
     _all?: true
   }
 
@@ -6709,12 +6777,16 @@ export namespace Prisma {
     id: string
     title: string
     summary: string | null
+    phone: string | null
+    location: string | null
+    website: string | null
     userId: string
-    applicationId: string
     educations: string[]
     experiences: string[]
     skills: string[]
     projects: string[]
+    resumePdfUrl: string | null
+    resumePdfName: string | null
     _count: ResumeCountAggregateOutputType | null
     _min: ResumeMinAggregateOutputType | null
     _max: ResumeMaxAggregateOutputType | null
@@ -6738,12 +6810,16 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     summary?: boolean
+    phone?: boolean
+    location?: boolean
+    website?: boolean
     userId?: boolean
-    applicationId?: boolean
     educations?: boolean
     experiences?: boolean
     skills?: boolean
     projects?: boolean
+    resumePdfUrl?: boolean
+    resumePdfName?: boolean
     user?: boolean | userDefaultArgs<ExtArgs>
     applications?: boolean | Resume$applicationsArgs<ExtArgs>
     _count?: boolean | ResumeCountOutputTypeDefaultArgs<ExtArgs>
@@ -6755,15 +6831,19 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     summary?: boolean
+    phone?: boolean
+    location?: boolean
+    website?: boolean
     userId?: boolean
-    applicationId?: boolean
     educations?: boolean
     experiences?: boolean
     skills?: boolean
     projects?: boolean
+    resumePdfUrl?: boolean
+    resumePdfName?: boolean
   }
 
-  export type ResumeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "summary" | "userId" | "applicationId" | "educations" | "experiences" | "skills" | "projects", ExtArgs["result"]["resume"]>
+  export type ResumeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "summary" | "phone" | "location" | "website" | "userId" | "educations" | "experiences" | "skills" | "projects" | "resumePdfUrl" | "resumePdfName", ExtArgs["result"]["resume"]>
   export type ResumeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | userDefaultArgs<ExtArgs>
     applications?: boolean | Resume$applicationsArgs<ExtArgs>
@@ -6780,12 +6860,16 @@ export namespace Prisma {
       id: string
       title: string
       summary: string | null
+      phone: string | null
+      location: string | null
+      website: string | null
       userId: string
-      applicationId: string
       educations: string[]
       experiences: string[]
       skills: string[]
       projects: string[]
+      resumePdfUrl: string | null
+      resumePdfName: string | null
     }, ExtArgs["result"]["resume"]>
     composites: {}
   }
@@ -7183,12 +7267,16 @@ export namespace Prisma {
     readonly id: FieldRef<"Resume", 'String'>
     readonly title: FieldRef<"Resume", 'String'>
     readonly summary: FieldRef<"Resume", 'String'>
+    readonly phone: FieldRef<"Resume", 'String'>
+    readonly location: FieldRef<"Resume", 'String'>
+    readonly website: FieldRef<"Resume", 'String'>
     readonly userId: FieldRef<"Resume", 'String'>
-    readonly applicationId: FieldRef<"Resume", 'String'>
     readonly educations: FieldRef<"Resume", 'String[]'>
     readonly experiences: FieldRef<"Resume", 'String[]'>
     readonly skills: FieldRef<"Resume", 'String[]'>
     readonly projects: FieldRef<"Resume", 'String[]'>
+    readonly resumePdfUrl: FieldRef<"Resume", 'String'>
+    readonly resumePdfName: FieldRef<"Resume", 'String'>
   }
     
 
@@ -7635,7 +7723,8 @@ export namespace Prisma {
     employment_type: 'employment_type',
     job_type: 'job_type',
     apply_through: 'apply_through',
-    companyId: 'companyId'
+    companyId: 'companyId',
+    lastDate: 'lastDate'
   };
 
   export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
@@ -7655,7 +7744,10 @@ export namespace Prisma {
     id: 'id',
     user_id: 'user_id',
     job_id: 'job_id',
-    resumeId: 'resumeId'
+    resumeId: 'resumeId',
+    status: 'status',
+    appliedAt: 'appliedAt',
+    statusNote: 'statusNote'
   };
 
   export type ApplicationsScalarFieldEnum = (typeof ApplicationsScalarFieldEnum)[keyof typeof ApplicationsScalarFieldEnum]
@@ -7665,12 +7757,16 @@ export namespace Prisma {
     id: 'id',
     title: 'title',
     summary: 'summary',
+    phone: 'phone',
+    location: 'location',
+    website: 'website',
     userId: 'userId',
-    applicationId: 'applicationId',
     educations: 'educations',
     experiences: 'experiences',
     skills: 'skills',
-    projects: 'projects'
+    projects: 'projects',
+    resumePdfUrl: 'resumePdfUrl',
+    resumePdfName: 'resumePdfName'
   };
 
   export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum]
@@ -7722,6 +7818,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -7869,6 +7979,7 @@ export namespace Prisma {
     job_type?: StringFilter<"job"> | string
     apply_through?: StringFilter<"job"> | string
     companyId?: StringFilter<"job"> | string
+    lastDate?: DateTimeNullableFilter<"job"> | Date | string | null
     company?: XOR<CompanyScalarRelationFilter, companyWhereInput>
     applications?: ApplicationsListRelationFilter
   }
@@ -7883,6 +7994,7 @@ export namespace Prisma {
     job_type?: SortOrder
     apply_through?: SortOrder
     companyId?: SortOrder
+    lastDate?: SortOrder
     company?: companyOrderByWithRelationInput
     applications?: ApplicationsOrderByRelationAggregateInput
   }
@@ -7900,6 +8012,7 @@ export namespace Prisma {
     job_type?: StringFilter<"job"> | string
     apply_through?: StringFilter<"job"> | string
     companyId?: StringFilter<"job"> | string
+    lastDate?: DateTimeNullableFilter<"job"> | Date | string | null
     company?: XOR<CompanyScalarRelationFilter, companyWhereInput>
     applications?: ApplicationsListRelationFilter
   }, "id">
@@ -7914,6 +8027,7 @@ export namespace Prisma {
     job_type?: SortOrder
     apply_through?: SortOrder
     companyId?: SortOrder
+    lastDate?: SortOrder
     _count?: jobCountOrderByAggregateInput
     _avg?: jobAvgOrderByAggregateInput
     _max?: jobMaxOrderByAggregateInput
@@ -7934,6 +8048,7 @@ export namespace Prisma {
     job_type?: StringWithAggregatesFilter<"job"> | string
     apply_through?: StringWithAggregatesFilter<"job"> | string
     companyId?: StringWithAggregatesFilter<"job"> | string
+    lastDate?: DateTimeNullableWithAggregatesFilter<"job"> | Date | string | null
   }
 
   export type reviewWhereInput = {
@@ -7997,6 +8112,9 @@ export namespace Prisma {
     user_id?: StringFilter<"Applications"> | string
     job_id?: StringFilter<"Applications"> | string
     resumeId?: StringNullableFilter<"Applications"> | string | null
+    status?: StringFilter<"Applications"> | string
+    appliedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
+    statusNote?: StringNullableFilter<"Applications"> | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     jobs?: XOR<JobScalarRelationFilter, jobWhereInput>
     Resume?: XOR<ResumeNullableScalarRelationFilter, ResumeWhereInput> | null
@@ -8007,6 +8125,9 @@ export namespace Prisma {
     user_id?: SortOrder
     job_id?: SortOrder
     resumeId?: SortOrder
+    status?: SortOrder
+    appliedAt?: SortOrder
+    statusNote?: SortOrder
     user?: userOrderByWithRelationInput
     jobs?: jobOrderByWithRelationInput
     Resume?: ResumeOrderByWithRelationInput
@@ -8020,6 +8141,9 @@ export namespace Prisma {
     user_id?: StringFilter<"Applications"> | string
     job_id?: StringFilter<"Applications"> | string
     resumeId?: StringNullableFilter<"Applications"> | string | null
+    status?: StringFilter<"Applications"> | string
+    appliedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
+    statusNote?: StringNullableFilter<"Applications"> | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     jobs?: XOR<JobScalarRelationFilter, jobWhereInput>
     Resume?: XOR<ResumeNullableScalarRelationFilter, ResumeWhereInput> | null
@@ -8030,6 +8154,9 @@ export namespace Prisma {
     user_id?: SortOrder
     job_id?: SortOrder
     resumeId?: SortOrder
+    status?: SortOrder
+    appliedAt?: SortOrder
+    statusNote?: SortOrder
     _count?: ApplicationsCountOrderByAggregateInput
     _max?: ApplicationsMaxOrderByAggregateInput
     _min?: ApplicationsMinOrderByAggregateInput
@@ -8043,6 +8170,9 @@ export namespace Prisma {
     user_id?: StringWithAggregatesFilter<"Applications"> | string
     job_id?: StringWithAggregatesFilter<"Applications"> | string
     resumeId?: StringNullableWithAggregatesFilter<"Applications"> | string | null
+    status?: StringWithAggregatesFilter<"Applications"> | string
+    appliedAt?: DateTimeNullableWithAggregatesFilter<"Applications"> | Date | string | null
+    statusNote?: StringNullableWithAggregatesFilter<"Applications"> | string | null
   }
 
   export type ResumeWhereInput = {
@@ -8052,12 +8182,16 @@ export namespace Prisma {
     id?: StringFilter<"Resume"> | string
     title?: StringFilter<"Resume"> | string
     summary?: StringNullableFilter<"Resume"> | string | null
+    phone?: StringNullableFilter<"Resume"> | string | null
+    location?: StringNullableFilter<"Resume"> | string | null
+    website?: StringNullableFilter<"Resume"> | string | null
     userId?: StringFilter<"Resume"> | string
-    applicationId?: StringFilter<"Resume"> | string
     educations?: StringNullableListFilter<"Resume">
     experiences?: StringNullableListFilter<"Resume">
     skills?: StringNullableListFilter<"Resume">
     projects?: StringNullableListFilter<"Resume">
+    resumePdfUrl?: StringNullableFilter<"Resume"> | string | null
+    resumePdfName?: StringNullableFilter<"Resume"> | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     applications?: ApplicationsListRelationFilter
   }
@@ -8066,12 +8200,16 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     summary?: SortOrder
+    phone?: SortOrder
+    location?: SortOrder
+    website?: SortOrder
     userId?: SortOrder
-    applicationId?: SortOrder
     educations?: SortOrder
     experiences?: SortOrder
     skills?: SortOrder
     projects?: SortOrder
+    resumePdfUrl?: SortOrder
+    resumePdfName?: SortOrder
     user?: userOrderByWithRelationInput
     applications?: ApplicationsOrderByRelationAggregateInput
   }
@@ -8084,11 +8222,15 @@ export namespace Prisma {
     NOT?: ResumeWhereInput | ResumeWhereInput[]
     title?: StringFilter<"Resume"> | string
     summary?: StringNullableFilter<"Resume"> | string | null
-    applicationId?: StringFilter<"Resume"> | string
+    phone?: StringNullableFilter<"Resume"> | string | null
+    location?: StringNullableFilter<"Resume"> | string | null
+    website?: StringNullableFilter<"Resume"> | string | null
     educations?: StringNullableListFilter<"Resume">
     experiences?: StringNullableListFilter<"Resume">
     skills?: StringNullableListFilter<"Resume">
     projects?: StringNullableListFilter<"Resume">
+    resumePdfUrl?: StringNullableFilter<"Resume"> | string | null
+    resumePdfName?: StringNullableFilter<"Resume"> | string | null
     user?: XOR<UserScalarRelationFilter, userWhereInput>
     applications?: ApplicationsListRelationFilter
   }, "id" | "userId">
@@ -8097,12 +8239,16 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     summary?: SortOrder
+    phone?: SortOrder
+    location?: SortOrder
+    website?: SortOrder
     userId?: SortOrder
-    applicationId?: SortOrder
     educations?: SortOrder
     experiences?: SortOrder
     skills?: SortOrder
     projects?: SortOrder
+    resumePdfUrl?: SortOrder
+    resumePdfName?: SortOrder
     _count?: ResumeCountOrderByAggregateInput
     _max?: ResumeMaxOrderByAggregateInput
     _min?: ResumeMinOrderByAggregateInput
@@ -8115,12 +8261,16 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Resume"> | string
     title?: StringWithAggregatesFilter<"Resume"> | string
     summary?: StringNullableWithAggregatesFilter<"Resume"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"Resume"> | string | null
+    location?: StringNullableWithAggregatesFilter<"Resume"> | string | null
+    website?: StringNullableWithAggregatesFilter<"Resume"> | string | null
     userId?: StringWithAggregatesFilter<"Resume"> | string
-    applicationId?: StringWithAggregatesFilter<"Resume"> | string
     educations?: StringNullableListFilter<"Resume">
     experiences?: StringNullableListFilter<"Resume">
     skills?: StringNullableListFilter<"Resume">
     projects?: StringNullableListFilter<"Resume">
+    resumePdfUrl?: StringNullableWithAggregatesFilter<"Resume"> | string | null
+    resumePdfName?: StringNullableWithAggregatesFilter<"Resume"> | string | null
   }
 
   export type userCreateInput = {
@@ -8249,6 +8399,7 @@ export namespace Prisma {
     employment_type: string
     job_type: string
     apply_through: string
+    lastDate?: Date | string | null
     company: companyCreateNestedOneWithoutJobsInput
     applications?: ApplicationsCreateNestedManyWithoutJobsInput
   }
@@ -8263,6 +8414,7 @@ export namespace Prisma {
     job_type: string
     apply_through: string
     companyId: string
+    lastDate?: Date | string | null
     applications?: ApplicationsUncheckedCreateNestedManyWithoutJobsInput
   }
 
@@ -8274,6 +8426,7 @@ export namespace Prisma {
     employment_type?: StringFieldUpdateOperationsInput | string
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     company?: companyUpdateOneRequiredWithoutJobsNestedInput
     applications?: ApplicationsUpdateManyWithoutJobsNestedInput
   }
@@ -8287,6 +8440,7 @@ export namespace Prisma {
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applications?: ApplicationsUncheckedUpdateManyWithoutJobsNestedInput
   }
 
@@ -8300,6 +8454,7 @@ export namespace Prisma {
     job_type: string
     apply_through: string
     companyId: string
+    lastDate?: Date | string | null
   }
 
   export type jobUpdateManyMutationInput = {
@@ -8310,6 +8465,7 @@ export namespace Prisma {
     employment_type?: StringFieldUpdateOperationsInput | string
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type jobUncheckedUpdateManyInput = {
@@ -8321,6 +8477,7 @@ export namespace Prisma {
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type reviewCreateInput = {
@@ -8368,6 +8525,9 @@ export namespace Prisma {
 
   export type ApplicationsCreateInput = {
     id?: string
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
     user: userCreateNestedOneWithoutApplied_jobsInput
     jobs: jobCreateNestedOneWithoutApplicationsInput
     Resume?: ResumeCreateNestedOneWithoutApplicationsInput
@@ -8378,9 +8538,15 @@ export namespace Prisma {
     user_id: string
     job_id: string
     resumeId?: string | null
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type ApplicationsUpdateInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutApplied_jobsNestedInput
     jobs?: jobUpdateOneRequiredWithoutApplicationsNestedInput
     Resume?: ResumeUpdateOneWithoutApplicationsNestedInput
@@ -8390,6 +8556,9 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     job_id?: StringFieldUpdateOperationsInput | string
     resumeId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationsCreateManyInput = {
@@ -8397,52 +8566,72 @@ export namespace Prisma {
     user_id: string
     job_id: string
     resumeId?: string | null
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type ApplicationsUpdateManyMutationInput = {
-
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     job_id?: StringFieldUpdateOperationsInput | string
     resumeId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ResumeCreateInput = {
     id?: string
-    title: string
+    title?: string
     summary?: string | null
-    applicationId: string
+    phone?: string | null
+    location?: string | null
+    website?: string | null
     educations?: ResumeCreateeducationsInput | string[]
     experiences?: ResumeCreateexperiencesInput | string[]
     skills?: ResumeCreateskillsInput | string[]
     projects?: ResumeCreateprojectsInput | string[]
+    resumePdfUrl?: string | null
+    resumePdfName?: string | null
     user: userCreateNestedOneWithoutResumeInput
     applications?: ApplicationsCreateNestedManyWithoutResumeInput
   }
 
   export type ResumeUncheckedCreateInput = {
     id?: string
-    title: string
+    title?: string
     summary?: string | null
+    phone?: string | null
+    location?: string | null
+    website?: string | null
     userId: string
-    applicationId: string
     educations?: ResumeCreateeducationsInput | string[]
     experiences?: ResumeCreateexperiencesInput | string[]
     skills?: ResumeCreateskillsInput | string[]
     projects?: ResumeCreateprojectsInput | string[]
+    resumePdfUrl?: string | null
+    resumePdfName?: string | null
     applications?: ApplicationsUncheckedCreateNestedManyWithoutResumeInput
   }
 
   export type ResumeUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationId?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutResumeNestedInput
     applications?: ApplicationsUpdateManyWithoutResumeNestedInput
   }
@@ -8450,46 +8639,62 @@ export namespace Prisma {
   export type ResumeUncheckedUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationsUncheckedUpdateManyWithoutResumeNestedInput
   }
 
   export type ResumeCreateManyInput = {
     id?: string
-    title: string
+    title?: string
     summary?: string | null
+    phone?: string | null
+    location?: string | null
+    website?: string | null
     userId: string
-    applicationId: string
     educations?: ResumeCreateeducationsInput | string[]
     experiences?: ResumeCreateexperiencesInput | string[]
     skills?: ResumeCreateskillsInput | string[]
     projects?: ResumeCreateprojectsInput | string[]
+    resumePdfUrl?: string | null
+    resumePdfName?: string | null
   }
 
   export type ResumeUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationId?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ResumeUncheckedUpdateManyInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -8616,6 +8821,18 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+    isSet?: boolean
+  }
+
   export type CompanyScalarRelationFilter = {
     is?: companyWhereInput
     isNot?: companyWhereInput
@@ -8631,6 +8848,7 @@ export namespace Prisma {
     job_type?: SortOrder
     apply_through?: SortOrder
     companyId?: SortOrder
+    lastDate?: SortOrder
   }
 
   export type jobAvgOrderByAggregateInput = {
@@ -8647,6 +8865,7 @@ export namespace Prisma {
     job_type?: SortOrder
     apply_through?: SortOrder
     companyId?: SortOrder
+    lastDate?: SortOrder
   }
 
   export type jobMinOrderByAggregateInput = {
@@ -8659,6 +8878,7 @@ export namespace Prisma {
     job_type?: SortOrder
     apply_through?: SortOrder
     companyId?: SortOrder
+    lastDate?: SortOrder
   }
 
   export type jobSumOrderByAggregateInput = {
@@ -8679,6 +8899,21 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
 
   export type UserScalarRelationFilter = {
@@ -8733,6 +8968,9 @@ export namespace Prisma {
     user_id?: SortOrder
     job_id?: SortOrder
     resumeId?: SortOrder
+    status?: SortOrder
+    appliedAt?: SortOrder
+    statusNote?: SortOrder
   }
 
   export type ApplicationsMaxOrderByAggregateInput = {
@@ -8740,6 +8978,9 @@ export namespace Prisma {
     user_id?: SortOrder
     job_id?: SortOrder
     resumeId?: SortOrder
+    status?: SortOrder
+    appliedAt?: SortOrder
+    statusNote?: SortOrder
   }
 
   export type ApplicationsMinOrderByAggregateInput = {
@@ -8747,6 +8988,9 @@ export namespace Prisma {
     user_id?: SortOrder
     job_id?: SortOrder
     resumeId?: SortOrder
+    status?: SortOrder
+    appliedAt?: SortOrder
+    statusNote?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -8780,28 +9024,40 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     summary?: SortOrder
+    phone?: SortOrder
+    location?: SortOrder
+    website?: SortOrder
     userId?: SortOrder
-    applicationId?: SortOrder
     educations?: SortOrder
     experiences?: SortOrder
     skills?: SortOrder
     projects?: SortOrder
+    resumePdfUrl?: SortOrder
+    resumePdfName?: SortOrder
   }
 
   export type ResumeMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     summary?: SortOrder
+    phone?: SortOrder
+    location?: SortOrder
+    website?: SortOrder
     userId?: SortOrder
-    applicationId?: SortOrder
+    resumePdfUrl?: SortOrder
+    resumePdfName?: SortOrder
   }
 
   export type ResumeMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     summary?: SortOrder
+    phone?: SortOrder
+    location?: SortOrder
+    website?: SortOrder
     userId?: SortOrder
-    applicationId?: SortOrder
+    resumePdfUrl?: SortOrder
+    resumePdfName?: SortOrder
   }
 
   export type reviewCreateNestedManyWithoutUserInput = {
@@ -9036,6 +9292,11 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+    unset?: boolean
+  }
+
   export type companyUpdateOneRequiredWithoutJobsNestedInput = {
     create?: XOR<companyCreateWithoutJobsInput, companyUncheckedCreateWithoutJobsInput>
     connectOrCreate?: companyCreateOrConnectWithoutJobsInput
@@ -9118,6 +9379,11 @@ export namespace Prisma {
     connect?: ResumeWhereUniqueInput
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+    unset?: boolean
+  }
+
   export type userUpdateOneRequiredWithoutApplied_jobsNestedInput = {
     create?: XOR<userCreateWithoutApplied_jobsInput, userUncheckedCreateWithoutApplied_jobsInput>
     connectOrCreate?: userCreateOrConnectWithoutApplied_jobsInput
@@ -9142,11 +9408,6 @@ export namespace Prisma {
     delete?: ResumeWhereInput | boolean
     connect?: ResumeWhereUniqueInput
     update?: XOR<XOR<ResumeUpdateToOneWithWhereWithoutApplicationsInput, ResumeUpdateWithoutApplicationsInput>, ResumeUncheckedUpdateWithoutApplicationsInput>
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-    unset?: boolean
   }
 
   export type ResumeCreateeducationsInput = {
@@ -9283,6 +9544,18 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+    isSet?: boolean
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -9308,6 +9581,33 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
@@ -9343,18 +9643,6 @@ export namespace Prisma {
     isSet?: boolean
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-    isSet?: boolean
-  }
-
   export type reviewCreateWithoutUserInput = {
     id?: string
     content: string
@@ -9378,6 +9666,9 @@ export namespace Prisma {
 
   export type ApplicationsCreateWithoutUserInput = {
     id?: string
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
     jobs: jobCreateNestedOneWithoutApplicationsInput
     Resume?: ResumeCreateNestedOneWithoutApplicationsInput
   }
@@ -9386,6 +9677,9 @@ export namespace Prisma {
     id?: string
     job_id: string
     resumeId?: string | null
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type ApplicationsCreateOrConnectWithoutUserInput = {
@@ -9399,25 +9693,33 @@ export namespace Prisma {
 
   export type ResumeCreateWithoutUserInput = {
     id?: string
-    title: string
+    title?: string
     summary?: string | null
-    applicationId: string
+    phone?: string | null
+    location?: string | null
+    website?: string | null
     educations?: ResumeCreateeducationsInput | string[]
     experiences?: ResumeCreateexperiencesInput | string[]
     skills?: ResumeCreateskillsInput | string[]
     projects?: ResumeCreateprojectsInput | string[]
+    resumePdfUrl?: string | null
+    resumePdfName?: string | null
     applications?: ApplicationsCreateNestedManyWithoutResumeInput
   }
 
   export type ResumeUncheckedCreateWithoutUserInput = {
     id?: string
-    title: string
+    title?: string
     summary?: string | null
-    applicationId: string
+    phone?: string | null
+    location?: string | null
+    website?: string | null
     educations?: ResumeCreateeducationsInput | string[]
     experiences?: ResumeCreateexperiencesInput | string[]
     skills?: ResumeCreateskillsInput | string[]
     projects?: ResumeCreateprojectsInput | string[]
+    resumePdfUrl?: string | null
+    resumePdfName?: string | null
     applications?: ApplicationsUncheckedCreateNestedManyWithoutResumeInput
   }
 
@@ -9476,6 +9778,9 @@ export namespace Prisma {
     user_id?: StringFilter<"Applications"> | string
     job_id?: StringFilter<"Applications"> | string
     resumeId?: StringNullableFilter<"Applications"> | string | null
+    status?: StringFilter<"Applications"> | string
+    appliedAt?: DateTimeNullableFilter<"Applications"> | Date | string | null
+    statusNote?: StringNullableFilter<"Applications"> | string | null
   }
 
   export type ResumeUpsertWithoutUserInput = {
@@ -9492,22 +9797,30 @@ export namespace Prisma {
   export type ResumeUpdateWithoutUserInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationId?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationsUpdateManyWithoutResumeNestedInput
   }
 
   export type ResumeUncheckedUpdateWithoutUserInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationId?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationsUncheckedUpdateManyWithoutResumeNestedInput
   }
 
@@ -9520,6 +9833,7 @@ export namespace Prisma {
     employment_type: string
     job_type: string
     apply_through: string
+    lastDate?: Date | string | null
     applications?: ApplicationsCreateNestedManyWithoutJobsInput
   }
 
@@ -9532,6 +9846,7 @@ export namespace Prisma {
     employment_type: string
     job_type: string
     apply_through: string
+    lastDate?: Date | string | null
     applications?: ApplicationsUncheckedCreateNestedManyWithoutJobsInput
   }
 
@@ -9594,6 +9909,7 @@ export namespace Prisma {
     job_type?: StringFilter<"job"> | string
     apply_through?: StringFilter<"job"> | string
     companyId?: StringFilter<"job"> | string
+    lastDate?: DateTimeNullableFilter<"job"> | Date | string | null
   }
 
   export type reviewUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -9635,6 +9951,9 @@ export namespace Prisma {
 
   export type ApplicationsCreateWithoutJobsInput = {
     id?: string
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
     user: userCreateNestedOneWithoutApplied_jobsInput
     Resume?: ResumeCreateNestedOneWithoutApplicationsInput
   }
@@ -9643,6 +9962,9 @@ export namespace Prisma {
     id?: string
     user_id: string
     resumeId?: string | null
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type ApplicationsCreateOrConnectWithoutJobsInput = {
@@ -9829,6 +10151,7 @@ export namespace Prisma {
     employment_type: string
     job_type: string
     apply_through: string
+    lastDate?: Date | string | null
     company: companyCreateNestedOneWithoutJobsInput
   }
 
@@ -9842,6 +10165,7 @@ export namespace Prisma {
     job_type: string
     apply_through: string
     companyId: string
+    lastDate?: Date | string | null
   }
 
   export type jobCreateOrConnectWithoutApplicationsInput = {
@@ -9851,26 +10175,34 @@ export namespace Prisma {
 
   export type ResumeCreateWithoutApplicationsInput = {
     id?: string
-    title: string
+    title?: string
     summary?: string | null
-    applicationId: string
+    phone?: string | null
+    location?: string | null
+    website?: string | null
     educations?: ResumeCreateeducationsInput | string[]
     experiences?: ResumeCreateexperiencesInput | string[]
     skills?: ResumeCreateskillsInput | string[]
     projects?: ResumeCreateprojectsInput | string[]
+    resumePdfUrl?: string | null
+    resumePdfName?: string | null
     user: userCreateNestedOneWithoutResumeInput
   }
 
   export type ResumeUncheckedCreateWithoutApplicationsInput = {
     id?: string
-    title: string
+    title?: string
     summary?: string | null
+    phone?: string | null
+    location?: string | null
+    website?: string | null
     userId: string
-    applicationId: string
     educations?: ResumeCreateeducationsInput | string[]
     experiences?: ResumeCreateexperiencesInput | string[]
     skills?: ResumeCreateskillsInput | string[]
     projects?: ResumeCreateprojectsInput | string[]
+    resumePdfUrl?: string | null
+    resumePdfName?: string | null
   }
 
   export type ResumeCreateOrConnectWithoutApplicationsInput = {
@@ -9926,6 +10258,7 @@ export namespace Prisma {
     employment_type?: StringFieldUpdateOperationsInput | string
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     company?: companyUpdateOneRequiredWithoutJobsNestedInput
   }
 
@@ -9938,6 +10271,7 @@ export namespace Prisma {
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ResumeUpsertWithoutApplicationsInput = {
@@ -9954,23 +10288,31 @@ export namespace Prisma {
   export type ResumeUpdateWithoutApplicationsInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationId?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutResumeNestedInput
   }
 
   export type ResumeUncheckedUpdateWithoutApplicationsInput = {
     title?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
     educations?: ResumeUpdateeducationsInput | string[]
     experiences?: ResumeUpdateexperiencesInput | string[]
     skills?: ResumeUpdateskillsInput | string[]
     projects?: ResumeUpdateprojectsInput | string[]
+    resumePdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resumePdfName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type userCreateWithoutResumeInput = {
@@ -10000,6 +10342,9 @@ export namespace Prisma {
 
   export type ApplicationsCreateWithoutResumeInput = {
     id?: string
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
     user: userCreateNestedOneWithoutApplied_jobsInput
     jobs: jobCreateNestedOneWithoutApplicationsInput
   }
@@ -10008,6 +10353,9 @@ export namespace Prisma {
     id?: string
     user_id: string
     job_id: string
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type ApplicationsCreateOrConnectWithoutResumeInput = {
@@ -10074,6 +10422,9 @@ export namespace Prisma {
     id?: string
     job_id: string
     resumeId?: string | null
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type reviewUpdateWithoutUserInput = {
@@ -10092,6 +10443,9 @@ export namespace Prisma {
   }
 
   export type ApplicationsUpdateWithoutUserInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
     jobs?: jobUpdateOneRequiredWithoutApplicationsNestedInput
     Resume?: ResumeUpdateOneWithoutApplicationsNestedInput
   }
@@ -10099,11 +10453,17 @@ export namespace Prisma {
   export type ApplicationsUncheckedUpdateWithoutUserInput = {
     job_id?: StringFieldUpdateOperationsInput | string
     resumeId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyWithoutUserInput = {
     job_id?: StringFieldUpdateOperationsInput | string
     resumeId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type jobCreateManyCompanyInput = {
@@ -10115,6 +10475,7 @@ export namespace Prisma {
     employment_type: string
     job_type: string
     apply_through: string
+    lastDate?: Date | string | null
   }
 
   export type reviewCreateManyCompanyInput = {
@@ -10131,6 +10492,7 @@ export namespace Prisma {
     employment_type?: StringFieldUpdateOperationsInput | string
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applications?: ApplicationsUpdateManyWithoutJobsNestedInput
   }
 
@@ -10142,6 +10504,7 @@ export namespace Prisma {
     employment_type?: StringFieldUpdateOperationsInput | string
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applications?: ApplicationsUncheckedUpdateManyWithoutJobsNestedInput
   }
 
@@ -10153,6 +10516,7 @@ export namespace Prisma {
     employment_type?: StringFieldUpdateOperationsInput | string
     job_type?: StringFieldUpdateOperationsInput | string
     apply_through?: StringFieldUpdateOperationsInput | string
+    lastDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type reviewUpdateWithoutCompanyInput = {
@@ -10174,9 +10538,15 @@ export namespace Prisma {
     id?: string
     user_id: string
     resumeId?: string | null
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type ApplicationsUpdateWithoutJobsInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutApplied_jobsNestedInput
     Resume?: ResumeUpdateOneWithoutApplicationsNestedInput
   }
@@ -10184,20 +10554,32 @@ export namespace Prisma {
   export type ApplicationsUncheckedUpdateWithoutJobsInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     resumeId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyWithoutJobsInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     resumeId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationsCreateManyResumeInput = {
     id?: string
     user_id: string
     job_id: string
+    status?: string
+    appliedAt?: Date | string | null
+    statusNote?: string | null
   }
 
   export type ApplicationsUpdateWithoutResumeInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutApplied_jobsNestedInput
     jobs?: jobUpdateOneRequiredWithoutApplicationsNestedInput
   }
@@ -10205,11 +10587,17 @@ export namespace Prisma {
   export type ApplicationsUncheckedUpdateWithoutResumeInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     job_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationsUncheckedUpdateManyWithoutResumeInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     job_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

@@ -10,7 +10,7 @@ import {
   Flex,
   Badge,
 } from "@radix-ui/themes";
-import { UserContext } from "@/app/(group)/layout";
+import { UserContext } from "@/context/UserContext";
 import SwitchAccDropD from "../dropdowns/SwitchAccDropD";
 import { HeaderContext } from "../headers/headerWrapper";
 import { UserPlus, UserRound } from "lucide-react";

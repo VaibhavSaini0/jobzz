@@ -9,13 +9,14 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CompanyJobCard from "@/components/cards/CompanyJobCard";
 import { job, review, company } from "../../../../../generated/prisma";
 import Compreviews from "@/components/Compreviews";
-import { UserContext } from "../../layout";
+import { UserContext } from "@/context/UserContext";
 import Loading from "@/components/lodingstate/Loading";
 import AboutCompany from "@/components/AboutCompany";
+import { isEmployer } from "@/lib/roles";
 
 type CompanyWithRelations = company & {
   jobs: job[] | null;
@@ -24,10 +25,17 @@ type CompanyWithRelations = company & {
 
 export default function Page() {
   const params = useParams();
-  const { company } = useContext(UserContext);
+  const router = useRouter();
+  const { user, company, isuserLoading } = useContext(UserContext);
   const [Jobcompany, setJobCompany] = useState<CompanyWithRelations | null>(null);
   const [companyJobs, setCompanyJobs] = useState<job[] | null>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!isuserLoading && user && !isEmployer(user.role)) {
+      router.push("/profile");
+    }
+  }, [user, isuserLoading, router]);
 
   useEffect(() => {
     async function fetchCompany() {
@@ -105,7 +113,9 @@ export default function Page() {
                 </Tabs.Content>
 
                 <Tabs.Content value="reviews">
-                  <Compreviews companyId={Jobcompany?.id} isloading={isLoading} />
+                  {Jobcompany?.id && (
+                    <Compreviews companyId={Jobcompany.id} isloading={isLoading} />
+                  )}
                 </Tabs.Content>
               </Box>
             </Tabs.Root>

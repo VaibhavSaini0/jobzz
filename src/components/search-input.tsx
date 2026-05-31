@@ -17,23 +17,29 @@ export default function SearchInput() {
     }
   }
 
-  // Fetch suggestions
+  // Fetch suggestions with debouncing
   useEffect(() => {
-    async function getsuggestion() {
-      const res = await fetch(`/api/search/suggestion?q=${input}`);
-      const data = await res.json();
-      if (data.success) {
-        setSuggestion(data.data);
-      } else {
-        setSuggestion([]);
-      }
+    if (!input.trim()) {
+      setSuggestion([]);
+      return;
     }
 
-    if (input.trim()) {
-      getsuggestion();
-    } else {
-      setSuggestion([]);
-    }
+    const delayDebounceFn = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search/suggestion?q=${encodeURIComponent(input.trim())}`);
+        const data = await res.json();
+        if (data.success) {
+          setSuggestion(data.data);
+        } else {
+          setSuggestion([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch suggestions:", err);
+        setSuggestion([]);
+      }
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(delayDebounceFn);
   }, [input]);
 
   // Close suggestions when clicking outside
@@ -68,11 +74,16 @@ export default function SearchInput() {
       </TextField.Root>
 
       {input.trim() && suggestion.length > 0 && (
-        <Box className="absolute left-0 right-0 mt-2 z-50 bg-white border border-gray-200 rounded-md shadow-lg">
+        <Box className="absolute left-0 right-0 mt-2 z-50 bg-card-bg border border-card-border rounded-xl shadow-lg overflow-hidden transition-all">
           {suggestion.map((item, index) => (
             <p
               key={index}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm sm:text-base text-black"
+              onClick={() => {
+                setInput(item.title);
+                router.push(`/search?q=${encodeURIComponent(item.title)}`);
+                setSuggestion([]);
+              }}
+              className="px-4 py-2.5 hover:bg-indigo-soft/10 cursor-pointer text-sm sm:text-base text-foreground transition duration-150 border-b border-card-border/50 last:border-b-0"
             >
               {item.title}
             </p>

@@ -1,5 +1,5 @@
 "use client";
-import { UserContext } from '@/app/(group)/layout';
+import { UserContext } from '@/context/UserContext';
 import { Box, Flex, Heading, Separator, Text } from '@radix-ui/themes';
 import { useContext, useEffect, useState } from 'react';
 import CompanyJobCard from './cards/CompanyJobCard';

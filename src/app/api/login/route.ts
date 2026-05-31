@@ -1,6 +1,9 @@
 import prismaclient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { setAuthCookies } from "@/lib/auth-cookies";
+import { serverError } from "@/lib/api-error";
 
 export async function POST(req: NextRequest) {
   const existingToken = req.cookies.get("token")?.value || "";
@@ -10,21 +13,21 @@ export async function POST(req: NextRequest) {
     const { email, password } = body;
 
     if (!email || !password) {
-      return NextResponse.json({
-        success: false,
-        message: "Login details are not valid",
-      });
+      return NextResponse.json(
+        { success: false, message: "Login details are not valid" },
+        { status: 400 }
+      );
     }
 
     const user = await prismaclient.user.findUnique({
-      where: { email },
+      where: { email: String(email).trim().toLowerCase() },
     });
 
-    if (!user || user.password !== password) {
-      return NextResponse.json({
-        success: false,
-        message: "User does not exist or credentials are wrong",
-      });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return NextResponse.json(
+        { success: false, message: "User does not exist or credentials are wrong" },
+        { status: 401 }
+      );
     }
 
     const TokenKey = process.env.SECRET;
@@ -39,13 +42,14 @@ export async function POST(req: NextRequest) {
     if (existingToken) {
       try {
         usersTokenPayload = JSON.parse(existingToken);
-      } catch (e) {
-        console.warn("Failed to parse existing token payload, resetting...");
+      } catch {
+        usersTokenPayload = {};
       }
     }
+
     const userAlreadyExists = Object.values(usersTokenPayload).some((token) => {
       try {
-        const decoded: any = jwt.verify(token, TokenKey);
+        const decoded = jwt.verify(token, TokenKey) as { id: string };
         return decoded.id === user.id;
       } catch {
         return false;
@@ -59,26 +63,17 @@ export async function POST(req: NextRequest) {
 
     const response = NextResponse.json({
       success: true,
-      user:{
-        id:user.id,
-        name:user.name,
-        email:user.email,
-        role:user.role
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
       },
     });
 
-    response.cookies.set("Active_User", newToken);
-    response.cookies.set("token", JSON.stringify(usersTokenPayload));
+    setAuthCookies(response, newToken, JSON.stringify(usersTokenPayload));
     return response;
-  } catch (error: any) {
-    console.error("Login error:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Something went wrong",
-        error: error.message,
-      },
-      { status: 500 }
-    );
+  } catch (error) {
+    return serverError("Login error:", error);
   }
 }

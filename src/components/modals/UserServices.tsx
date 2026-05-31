@@ -1,5 +1,5 @@
 "use client";
-import { UserContext } from "@/app/(group)/layout";
+import { UserContext } from "@/context/UserContext";
 import { logout } from "@/HelperFun/logout";
 import {
   Avatar,
@@ -116,21 +116,23 @@ export default function UserServices() {
                   </Flex>
                 </Link>
 
-                <Link href={"/company/profile"}>
-                  <Flex
-                    className="hover:border-1 box-content px-3 py-1.5 hover:border-gray-500 rounded-md"
-                    justify="between"
-                    align="center"
-                  >
-                    <Text as="div" size="2" color="blue">
-                      <Flex gap="3" align="center">
-                        <Building2 />
-                        Company Profile
-                      </Flex>
-                    </Text>
-                    <ChevronRight className="text-[#1eadf5]" />
-                  </Flex>
-                </Link>
+                {user?.role === "admin" && (
+                  <Link href={"/company/profile"}>
+                    <Flex
+                      className="hover:border-1 box-content px-3 py-1.5 hover:border-gray-500 rounded-md"
+                      justify="between"
+                      align="center"
+                    >
+                      <Text as="div" size="2" color="blue">
+                        <Flex gap="3" align="center">
+                          <Building2 />
+                          Company Profile
+                        </Flex>
+                      </Text>
+                      <ChevronRight className="text-[#1eadf5]" />
+                    </Flex>
+                  </Link>
+                )}
 
                 <Link href={"#"}>
                   <Flex

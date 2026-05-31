@@ -42,9 +42,9 @@ const [usersData, setUsersData] = useState<user[] | null>(null);
       usersData,
       setUsersData,
     }),
-    [open, signUpOpen, isServiceOpen, isAddAc, isSwitchAcc,usersData]
+    [open, signUpOpen, isServiceOpen, isAddAc, isSwitchAcc, usersData]
   );
-  console.log("HeaderWrapper mounted");
+
   useEffect(() => {
     async function fetchUsers() {
       // console.log("hello");

@@ -9,22 +9,22 @@ import {
 } from "@radix-ui/themes";
 import React, { useContext, useEffect, useState } from "react";
 import { review, user } from "../../generated/prisma";
-import { UserContext } from "@/app/(group)/layout";
+import { UserContext } from "@/context/UserContext";
 import Loading from "./lodingstate/Loading";
+import { useToast } from "@/context/ToastContext";
 
-type ReviewWithUser = review & {
-  user: user;
-};
+type ReviewWithUser = review & { user: user };
 
 export default function Compreviews({
   companyId,
   isloading,
 }: {
-  companyId: any;
+  companyId: string;
   isloading: boolean;
 }) {
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState("");
   const { user } = useContext(UserContext);
+  const { toast } = useToast();
   const [companyReview, setCompanyReview] = useState<ReviewWithUser[]>([]);
 
   useEffect(() => {
@@ -32,23 +32,31 @@ export default function Compreviews({
       try {
         const res = await fetch(`/api/review/${companyId}`);
         const data = await res.json();
-        if (data.success) {
-          setCompanyReview(data.data);
-        }
+        if (data.success) setCompanyReview(data.data);
       } catch {
-        alert("Failed to fetch reviews.");
+        toast("Failed to fetch reviews.", "error");
       }
     }
-    fetchReviews();
-  }, [companyId]);
+    if (companyId) fetchReviews();
+  }, [companyId, toast]);
 
   async function handleclick(e: React.MouseEvent) {
     e.preventDefault();
 
+    if (!user) {
+      toast("Please log in to leave a review.", "error");
+      return;
+    }
+
+    if (!content.trim()) {
+      toast("Please write a review first.", "error");
+      return;
+    }
+
     try {
       const res = await fetch("/api/review/add", {
         method: "POST",
-        body: JSON.stringify({ content, userId: user.id, companyId }),
+        body: JSON.stringify({ content, companyId }),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -56,9 +64,12 @@ export default function Compreviews({
       if (data.success) {
         setCompanyReview([...companyReview, { ...data.data, user }]);
         setContent("");
+        toast("Review posted!", "success");
+      } else {
+        toast(data.message || "Could not post review.", "error");
       }
     } catch {
-      alert("Something went wrong.");
+      toast("Something went wrong.", "error");
     }
   }
 
@@ -77,7 +88,7 @@ export default function Compreviews({
           onChange={(e) => setContent(e.target.value)}
           className="w-full"
         />
-        <Button variant="surface" onClick={handleclick}>
+        <Button variant="surface" onClick={handleclick} disabled={!user}>
           Add Review
         </Button>
       </Flex>
@@ -90,15 +101,12 @@ export default function Compreviews({
           {companyReview.map((rev) => (
             <div
               key={rev.id}
-              className="relative bg-zinc-900 text-white rounded-2xl shadow-lg p-4 transition duration-300 hover:scale-[1.02] hover:shadow-xl cursor-pointer"
+              className="relative bg-card-bg border border-card-border rounded-2xl shadow-sm p-4"
             >
-              <Badge
-                color="green"
-                className="rounded-xl absolute top-[-10px] left-0 mb-2 block"
-              >
+              <Badge color="green" className="rounded-xl mb-2">
                 {rev.user?.name ?? "Anonymous"}
               </Badge>
-              <Text size="2" color="gray" className="leading-relaxed">
+              <Text size="2" className="text-text-muted leading-relaxed">
                 {rev.content}
               </Text>
             </div>

@@ -2,7 +2,10 @@
 
 import * as Form from "@radix-ui/react-form";
 import { useContext, useState } from "react";
-import { UserContext } from "../layout";
+import { UserContext } from "@/context/UserContext";
+import { useToast } from "@/context/ToastContext";
+import { Button, Flex, Text } from "@radix-ui/themes";
+import { Sparkles, Loader2 } from "lucide-react";
 
 export default function SimpleAddJobForm() {
   const employmentTypes = ["Full-Time", "Part-Time", "Contract"];
@@ -17,9 +20,12 @@ export default function SimpleAddJobForm() {
     employment_type: "",
     job_type: "",
     apply_through: "",
+    lastDate: "",
   });
 
   const { company } = useContext(UserContext);
+  const { toast } = useToast();
+  const [aiLoading, setAiLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -30,11 +36,43 @@ export default function SimpleAddJobForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  async function generateDescription() {
+    if (!formData.title.trim()) {
+      toast("Enter a job title first", "error");
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const res = await fetch("/api/ai/job-description", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formData.title,
+          location: formData.location,
+          employment_type: formData.employment_type,
+          job_type: formData.job_type,
+          companyName: company?.name,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setFormData((prev) => ({ ...prev, description: data.data }));
+        toast(data.isDemo ? "Demo description generated" : "AI description generated!", "success");
+      } else {
+        toast(data.message || "Generation failed", "error");
+      }
+    } catch {
+      toast("AI generation failed", "error");
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!company || !company?.id) {
-      alert("Company not found. Please log in again.");
+      toast("Company not found. Please register your company first.", "error");
       return;
     }
 
@@ -56,10 +94,20 @@ export default function SimpleAddJobForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to submit");
 
-      alert("Job submitted successfully!");
+      toast("Job posted successfully!", "success");
+      setFormData({
+        title: "",
+        description: "",
+        location: "",
+        salary: "",
+        employment_type: "",
+        job_type: "",
+        apply_through: "",
+        lastDate: "",
+      });
     } catch (err) {
       console.error("Job Submit Error:", err);
-      alert("Error submitting job");
+      toast("Error submitting job", "error");
     }
   };
 
@@ -72,34 +120,47 @@ export default function SimpleAddJobForm() {
       <Form.Root onSubmit={handleSubmit} className="space-y-4">
         {[
           { name: "title", label: "Job Title", type: "text" },
-          { name: "description", label: "Description", type: "textarea" },
           { name: "location", label: "Location", type: "text" },
           { name: "salary", label: "Salary", type: "number" },
         ].map(({ name, label, type }) => (
           <Form.Field name={name} key={name} className="grid gap-1">
             <Form.Label className="font-medium">{label}</Form.Label>
             <Form.Control asChild>
-              {type === "textarea" ? (
-                <textarea
-                  name={name}
-                  value={formData[name as keyof typeof formData]}
-                  onChange={handleChange}
-                  required
-                  className="p-2 border border-border bg-background text-foreground rounded-md h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              ) : (
-                <input
-                  type={type}
-                  name={name}
-                  value={formData[name as keyof typeof formData]}
-                  onChange={handleChange}
-                  required
-                  className="p-2 border border-border bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              )}
+              <input
+                type={type}
+                name={name}
+                value={formData[name as keyof typeof formData]}
+                onChange={handleChange}
+                required={name !== "location"}
+                className="p-2 border border-border bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </Form.Control>
           </Form.Field>
         ))}
+
+        <Form.Field name="description" className="grid gap-1">
+          <Flex justify="between" align="center">
+            <Form.Label className="font-medium">Description</Form.Label>
+            <Button
+              type="button"
+              size="1"
+              variant="soft"
+              color="indigo"
+              onClick={generateDescription}
+              disabled={aiLoading}
+            >
+              {aiLoading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+              AI Write
+            </Button>
+          </Flex>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            className="p-2 border border-border bg-background text-foreground rounded-md h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </Form.Field>
 
         <Form.Field name="employment_type" className="grid gap-1">
           <Form.Label className="font-medium">Employment Type</Form.Label>
@@ -159,6 +220,19 @@ export default function SimpleAddJobForm() {
               </option>
             ))}
           </select>
+        </Form.Field>
+
+        <Form.Field name="lastDate" className="grid gap-1">
+          <Form.Label className="font-medium">Application Deadline (Last Date to Apply)</Form.Label>
+          <Form.Control asChild>
+            <input
+              type="date"
+              name="lastDate"
+              value={formData.lastDate}
+              onChange={handleChange}
+              className="p-2 border border-border bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </Form.Control>
         </Form.Field>
 
         <Form.Submit asChild>

@@ -10,6 +10,7 @@ import {
 import { Check } from "lucide-react";
 import BtnLoading from "./lodingstate/BtnLoading";
 import { useState } from "react";
+import { useToast } from "@/context/ToastContext";
 
 export default function WithdrawlBtn({
   job,
@@ -20,20 +21,23 @@ export default function WithdrawlBtn({
   setIsApplied: (value: boolean) => void;
 }) {
   const [isloading, setIsloading] = useState<boolean>(false);
+  const { toast } = useToast();
 
   async function handleWithdrawl() {
     setIsloading(true);
     try {
-      const res = await fetch(`/api/job/withdrawal/${job?.id}`);
+      const res = await fetch(`/api/job/withdrawal/${job?.id}`, {
+        method: "POST",
+      });
       const data = await res.json();
       if (data.success) {
         setIsApplied(false);
-        alert("Withdrawal successful.");
+        toast("Withdrawal successful.", "success");
       } else {
-        alert(data.message || "Something went wrong");
+        toast(data.message || "Something went wrong", "error");
       }
     } catch (error) {
-      alert("Something went wrong");
+      toast("Something went wrong", "error");
     } finally {
       setIsloading(false);
     }

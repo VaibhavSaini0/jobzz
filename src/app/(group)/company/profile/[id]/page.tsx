@@ -37,7 +37,7 @@ export default function Page() {
     async function fetchCompany() {
       try {
         setIsLoading(true);
-        const res = await fetch(`/api/company/profile/${id}`);
+        const res = await fetch(`/api/company/profile/${id}?public=true`);
         const data = await res.json();
 
         if (data.success) {

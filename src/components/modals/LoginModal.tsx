@@ -2,8 +2,9 @@
 
 import { useContext, useState } from "react";
 import { Button, Dialog, TextField, Flex, Text } from "@radix-ui/themes";
-import { UserContext } from "@/app/(group)/layout";
+import { UserContext } from "@/context/UserContext";
 import BtnLoading from "../lodingstate/BtnLoading";
+import { useToast } from "@/context/ToastContext";
 
 export default function LoginModal({
   open,
@@ -13,17 +14,16 @@ export default function LoginModal({
   open: boolean;
   setOpen: (val: boolean) => void;
   setSignUpOpen: (val: boolean) => void;
-})
- {
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const {setUser}=useContext(UserContext)
+  const { setUser } = useContext(UserContext);
+  const { toast } = useToast();
+
   async function handleSubmit(e: any) {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
 
     try {
       const res = await fetch("/api/login", {
@@ -34,16 +34,14 @@ export default function LoginModal({
 
       const data = await res.json();
       if (data.success) {
-        setMessage("Login successful!");
-        setUser(data.user)
-        setTimeout(() => {
-          setOpen(false);
-        }, 800);
+        toast("Login successful!", "success");
+        setUser(data.user);
+        setOpen(false);
       } else {
-        setMessage(data.message || "Invalid credentials.");
+        toast(data.message || "Invalid credentials.", "error");
       }
     } catch (err) {
-      setMessage("Something went wrong.");
+      toast("Something went wrong.", "error");
     } finally {
       setLoading(false);
     }
@@ -51,7 +49,7 @@ export default function LoginModal({
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-              <Dialog.Trigger>
+      <Dialog.Trigger>
         <Button>Login</Button>
       </Dialog.Trigger>
       <Dialog.Content maxWidth="450px">
@@ -78,28 +76,21 @@ export default function LoginModal({
           </label>
         </Flex>
 
-        {message && (
-          <Text mt="2" color={message.includes("success") ? "green" : "red"}>
-            {message}
-          </Text>
-        )}
-
         <Flex mt="4" justify="end" gap="2">
           <Button onClick={handleSubmit}>
             {!loading ? (
               "Login"
             ) : (
-             <BtnLoading/>
+              <BtnLoading />
             )}
           </Button>
         </Flex>
-            <Text color="blue" onClick={() => {
-  setOpen(false);
-  setSignUpOpen(true);
-}} className="cursor-pointer hover:underline">
-  Create a new account
-</Text>
-
+        <Text color="blue" onClick={() => {
+          setOpen(false);
+          setSignUpOpen(true);
+        }} className="cursor-pointer hover:underline">
+          Create a new account
+        </Text>
       </Dialog.Content>
     </Dialog.Root>
   );

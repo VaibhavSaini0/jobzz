@@ -46,6 +46,7 @@ model job {
   companyId       String         @db.ObjectId
   company         company        @relation(fields: [companyId], references: [id])
   applications    Applications[]
+  lastDate        DateTime?
 }
 
 model review {
@@ -58,25 +59,32 @@ model review {
 }
 
 model Applications {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  user_id  String  @db.ObjectId
-  user     user    @relation(fields: [user_id], references: [id])
-  job_id   String  @db.ObjectId
-  jobs     job     @relation(fields: [job_id], references: [id])
-  Resume   Resume? @relation(fields: [resumeId], references: [id])
-  resumeId String? @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id   String   @db.ObjectId
+  user      user     @relation(fields: [user_id], references: [id])
+  job_id    String   @db.ObjectId
+  jobs      job      @relation(fields: [job_id], references: [id])
+  Resume    Resume?  @relation(fields: [resumeId], references: [id])
+  resumeId  String?  @db.ObjectId
+  status    String   @default("pending")
+  appliedAt DateTime? @default(now())
+  statusNote String?
 }
 
 model Resume {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  summary       String?
-  user          user           @relation(fields: [userId], references: [id])
-  userId        String         @unique @db.ObjectId
-  applicationId String         @db.ObjectId
-  applications  Applications[]
-  educations    String[]
-  experiences   String[]
-  skills        String[]
-  projects      String[]
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  title        String         @default("")
+  summary      String?
+  phone        String?
+  location     String?
+  website      String?
+  user         user           @relation(fields: [userId], references: [id])
+  userId       String         @unique @db.ObjectId
+  applications Applications[]
+  educations   String[]
+  experiences  String[]
+  skills       String[]
+  projects     String[]
+  resumePdfUrl  String?
+  resumePdfName String?
 }

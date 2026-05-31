@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jobzz — Tech Job Portal
+
+A modern job portal built with **Next.js 15**, **Prisma**, **MongoDB**, and **Tailwind CSS**. Candidates can search jobs, build resume profiles, apply with AI cover letters, and track applications. Employers can register companies, post jobs, and review applicants.
+
+## Features
+
+- Job search with filters (remote, hybrid, on-site, employment type)
+- User authentication with secure httpOnly JWT cookies
+- Resume profiles stored in the database
+- AI cover letter generation (Google Gemini)
+- AI job match scoring for candidates
+- AI resume coaching on profile page
+- AI job description writer for employers
+- AI candidate screening for employers
+- Application status tracking (pending → hired/rejected)
+- Employer dashboard for job and applicant management
+- Company reviews and public company pages
+- Dark mode, responsive UI, SEO-friendly pages
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment
+
+Copy `.env.example` to `.env` and set:
+
+- `DATABASE_URL` — MongoDB connection string
+- `SECRET` — JWT signing secret
+- `GEMINI_API_KEY` — (optional) for AI cover letters
+- `NEXT_PUBLIC_SITE_URL` — e.g. `http://localhost:3001`
+
+### 3. Generate Prisma client
+
+```bash
+npx prisma generate
+```
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server on port 3001 |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | Run Next.js lint |
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/              # Next.js App Router pages & API routes
+├── components/     # React components
+├── context/        # React context providers
+├── lib/            # Shared utilities (auth, roles, API helpers)
+├── services/       # Prisma client
+└── HelperFun/      # Server helpers (auth check, logout)
+prisma/
+└── schema.prisma   # Database schema
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Security Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Auth cookies are `httpOnly` and `secure` in production
+- Protected routes use middleware + API-level authorization
+- Seeding is disabled in production
+- Signup roles are validated server-side
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Private project.

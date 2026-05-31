@@ -1,6 +1,9 @@
 "use client";
+
 import JobApplyBtn from "@/components/JobApplyBtn";
-import AppliedUserList from "@/components/modals/AppliedUserList";
+import AppliedUserList, {
+  type ApplicantRecord,
+} from "@/components/modals/AppliedUserList";
 import {
   Box,
   Flex,
@@ -10,18 +13,16 @@ import {
   Button,
   Card,
   Avatar,
+  Badge,
 } from "@radix-ui/themes";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { user } from "../../../../../generated/prisma";
-import { Check, CheckCheck } from "lucide-react";
-import WithdrawlBtn from "@/components/WithdrawalBtn";
-import { UserContext } from "../../layout";
+import { Sparkles, TrendingUp, Users } from "lucide-react";
+import WithdrawalBtn from "@/components/WithdrawalBtn";
+import AICoverLetterModal from "@/components/AICoverLetterModal";
+import AIJobMatchModal from "@/components/AIJobMatchModal";
+import { UserContext } from "@/context/UserContext";
 import Loading from "@/components/lodingstate/Loading";
-type Company = {
-  id: string;
-  name: string;
-};
 
 type Job = {
   id: string;
@@ -32,25 +33,30 @@ type Job = {
   employment_type: string;
   job_type: string;
   apply_through: string;
-  company: Company;
+  company: { id: string; name: string };
+  companyId: string;
+  lastDate: string | null;
 };
-export default function page() {
+
+export default function JobDetailPage() {
   const [job, setJob] = useState<Job | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isAppModal, setIsAppModal] = useState<boolean>(false);
-  const [applicants, setApplicants] = useState<user[]>([]);
-  const [isApplied, setIsApplied] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+  const [isAppModal, setIsAppModal] = useState(false);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
+  const [applicants, setApplicants] = useState<ApplicantRecord[]>([]);
+  const [isApplied, setIsApplied] = useState(false);
   const { id } = useParams();
-  const { user } = useContext(UserContext);
+  const { user, company } = useContext(UserContext);
+
   useEffect(() => {
     async function fetchJob() {
       setLoading(true);
       try {
         const res = await fetch(`/api/job/${id}`);
         if (!res.ok) throw new Error("Job not found");
-
-        const data = await res.json();
-        setJob(data);
+        const json = await res.json();
+        setJob(json.data ?? json);
       } catch (err) {
         console.error("Failed to load job:", err);
       } finally {
@@ -59,131 +65,173 @@ export default function page() {
     }
     fetchJob();
   }, [id]);
-useEffect(() => {
-  async function fetchaplicants() {
-    if (!job || !user) return;
-    try {
-      const res = await fetch(`/api/applicants/${job.id}`);
-      const data = await res.json();
-      setApplicants(data.data);
 
-      if (
-        Array.isArray(data.data) &&
-        data.data.find((item: user) => item.id === user.id)
-      ) {
-        setIsApplied(true);
-      } else {
-        setIsApplied(false);
+  useEffect(() => {
+    async function fetchApplicationState() {
+      if (!job || !user) return;
+      const isOwner = company?.id === job.companyId;
+
+      if (isOwner) {
+        try {
+          const res = await fetch(`/api/applicants/${job.id}`);
+          const data = await res.json();
+          if (data.success) setApplicants(data.data ?? []);
+        } catch (err) {
+          console.error("Failed to load applicants:", err);
+        }
+        return;
       }
-    } catch (err) {
-      console.error("Failed to load applicants:", err);
-    } finally {
-      setIsAppModal(false);
+
+      try {
+        const res = await fetch(`/api/applications/check/${job.id}`);
+        const data = await res.json();
+        if (data.success) setIsApplied(Boolean(data.applied));
+      } catch (err) {
+        console.error("Failed to check application:", err);
+      }
     }
+    fetchApplicationState();
+  }, [job, user, company]);
+
+  function handleStatusChange(applicationId: string, status: string) {
+    setApplicants((prev) =>
+      prev.map((a) => (a.id === applicationId ? { ...a, status } : a))
+    );
   }
 
-  fetchaplicants();
-}, [job, user]); // <-- include user here
+  if (loading) return <Loading />;
+  if (!job) return <Text color="red">Job not found.</Text>;
 
-  if (loading) {
-    return <Loading/>;
-  }
-
-  if (!job) {
-    return <Text color="red">Job not found.</Text>;
-  }
+  const isOwner = company?.id === job.companyId;
+  const isCandidate = user && !isOwner;
+  const isExpired = job.lastDate ? new Date() > new Date(job.lastDate) : false;
 
   return (
     <Box className="max-w-4xl mx-auto p-6 space-y-6">
       <Flex align="center" justify="between" wrap="wrap" className="gap-4">
         <Box>
-          <Heading size="6" className="mb-1">
-            {job.title}
-          </Heading>
+          <Heading size="6" className="mb-1">{job.title}</Heading>
           <Text size="3" color="gray">
             {job.location} • {job.job_type} • {job.employment_type}
           </Text>
         </Box>
-        <Flex justify="start" gap="4" wrap="wrap">
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              setIsAppModal(true);
-            }}
-            size="3"
-            variant="outline"
-            className="border-blue-600"
-          >
-            Total Applicants
-          </Button>
-          {!isApplied ? (
-            <JobApplyBtn
-              job={job}
-              isApplied={isApplied}
-              setIsApplied={setIsApplied}
-            />
-          ) : (
-            <WithdrawlBtn
-              job={job}
-              isApplied={isApplied}
-              setIsApplied={setIsApplied}
-            />
+        <Flex gap="2" wrap="wrap" align="center">
+          {isOwner && (
+            <Button
+              onClick={() => setIsAppModal(true)}
+              size="3"
+              variant="outline"
+              color="indigo"
+            >
+              <Users size={16} />
+              Applicants ({applicants.length})
+            </Button>
+          )}
+          {isCandidate && (
+            <>
+              <Button
+                onClick={() => setIsMatchModalOpen(true)}
+                size="3"
+                variant="soft"
+                color="purple"
+              >
+                <TrendingUp size={16} /> AI Match
+              </Button>
+              <Button
+                onClick={() => setIsAiModalOpen(true)}
+                size="3"
+                variant="soft"
+                color="indigo"
+              >
+                <Sparkles size={16} /> AI Cover Letter
+              </Button>
+            </>
+          )}
+          {isCandidate && (
+            isExpired ? (
+              !isApplied ? (
+                <Button size="3" variant="solid" color="gray" disabled>
+                  Deadline Passed
+                </Button>
+              ) : (
+                <WithdrawalBtn job={job} isApplied={isApplied} setIsApplied={setIsApplied} />
+              )
+            ) : (
+              !isApplied ? (
+                <JobApplyBtn job={job} isApplied={isApplied} setIsApplied={setIsApplied} />
+              ) : (
+                <WithdrawalBtn job={job} isApplied={isApplied} setIsApplied={setIsApplied} />
+              )
+            )
           )}
         </Flex>
       </Flex>
 
-      <Separator size={"4"} />
-
-      <Card size="2" className="bg-gray-100 dark:bg-gray-900">
-        <Flex align="center" gap="4">
-          <Avatar
-            fallback={job.company.name.charAt(0).toUpperCase()}
-            size="4"
-            radius="full"
-            src=""
-          />
-          <Box>
-            <Text size="4" weight="medium">
-              {job.company.name}
+      {isCandidate && (
+        <Card className="p-4 bg-indigo-500/5 border border-indigo-500/20">
+          <Flex align="center" gap="2">
+            <Sparkles size={16} className="text-indigo-500" />
+            <Text size="2" className="text-text-muted">
+              Use <strong>AI Match</strong> to see how well your profile fits this role, then generate a tailored cover letter.
             </Text>
-          </Box>
+          </Flex>
+        </Card>
+      )}
+
+      <Separator size="4" />
+
+      <Card size="2" className="bg-card-bg border border-card-border">
+        <Flex align="center" gap="4">
+          <Avatar fallback={job.company.name.charAt(0).toUpperCase()} size="4" radius="full" />
+          <Text size="4" weight="medium">{job.company.name}</Text>
         </Flex>
       </Card>
 
       <Box>
-        <Heading size="4" mb="2">
-          Job Description
-        </Heading>
-        <Text as="p" size="3" color="gray">
-          {job.description}
-        </Text>
+        <Heading size="4" mb="2">Job Description</Heading>
+        <Text as="p" size="3" color="gray" className="whitespace-pre-line">{job.description}</Text>
       </Box>
 
       <Box>
-        <Heading size="4" mb="2">
-          Details
-        </Heading>
+        <Heading size="4" mb="2">Details</Heading>
         <Flex direction="column" gap="2">
-          <Text>
-            <strong>Salary:</strong> ₹{job.salary}
-          </Text>
-          <Text>
-            <strong>Employment Type:</strong> {job.employment_type}
-          </Text>
-          <Text>
-            <strong>Job Type:</strong> {job.job_type}
-          </Text>
-          <Text>
-            <strong>Location:</strong> {job.location}
-          </Text>
+          <Text><strong>Salary:</strong> ₹{job.salary.toLocaleString()}</Text>
+          <Text><strong>Employment Type:</strong> {job.employment_type}</Text>
+          <Text><strong>Job Type:</strong> {job.job_type}</Text>
+          <Text><strong>Location:</strong> {job.location}</Text>
+          <Flex align="center" gap="2">
+            <strong>Apply via:</strong>
+            <Badge variant="soft">{job.apply_through}</Badge>
+          </Flex>
+          {job.lastDate && (
+            <Text>
+              <strong>Application Deadline:</strong>{" "}
+              <span className={isExpired ? "text-red-500 font-semibold" : "text-indigo-600 dark:text-indigo-400 font-semibold"}>
+                {new Date(job.lastDate).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+                {isExpired && " (Passed)"}
+              </span>
+            </Text>
+          )}
         </Flex>
       </Box>
+
       {isAppModal && (
         <AppliedUserList
           isAppModal={isAppModal}
           setIsAppModal={setIsAppModal}
           applicants={applicants}
+          onStatusChange={handleStatusChange}
         />
+      )}
+      {isAiModalOpen && (
+        <AICoverLetterModal job={job} isOpen={isAiModalOpen} setIsOpen={setIsAiModalOpen} />
+      )}
+      {isMatchModalOpen && (
+        <AIJobMatchModal job={job} isOpen={isMatchModalOpen} setIsOpen={setIsMatchModalOpen} />
       )}
     </Box>
   );

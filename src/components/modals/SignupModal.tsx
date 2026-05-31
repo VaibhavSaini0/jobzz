@@ -9,7 +9,9 @@ import {
   Text,
   Select,
 } from "@radix-ui/themes";
-import { UserContext } from "@/app/(group)/layout";
+import { UserContext } from "@/context/UserContext";
+import { useToast } from "@/context/ToastContext";
+import { ROLES } from "@/lib/roles";
 
 export default function SignupModal({
   signUpOpen,
@@ -23,32 +25,32 @@ export default function SignupModal({
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState<string>(ROLES.CANDIDATE);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const {setUser} = useContext(UserContext)
-  async function handleSubmit(e: any) {
+  const { setUser } = useContext(UserContext);
+  const { toast } = useToast();
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
 
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
-        body: JSON.stringify({ name,email, password,role }),
+        body: JSON.stringify({ name, email, password, role }),
         headers: { "Content-Type": "application/json" },
       });
 
       const data = await res.json();
       if (data.success) {
-        setUser(data.user)
-        setMessage("Login successful!");
+        setUser(data.user);
+        toast("Signup successful!", "success");
         setSignUpOpen(false);
       } else {
-        setMessage(data.message || "Invalid credentials.");
+        toast(data.message || "Signup failed.", "error");
       }
-    } catch (err) {
-      setMessage("Something went wrong.");
+    } catch {
+      toast("Something went wrong.", "error");
     } finally {
       setLoading(false);
     }
@@ -57,25 +59,28 @@ export default function SignupModal({
   return (
     <Dialog.Root open={signUpOpen} onOpenChange={setSignUpOpen}>
       <Dialog.Content maxWidth="450px">
-        <Dialog.Title>Signup</Dialog.Title>
+        <Dialog.Title>Create your account</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Enter your credentials below
+          Join Jobzz as a candidate or employer
         </Dialog.Description>
         <Flex direction="column" gap="3">
           <label>
             <Text>Name</Text>
             <TextField.Root
-              placeholder="Name"
+              placeholder="Your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </label>
           <label>
             <Text>Email</Text>
             <TextField.Root
-            value={email}
-              placeholder="xyz@gmail.com"
+              type="email"
+              value={email}
+              placeholder="you@example.com"
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </label>
           <label>
@@ -83,74 +88,27 @@ export default function SignupModal({
             <TextField.Root
               type="password"
               value={password}
-              placeholder="password"
+              placeholder="Min. 6 characters"
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </label>
           <label>
-            <Flex gap="6">
-
-            <Text>Role</Text>
-            <Select.Root  value={role} onValueChange={setRole}>
-              <Select.Trigger style={{width:"180px"}} />
-              <Select.Content >
-                <Select.Item value="user">User</Select.Item>
-                <Select.Item value="admin">Admin</Select.Item>
-              </Select.Content>
-            </Select.Root>
+            <Flex gap="6" align="center">
+              <Text>I am a</Text>
+              <Select.Root value={role} onValueChange={setRole}>
+                <Select.Trigger style={{ width: "180px" }} />
+                <Select.Content>
+                  <Select.Item value={ROLES.CANDIDATE}>Job Seeker</Select.Item>
+                  <Select.Item value={ROLES.EMPLOYER}>Employer</Select.Item>
+                </Select.Content>
+              </Select.Root>
             </Flex>
           </label>
         </Flex>
-        <Flex mt="2" justify="end" style={{padding:"10px 0px"}} position={"relative"} align={"center"} gap="8">
-        {message && <Text style={{margin:"30px",position:"absolute",
-            top:"-15px",
-            left:"0"
-        }} color="red">{message}</Text>}
-          <Button onClick={handleSubmit}>
-            {!loading ? (
-              "Signup"
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="18" cy="12" r="0" fill="currentColor">
-                  <animate
-                    attributeName="r"
-                    begin=".67"
-                    calcMode="spline"
-                    dur="1.5s"
-                    keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-                    repeatCount="indefinite"
-                    values="0;2;0;0"
-                  ></animate>
-                </circle>
-                <circle cx="12" cy="12" r="0" fill="currentColor">
-                  <animate
-                    attributeName="r"
-                    begin=".33"
-                    calcMode="spline"
-                    dur="1.5s"
-                    keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-                    repeatCount="indefinite"
-                    values="0;2;0;0"
-                  ></animate>
-                </circle>
-                <circle cx="6" cy="12" r="0" fill="currentColor">
-                  <animate
-                    attributeName="r"
-                    begin="0"
-                    calcMode="spline"
-                    dur="1.5s"
-                    keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-                    repeatCount="indefinite"
-                    values="0;2;0;0"
-                  ></animate>
-                </circle>
-              </svg>
-            )}
+        <Flex mt="4" justify="end" gap="3">
+          <Button onClick={handleSubmit} disabled={loading}>
+            {loading ? "Creating..." : "Sign up"}
           </Button>
         </Flex>
         <Text
@@ -159,9 +117,9 @@ export default function SignupModal({
             setSignUpOpen(false);
             setOpen(true);
           }}
-          className="cursor-pointer hover:underline"
+          className="cursor-pointer hover:underline mt-3 block"
         >
-          Already have an account?
+          Already have an account? Log in
         </Text>
       </Dialog.Content>
     </Dialog.Root>
