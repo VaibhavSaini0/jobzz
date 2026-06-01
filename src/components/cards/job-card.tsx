@@ -1,5 +1,4 @@
 "use client";
-//@ts-nocheck
 import {
   Avatar,
   Box,
@@ -7,11 +6,10 @@ import {
   Text,
   Button,
   Badge,
-  ThickChevronRightIcon,
 } from "@radix-ui/themes";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Briefcase, MapPin, Building } from "lucide-react";
+import { Briefcase, MapPin, Building, ChevronRight } from "lucide-react";
 
 export default function Jobcard({
   job,
@@ -87,7 +85,7 @@ export default function Jobcard({
             <Link href={`/jobs/${job.id}`}>
               <Flex gap="1" align="center">
                 <span>Details</span>
-                <ThickChevronRightIcon />
+                <ChevronRight size={16} />
               </Flex>
             </Link>
           </Button>

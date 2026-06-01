@@ -63,7 +63,6 @@ export default function UserServices() {
                   : "U"
               }
               radius="full"
-              src="https://pbs.twimg.com/profile_images/1337055608613253126/.png"
             />{" "}
           </button>
         </Popover.Trigger>
@@ -83,7 +82,6 @@ export default function UserServices() {
               size="3"
               fallback={user?.name?.charAt(0).toUpperCase() || "U"}
               radius="full"
-              src="https://pbs.twimg.com/profile_images/1337055608613253126/.png"
             />
             <Box>
               <Heading size="3" as="h3" color="blue">
@@ -134,7 +132,7 @@ export default function UserServices() {
                   </Link>
                 )}
 
-                <Link href={"#"}>
+                <Link href={"/profile"}>
                   <Flex
                     className="hover:border-1 px-3 py-1.5 hover:border-gray-500 rounded-md"
                     justify="between"

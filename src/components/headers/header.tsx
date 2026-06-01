@@ -69,7 +69,7 @@ export default function Header() {
               </Link>
             ))}
 
-            {user && (
+            {user && !isEmployer(user.role) && (
               <Link href="/applied-jobs">
                 <Text
                   size="2"
@@ -139,16 +139,18 @@ export default function Header() {
               </Link>
             ))}
 
-            <Link href="/applied-jobs" className="w-[80%] py-1 px-2  flex justify-center">
-              <Text
-                onClick={()=>setIsMenuOpen(false)}
-                size="2"
-                color="gray"
-                className="block hover:text-indigo-500 transition cursor-pointer"
-              >
-                Applied Jobs
-              </Text>
-            </Link>
+            {user && !isEmployer(user.role) && (
+              <Link href="/applied-jobs" className="w-[80%] py-1 px-2  flex justify-center">
+                <Text
+                  onClick={()=>setIsMenuOpen(false)}
+                  size="2"
+                  color="gray"
+                  className="block hover:text-indigo-500 transition cursor-pointer"
+                >
+                  Applied Jobs
+                </Text>
+              </Link>
+            )}
 
             {isEmployer(user?.role) && (
               company ? (

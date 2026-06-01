@@ -2,12 +2,22 @@
 
 import JobCard from "@/components/cards/job-card";
 import CardLoading from "@/components/lodingstate/CardLoading";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState, useContext } from "react";
 import { job } from "../../generated/prisma";
+import { UserContext } from "@/context/UserContext";
 
 export default function SearchPageContent() {
   const searchparams = useSearchParams();
+  const router = useRouter();
+  const { user } = useContext(UserContext);
+  
+  useEffect(() => {
+    if (user && user.role === "admin") {
+      router.push("/profile");
+    }
+  }, [user, router]);
+
   const q = searchparams.get("q") || "";
   const et = searchparams.get("et") || "";
   const jt = searchparams.get("jt") || "";

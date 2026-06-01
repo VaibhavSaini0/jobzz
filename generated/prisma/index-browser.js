@@ -118,14 +118,23 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   password: 'password',
-  role: 'role'
+  role: 'role',
+  companyId: 'companyId'
 };
 
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  ownerId: 'ownerId'
+  ownerId: 'ownerId',
+  website: 'website',
+  location: 'location',
+  logoUrl: 'logoUrl',
+  industry: 'industry',
+  companySize: 'companySize',
+  founded: 'founded',
+  phone: 'phone',
+  email: 'email'
 };
 
 exports.Prisma.JobScalarFieldEnum = {

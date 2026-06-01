@@ -109,7 +109,7 @@ export default function Footer() {
             <Text weight="bold" size="3" className="text-foreground tracking-wide uppercase text-xs opacity-80">
               Companies
             </Text>
-            <RadixLink id="footer-link-post-job" href="/profile" size="2" color="indigo" className="hover:text-indigo-500 hover:translate-x-1 transition-all duration-200 w-fit">
+            <RadixLink id="footer-link-post-job" href="/add-job" size="2" color="indigo" className="hover:text-indigo-500 hover:translate-x-1 transition-all duration-200 w-fit">
               Post a Position
             </RadixLink>
             <RadixLink id="footer-link-recruiter-settings" href="/profile" size="2" color="indigo" className="hover:text-indigo-500 hover:translate-x-1 transition-all duration-200 w-fit">

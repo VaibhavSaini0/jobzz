@@ -23,6 +23,8 @@ model user {
   review       review[]
   applied_jobs Applications[]
   Resume       Resume?
+  companyId    String?        @db.ObjectId
+  company      company?       @relation("CompanyEmployers", fields: [companyId], references: [id])
 }
 
 model company {
@@ -30,8 +32,17 @@ model company {
   name        String
   description String
   ownerId     String   @unique
+  website     String?
+  location    String?
+  logoUrl     String?
+  industry    String?
+  companySize String?
+  founded     String?
+  phone       String?
+  email       String?
   jobs        job[]
   review      review[]
+  employers   user[]   @relation("CompanyEmployers")
 }
 
 model job {

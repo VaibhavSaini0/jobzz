@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import prismaclient from "@/services/prisma";
 import HomePage from "@/components/home/HomePage";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { Checkcookie } from "@/HelperFun/Checkcookie";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Find Tech Jobs & Hire Developers",
@@ -29,6 +31,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  const user = await Checkcookie();
+  if (user && user.role === "admin") {
+    redirect("/profile");
+  }
+
   const [featuredJobs, jobCount, companyCount, userCount, applicationCount] =
     await Promise.all([
       prismaclient.job.findMany({

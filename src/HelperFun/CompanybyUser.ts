@@ -7,11 +7,20 @@ export  async function CompanybyUser(userId:string) {
     if(!token){
        return null;
     }
-    const company=await prismaclient.company.findUnique({
-        where:{
-            ownerId:userId
-        },
-    })     
-    if(!company)return null
-    else return company;
+    const user = await prismaclient.user.findUnique({
+        where: { id: userId },
+    });
+    if (!user) return null;
+
+    let company = null;
+    if (user.companyId) {
+        company = await prismaclient.company.findUnique({
+            where: { id: user.companyId },
+        });
+    } else {
+        company = await prismaclient.company.findUnique({
+            where: { ownerId: userId },
+        });
+    }
+    return company;
 }

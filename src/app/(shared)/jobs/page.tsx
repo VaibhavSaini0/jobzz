@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
+import { Checkcookie } from "@/HelperFun/Checkcookie";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Explore Developer & Tech Jobs",
@@ -18,6 +20,11 @@ export default async function Page({
 }: {
   searchParams: SearchParams;
 }) {
+  const user = await Checkcookie();
+  if (user && user.role === "admin") {
+    redirect("/profile");
+  }
+
   const params = await searchParams;
   const q = params.q?.trim() || "";
   const et = params.et?.trim() || "";

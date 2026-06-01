@@ -16,9 +16,23 @@ export async function GET(req: NextRequest) {
     return res;
   }
 
-  const company = await prismaclient.company.findUnique({
-    where: { ownerId: user.id },
-  });
+  let company = null;
+  if (user.companyId) {
+    company = await prismaclient.company.findUnique({
+      where: { id: user.companyId },
+    });
+  } else {
+    company = await prismaclient.company.findUnique({
+      where: { ownerId: user.id },
+    });
+    if (company) {
+      await prismaclient.user.update({
+        where: { id: user.id },
+        data: { companyId: company.id },
+      });
+      user.companyId = company.id;
+    }
+  }
 
   const res = NextResponse.json({ success: true, user, company });
   if (token) {

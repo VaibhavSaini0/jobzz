@@ -35,10 +35,13 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const company = await prismaclient.company.findUnique({
+    const company = await prismaclient.company.findFirst({
       where: {
         id: body.companyId,
-        ownerId: user.id,
+        OR: [
+          { ownerId: user.id },
+          { employers: { some: { id: user.id } } }
+        ]
       },
     });
 

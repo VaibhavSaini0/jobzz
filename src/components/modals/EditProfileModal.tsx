@@ -208,8 +208,8 @@ export default function EditProfileModal({
         }}
         className="backdrop-blur-md bg-card-bg/95 border border-card-border rounded-2xl shadow-xl"
       >
-        <Dialog.Title>
-          <Heading size="6" className="tracking-tight">Edit Your Profile</Heading>
+        <Dialog.Title size="5" className="tracking-tight text-foreground font-extrabold m-0">
+          Edit Your Profile
         </Dialog.Title>
         <Dialog.Description size="2" className="text-text-muted mb-3">
           Complete each section to maintain a standout candidate profile.

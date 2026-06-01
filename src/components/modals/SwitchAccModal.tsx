@@ -40,14 +40,19 @@ async function handleSwitch(id: string) {
     console.log(err);
   }
 }
- async function handleguest() {
-  const res=await fetch("/api/guest", { method: "GET" });
-  if(res){
-    setIsguest(true);
-    console.log("guest mode on")
-    setIsSwitchAcc(false)
-  }
- } 
+  async function handleguest() {
+    try {
+      const res = await fetch("/api/guest/add", { method: "GET" });
+      const data = await res.json();
+      if (data.success) {
+        setIsguest(true);
+        console.log("guest mode on");
+        setIsSwitchAcc(false);
+      }
+    } catch (err) {
+      console.error("Guest mode activation error:", err);
+    }
+  } 
   return (
 <Dialog.Root open={isSwitchAcc} onOpenChange={setIsSwitchAcc}>
   <Dialog.Content
@@ -120,9 +125,6 @@ async function handleSwitch(id: string) {
                   size="3"
                   fallback={userdata?.name?.charAt(0).toUpperCase() || "U"}
                   radius="full"
-                  src={
-                    "https://pbs.twimg.com/profile_images/1337055608613253126/.png"
-                  }
                 />
                 <Box>
                   <Heading size="3" as="h3" color="blue">

@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import { useContext, useState } from "react";
 import { Button, Dialog, TextField, Flex, Text } from "@radix-ui/themes";
@@ -9,7 +8,7 @@ export default function AddAccountModal()
  {
     const headerCtx = useContext(HeaderContext);
   if (!headerCtx) return null;
-  const { setIsAddAc, isAddAc,setSignUpOpen,setUsersData } = headerCtx;
+  const { setIsAddAc, isAddAc, setSignUpOpen, setUsersData, usersData } = headerCtx;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,7 +30,7 @@ export default function AddAccountModal()
       if (data.success) {
         
         setUser(data.user)
-setUsersData((prev) => [...(prev || []), data.user]);
+        setUsersData([...(usersData || []), data.user]);
         setTimeout(() => {
           setIsAddAc(false); // Close after short delay
         }, 800);

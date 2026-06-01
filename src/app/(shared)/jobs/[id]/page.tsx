@@ -15,7 +15,7 @@ import {
   Avatar,
   Badge,
 } from "@radix-ui/themes";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { Sparkles, TrendingUp, Users } from "lucide-react";
 import WithdrawalBtn from "@/components/WithdrawalBtn";
@@ -47,7 +47,17 @@ export default function JobDetailPage() {
   const [applicants, setApplicants] = useState<ApplicantRecord[]>([]);
   const [isApplied, setIsApplied] = useState(false);
   const { id } = useParams();
+  const router = useRouter();
   const { user, company } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!loading && job && user && user.role === "admin") {
+      const isOwner = company?.id === job.companyId;
+      if (!isOwner) {
+        router.push("/profile");
+      }
+    }
+  }, [loading, job, user, company, router]);
 
   useEffect(() => {
     async function fetchJob() {

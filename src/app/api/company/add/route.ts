@@ -42,6 +42,11 @@ export async function POST(res: NextRequest) {
       },
     });
 
+    await prismaclient.user.update({
+      where: { id: user.id },
+      data: { companyId: company.id },
+    });
+
     return NextResponse.json({
       success: true,
       message: "Company created successfully",

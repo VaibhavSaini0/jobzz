@@ -1333,11 +1333,13 @@ export namespace Prisma {
   export type CompanyCountOutputType = {
     jobs: number
     review: number
+    employers: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     jobs?: boolean | CompanyCountOutputTypeCountJobsArgs
     review?: boolean | CompanyCountOutputTypeCountReviewArgs
+    employers?: boolean | CompanyCountOutputTypeCountEmployersArgs
   }
 
   // Custom InputTypes
@@ -1363,6 +1365,13 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: reviewWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountEmployersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: userWhereInput
   }
 
 
@@ -1448,6 +1457,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     role: string | null
+    companyId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1456,6 +1466,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     role: string | null
+    companyId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1464,6 +1475,7 @@ export namespace Prisma {
     email: number
     password: number
     role: number
+    companyId: number
     _all: number
   }
 
@@ -1474,6 +1486,7 @@ export namespace Prisma {
     email?: true
     password?: true
     role?: true
+    companyId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1482,6 +1495,7 @@ export namespace Prisma {
     email?: true
     password?: true
     role?: true
+    companyId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1490,6 +1504,7 @@ export namespace Prisma {
     email?: true
     password?: true
     role?: true
+    companyId?: true
     _all?: true
   }
 
@@ -1571,6 +1586,7 @@ export namespace Prisma {
     email: string
     password: string
     role: string
+    companyId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1596,9 +1612,11 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     role?: boolean
+    companyId?: boolean
     review?: boolean | user$reviewArgs<ExtArgs>
     applied_jobs?: boolean | user$applied_jobsArgs<ExtArgs>
     Resume?: boolean | user$ResumeArgs<ExtArgs>
+    company?: boolean | user$companyArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1610,13 +1628,15 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     role?: boolean
+    companyId?: boolean
   }
 
-  export type userOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role", ExtArgs["result"]["user"]>
+  export type userOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "companyId", ExtArgs["result"]["user"]>
   export type userInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     review?: boolean | user$reviewArgs<ExtArgs>
     applied_jobs?: boolean | user$applied_jobsArgs<ExtArgs>
     Resume?: boolean | user$ResumeArgs<ExtArgs>
+    company?: boolean | user$companyArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1626,6 +1646,7 @@ export namespace Prisma {
       review: Prisma.$reviewPayload<ExtArgs>[]
       applied_jobs: Prisma.$ApplicationsPayload<ExtArgs>[]
       Resume: Prisma.$ResumePayload<ExtArgs> | null
+      company: Prisma.$companyPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1633,6 +1654,7 @@ export namespace Prisma {
       email: string
       password: string
       role: string
+      companyId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1999,6 +2021,7 @@ export namespace Prisma {
     review<T extends user$reviewArgs<ExtArgs> = {}>(args?: Subset<T, user$reviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$reviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     applied_jobs<T extends user$applied_jobsArgs<ExtArgs> = {}>(args?: Subset<T, user$applied_jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Resume<T extends user$ResumeArgs<ExtArgs> = {}>(args?: Subset<T, user$ResumeArgs<ExtArgs>>): Prisma__ResumeClient<$Result.GetResult<Prisma.$ResumePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    company<T extends user$companyArgs<ExtArgs> = {}>(args?: Subset<T, user$companyArgs<ExtArgs>>): Prisma__companyClient<$Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2033,6 +2056,7 @@ export namespace Prisma {
     readonly email: FieldRef<"user", 'String'>
     readonly password: FieldRef<"user", 'String'>
     readonly role: FieldRef<"user", 'String'>
+    readonly companyId: FieldRef<"user", 'String'>
   }
     
 
@@ -2470,6 +2494,25 @@ export namespace Prisma {
   }
 
   /**
+   * user.company
+   */
+  export type user$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the company
+     */
+    select?: companySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the company
+     */
+    omit?: companyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: companyInclude<ExtArgs> | null
+    where?: companyWhereInput
+  }
+
+  /**
    * user without action
    */
   export type userDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2503,6 +2546,14 @@ export namespace Prisma {
     name: string | null
     description: string | null
     ownerId: string | null
+    website: string | null
+    location: string | null
+    logoUrl: string | null
+    industry: string | null
+    companySize: string | null
+    founded: string | null
+    phone: string | null
+    email: string | null
   }
 
   export type CompanyMaxAggregateOutputType = {
@@ -2510,6 +2561,14 @@ export namespace Prisma {
     name: string | null
     description: string | null
     ownerId: string | null
+    website: string | null
+    location: string | null
+    logoUrl: string | null
+    industry: string | null
+    companySize: string | null
+    founded: string | null
+    phone: string | null
+    email: string | null
   }
 
   export type CompanyCountAggregateOutputType = {
@@ -2517,6 +2576,14 @@ export namespace Prisma {
     name: number
     description: number
     ownerId: number
+    website: number
+    location: number
+    logoUrl: number
+    industry: number
+    companySize: number
+    founded: number
+    phone: number
+    email: number
     _all: number
   }
 
@@ -2526,6 +2593,14 @@ export namespace Prisma {
     name?: true
     description?: true
     ownerId?: true
+    website?: true
+    location?: true
+    logoUrl?: true
+    industry?: true
+    companySize?: true
+    founded?: true
+    phone?: true
+    email?: true
   }
 
   export type CompanyMaxAggregateInputType = {
@@ -2533,6 +2608,14 @@ export namespace Prisma {
     name?: true
     description?: true
     ownerId?: true
+    website?: true
+    location?: true
+    logoUrl?: true
+    industry?: true
+    companySize?: true
+    founded?: true
+    phone?: true
+    email?: true
   }
 
   export type CompanyCountAggregateInputType = {
@@ -2540,6 +2623,14 @@ export namespace Prisma {
     name?: true
     description?: true
     ownerId?: true
+    website?: true
+    location?: true
+    logoUrl?: true
+    industry?: true
+    companySize?: true
+    founded?: true
+    phone?: true
+    email?: true
     _all?: true
   }
 
@@ -2620,6 +2711,14 @@ export namespace Prisma {
     name: string
     description: string
     ownerId: string
+    website: string | null
+    location: string | null
+    logoUrl: string | null
+    industry: string | null
+    companySize: string | null
+    founded: string | null
+    phone: string | null
+    email: string | null
     _count: CompanyCountAggregateOutputType | null
     _min: CompanyMinAggregateOutputType | null
     _max: CompanyMaxAggregateOutputType | null
@@ -2644,8 +2743,17 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     ownerId?: boolean
+    website?: boolean
+    location?: boolean
+    logoUrl?: boolean
+    industry?: boolean
+    companySize?: boolean
+    founded?: boolean
+    phone?: boolean
+    email?: boolean
     jobs?: boolean | company$jobsArgs<ExtArgs>
     review?: boolean | company$reviewArgs<ExtArgs>
+    employers?: boolean | company$employersArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -2656,12 +2764,21 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     ownerId?: boolean
+    website?: boolean
+    location?: boolean
+    logoUrl?: boolean
+    industry?: boolean
+    companySize?: boolean
+    founded?: boolean
+    phone?: boolean
+    email?: boolean
   }
 
-  export type companyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "ownerId", ExtArgs["result"]["company"]>
+  export type companyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "ownerId" | "website" | "location" | "logoUrl" | "industry" | "companySize" | "founded" | "phone" | "email", ExtArgs["result"]["company"]>
   export type companyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     jobs?: boolean | company$jobsArgs<ExtArgs>
     review?: boolean | company$reviewArgs<ExtArgs>
+    employers?: boolean | company$employersArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2670,12 +2787,21 @@ export namespace Prisma {
     objects: {
       jobs: Prisma.$jobPayload<ExtArgs>[]
       review: Prisma.$reviewPayload<ExtArgs>[]
+      employers: Prisma.$userPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       description: string
       ownerId: string
+      website: string | null
+      location: string | null
+      logoUrl: string | null
+      industry: string | null
+      companySize: string | null
+      founded: string | null
+      phone: string | null
+      email: string | null
     }, ExtArgs["result"]["company"]>
     composites: {}
   }
@@ -3041,6 +3167,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     jobs<T extends company$jobsArgs<ExtArgs> = {}>(args?: Subset<T, company$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$jobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     review<T extends company$reviewArgs<ExtArgs> = {}>(args?: Subset<T, company$reviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$reviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    employers<T extends company$employersArgs<ExtArgs> = {}>(args?: Subset<T, company$employersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$userPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3074,6 +3201,14 @@ export namespace Prisma {
     readonly name: FieldRef<"company", 'String'>
     readonly description: FieldRef<"company", 'String'>
     readonly ownerId: FieldRef<"company", 'String'>
+    readonly website: FieldRef<"company", 'String'>
+    readonly location: FieldRef<"company", 'String'>
+    readonly logoUrl: FieldRef<"company", 'String'>
+    readonly industry: FieldRef<"company", 'String'>
+    readonly companySize: FieldRef<"company", 'String'>
+    readonly founded: FieldRef<"company", 'String'>
+    readonly phone: FieldRef<"company", 'String'>
+    readonly email: FieldRef<"company", 'String'>
   }
     
 
@@ -3489,6 +3624,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+  }
+
+  /**
+   * company.employers
+   */
+  export type company$employersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user
+     */
+    omit?: userOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userInclude<ExtArgs> | null
+    where?: userWhereInput
+    orderBy?: userOrderByWithRelationInput | userOrderByWithRelationInput[]
+    cursor?: userWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -7731,7 +7890,8 @@ export namespace Prisma {
     name: 'name',
     email: 'email',
     password: 'password',
-    role: 'role'
+    role: 'role',
+    companyId: 'companyId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -7741,7 +7901,15 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
-    ownerId: 'ownerId'
+    ownerId: 'ownerId',
+    website: 'website',
+    location: 'location',
+    logoUrl: 'logoUrl',
+    industry: 'industry',
+    companySize: 'companySize',
+    founded: 'founded',
+    phone: 'phone',
+    email: 'email'
   };
 
   export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -7897,9 +8065,11 @@ export namespace Prisma {
     email?: StringFilter<"user"> | string
     password?: StringFilter<"user"> | string
     role?: StringFilter<"user"> | string
+    companyId?: StringNullableFilter<"user"> | string | null
     review?: ReviewListRelationFilter
     applied_jobs?: ApplicationsListRelationFilter
     Resume?: XOR<ResumeNullableScalarRelationFilter, ResumeWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, companyWhereInput> | null
   }
 
   export type userOrderByWithRelationInput = {
@@ -7908,9 +8078,11 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
     review?: reviewOrderByRelationAggregateInput
     applied_jobs?: ApplicationsOrderByRelationAggregateInput
     Resume?: ResumeOrderByWithRelationInput
+    company?: companyOrderByWithRelationInput
   }
 
   export type userWhereUniqueInput = Prisma.AtLeast<{
@@ -7922,9 +8094,11 @@ export namespace Prisma {
     name?: StringFilter<"user"> | string
     password?: StringFilter<"user"> | string
     role?: StringFilter<"user"> | string
+    companyId?: StringNullableFilter<"user"> | string | null
     review?: ReviewListRelationFilter
     applied_jobs?: ApplicationsListRelationFilter
     Resume?: XOR<ResumeNullableScalarRelationFilter, ResumeWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, companyWhereInput> | null
   }, "id" | "email">
 
   export type userOrderByWithAggregationInput = {
@@ -7933,6 +8107,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
     _count?: userCountOrderByAggregateInput
     _max?: userMaxOrderByAggregateInput
     _min?: userMinOrderByAggregateInput
@@ -7947,6 +8122,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"user"> | string
     password?: StringWithAggregatesFilter<"user"> | string
     role?: StringWithAggregatesFilter<"user"> | string
+    companyId?: StringNullableWithAggregatesFilter<"user"> | string | null
   }
 
   export type companyWhereInput = {
@@ -7957,8 +8133,17 @@ export namespace Prisma {
     name?: StringFilter<"company"> | string
     description?: StringFilter<"company"> | string
     ownerId?: StringFilter<"company"> | string
+    website?: StringNullableFilter<"company"> | string | null
+    location?: StringNullableFilter<"company"> | string | null
+    logoUrl?: StringNullableFilter<"company"> | string | null
+    industry?: StringNullableFilter<"company"> | string | null
+    companySize?: StringNullableFilter<"company"> | string | null
+    founded?: StringNullableFilter<"company"> | string | null
+    phone?: StringNullableFilter<"company"> | string | null
+    email?: StringNullableFilter<"company"> | string | null
     jobs?: JobListRelationFilter
     review?: ReviewListRelationFilter
+    employers?: UserListRelationFilter
   }
 
   export type companyOrderByWithRelationInput = {
@@ -7966,8 +8151,17 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    logoUrl?: SortOrder
+    industry?: SortOrder
+    companySize?: SortOrder
+    founded?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
     jobs?: jobOrderByRelationAggregateInput
     review?: reviewOrderByRelationAggregateInput
+    employers?: userOrderByRelationAggregateInput
   }
 
   export type companyWhereUniqueInput = Prisma.AtLeast<{
@@ -7978,8 +8172,17 @@ export namespace Prisma {
     NOT?: companyWhereInput | companyWhereInput[]
     name?: StringFilter<"company"> | string
     description?: StringFilter<"company"> | string
+    website?: StringNullableFilter<"company"> | string | null
+    location?: StringNullableFilter<"company"> | string | null
+    logoUrl?: StringNullableFilter<"company"> | string | null
+    industry?: StringNullableFilter<"company"> | string | null
+    companySize?: StringNullableFilter<"company"> | string | null
+    founded?: StringNullableFilter<"company"> | string | null
+    phone?: StringNullableFilter<"company"> | string | null
+    email?: StringNullableFilter<"company"> | string | null
     jobs?: JobListRelationFilter
     review?: ReviewListRelationFilter
+    employers?: UserListRelationFilter
   }, "id" | "ownerId">
 
   export type companyOrderByWithAggregationInput = {
@@ -7987,6 +8190,14 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    logoUrl?: SortOrder
+    industry?: SortOrder
+    companySize?: SortOrder
+    founded?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
     _count?: companyCountOrderByAggregateInput
     _max?: companyMaxOrderByAggregateInput
     _min?: companyMinOrderByAggregateInput
@@ -8000,6 +8211,14 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"company"> | string
     description?: StringWithAggregatesFilter<"company"> | string
     ownerId?: StringWithAggregatesFilter<"company"> | string
+    website?: StringNullableWithAggregatesFilter<"company"> | string | null
+    location?: StringNullableWithAggregatesFilter<"company"> | string | null
+    logoUrl?: StringNullableWithAggregatesFilter<"company"> | string | null
+    industry?: StringNullableWithAggregatesFilter<"company"> | string | null
+    companySize?: StringNullableWithAggregatesFilter<"company"> | string | null
+    founded?: StringNullableWithAggregatesFilter<"company"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"company"> | string | null
+    email?: StringNullableWithAggregatesFilter<"company"> | string | null
   }
 
   export type jobWhereInput = {
@@ -8333,6 +8552,7 @@ export namespace Prisma {
     review?: reviewCreateNestedManyWithoutUserInput
     applied_jobs?: ApplicationsCreateNestedManyWithoutUserInput
     Resume?: ResumeCreateNestedOneWithoutUserInput
+    company?: companyCreateNestedOneWithoutEmployersInput
   }
 
   export type userUncheckedCreateInput = {
@@ -8341,6 +8561,7 @@ export namespace Prisma {
     email: string
     password: string
     role: string
+    companyId?: string | null
     review?: reviewUncheckedCreateNestedManyWithoutUserInput
     applied_jobs?: ApplicationsUncheckedCreateNestedManyWithoutUserInput
     Resume?: ResumeUncheckedCreateNestedOneWithoutUserInput
@@ -8354,6 +8575,7 @@ export namespace Prisma {
     review?: reviewUpdateManyWithoutUserNestedInput
     applied_jobs?: ApplicationsUpdateManyWithoutUserNestedInput
     Resume?: ResumeUpdateOneWithoutUserNestedInput
+    company?: companyUpdateOneWithoutEmployersNestedInput
   }
 
   export type userUncheckedUpdateInput = {
@@ -8361,6 +8583,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     review?: reviewUncheckedUpdateManyWithoutUserNestedInput
     applied_jobs?: ApplicationsUncheckedUpdateManyWithoutUserNestedInput
     Resume?: ResumeUncheckedUpdateOneWithoutUserNestedInput
@@ -8372,6 +8595,7 @@ export namespace Prisma {
     email: string
     password: string
     role: string
+    companyId?: string | null
   }
 
   export type userUpdateManyMutationInput = {
@@ -8386,6 +8610,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type companyCreateInput = {
@@ -8393,8 +8618,17 @@ export namespace Prisma {
     name: string
     description: string
     ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
     jobs?: jobCreateNestedManyWithoutCompanyInput
     review?: reviewCreateNestedManyWithoutCompanyInput
+    employers?: userCreateNestedManyWithoutCompanyInput
   }
 
   export type companyUncheckedCreateInput = {
@@ -8402,24 +8636,51 @@ export namespace Prisma {
     name: string
     description: string
     ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
     jobs?: jobUncheckedCreateNestedManyWithoutCompanyInput
     review?: reviewUncheckedCreateNestedManyWithoutCompanyInput
+    employers?: userUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type companyUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     jobs?: jobUpdateManyWithoutCompanyNestedInput
     review?: reviewUpdateManyWithoutCompanyNestedInput
+    employers?: userUpdateManyWithoutCompanyNestedInput
   }
 
   export type companyUncheckedUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     jobs?: jobUncheckedUpdateManyWithoutCompanyNestedInput
     review?: reviewUncheckedUpdateManyWithoutCompanyNestedInput
+    employers?: userUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type companyCreateManyInput = {
@@ -8427,18 +8688,42 @@ export namespace Prisma {
     name: string
     description: string
     ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
   }
 
   export type companyUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type companyUncheckedUpdateManyInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type jobCreateInput = {
@@ -8784,6 +9069,22 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    isSet?: boolean
+  }
+
   export type ReviewListRelationFilter = {
     every?: reviewWhereInput
     some?: reviewWhereInput
@@ -8801,6 +9102,11 @@ export namespace Prisma {
     isNot?: ResumeWhereInput | null
   }
 
+  export type CompanyNullableScalarRelationFilter = {
+    is?: companyWhereInput | null
+    isNot?: companyWhereInput | null
+  }
+
   export type reviewOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -8815,6 +9121,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
   }
 
   export type userMaxOrderByAggregateInput = {
@@ -8823,6 +9130,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
   }
 
   export type userMinOrderByAggregateInput = {
@@ -8831,6 +9139,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8851,13 +9160,42 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
   export type JobListRelationFilter = {
     every?: jobWhereInput
     some?: jobWhereInput
     none?: jobWhereInput
   }
 
+  export type UserListRelationFilter = {
+    every?: userWhereInput
+    some?: userWhereInput
+    none?: userWhereInput
+  }
+
   export type jobOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type userOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -8866,6 +9204,14 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    logoUrl?: SortOrder
+    industry?: SortOrder
+    companySize?: SortOrder
+    founded?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
   }
 
   export type companyMaxOrderByAggregateInput = {
@@ -8873,6 +9219,14 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    logoUrl?: SortOrder
+    industry?: SortOrder
+    companySize?: SortOrder
+    founded?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
   }
 
   export type companyMinOrderByAggregateInput = {
@@ -8880,6 +9234,14 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    logoUrl?: SortOrder
+    industry?: SortOrder
+    companySize?: SortOrder
+    founded?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -9014,22 +9376,6 @@ export namespace Prisma {
     companyId?: SortOrder
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-    isSet?: boolean
-  }
-
   export type JobScalarRelationFilter = {
     is?: jobWhereInput
     isNot?: jobWhereInput
@@ -9069,25 +9415,6 @@ export namespace Prisma {
     statusNote?: SortOrder
     notes?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-    isSet?: boolean
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -9161,6 +9488,12 @@ export namespace Prisma {
     connect?: ResumeWhereUniqueInput
   }
 
+  export type companyCreateNestedOneWithoutEmployersInput = {
+    create?: XOR<companyCreateWithoutEmployersInput, companyUncheckedCreateWithoutEmployersInput>
+    connectOrCreate?: companyCreateOrConnectWithoutEmployersInput
+    connect?: companyWhereUniqueInput
+  }
+
   export type reviewUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<reviewCreateWithoutUserInput, reviewUncheckedCreateWithoutUserInput> | reviewCreateWithoutUserInput[] | reviewUncheckedCreateWithoutUserInput[]
     connectOrCreate?: reviewCreateOrConnectWithoutUserInput | reviewCreateOrConnectWithoutUserInput[]
@@ -9223,6 +9556,21 @@ export namespace Prisma {
     update?: XOR<XOR<ResumeUpdateToOneWithWhereWithoutUserInput, ResumeUpdateWithoutUserInput>, ResumeUncheckedUpdateWithoutUserInput>
   }
 
+  export type companyUpdateOneWithoutEmployersNestedInput = {
+    create?: XOR<companyCreateWithoutEmployersInput, companyUncheckedCreateWithoutEmployersInput>
+    connectOrCreate?: companyCreateOrConnectWithoutEmployersInput
+    upsert?: companyUpsertWithoutEmployersInput
+    disconnect?: boolean
+    delete?: companyWhereInput | boolean
+    connect?: companyWhereUniqueInput
+    update?: XOR<XOR<companyUpdateToOneWithWhereWithoutEmployersInput, companyUpdateWithoutEmployersInput>, companyUncheckedUpdateWithoutEmployersInput>
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+    unset?: boolean
+  }
+
   export type reviewUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<reviewCreateWithoutUserInput, reviewUncheckedCreateWithoutUserInput> | reviewCreateWithoutUserInput[] | reviewUncheckedCreateWithoutUserInput[]
     connectOrCreate?: reviewCreateOrConnectWithoutUserInput | reviewCreateOrConnectWithoutUserInput[]
@@ -9275,6 +9623,13 @@ export namespace Prisma {
     connect?: reviewWhereUniqueInput | reviewWhereUniqueInput[]
   }
 
+  export type userCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<userCreateWithoutCompanyInput, userUncheckedCreateWithoutCompanyInput> | userCreateWithoutCompanyInput[] | userUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: userCreateOrConnectWithoutCompanyInput | userCreateOrConnectWithoutCompanyInput[]
+    createMany?: userCreateManyCompanyInputEnvelope
+    connect?: userWhereUniqueInput | userWhereUniqueInput[]
+  }
+
   export type jobUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<jobCreateWithoutCompanyInput, jobUncheckedCreateWithoutCompanyInput> | jobCreateWithoutCompanyInput[] | jobUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: jobCreateOrConnectWithoutCompanyInput | jobCreateOrConnectWithoutCompanyInput[]
@@ -9287,6 +9642,13 @@ export namespace Prisma {
     connectOrCreate?: reviewCreateOrConnectWithoutCompanyInput | reviewCreateOrConnectWithoutCompanyInput[]
     createMany?: reviewCreateManyCompanyInputEnvelope
     connect?: reviewWhereUniqueInput | reviewWhereUniqueInput[]
+  }
+
+  export type userUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<userCreateWithoutCompanyInput, userUncheckedCreateWithoutCompanyInput> | userCreateWithoutCompanyInput[] | userUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: userCreateOrConnectWithoutCompanyInput | userCreateOrConnectWithoutCompanyInput[]
+    createMany?: userCreateManyCompanyInputEnvelope
+    connect?: userWhereUniqueInput | userWhereUniqueInput[]
   }
 
   export type jobUpdateManyWithoutCompanyNestedInput = {
@@ -9317,6 +9679,20 @@ export namespace Prisma {
     deleteMany?: reviewScalarWhereInput | reviewScalarWhereInput[]
   }
 
+  export type userUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<userCreateWithoutCompanyInput, userUncheckedCreateWithoutCompanyInput> | userCreateWithoutCompanyInput[] | userUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: userCreateOrConnectWithoutCompanyInput | userCreateOrConnectWithoutCompanyInput[]
+    upsert?: userUpsertWithWhereUniqueWithoutCompanyInput | userUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: userCreateManyCompanyInputEnvelope
+    set?: userWhereUniqueInput | userWhereUniqueInput[]
+    disconnect?: userWhereUniqueInput | userWhereUniqueInput[]
+    delete?: userWhereUniqueInput | userWhereUniqueInput[]
+    connect?: userWhereUniqueInput | userWhereUniqueInput[]
+    update?: userUpdateWithWhereUniqueWithoutCompanyInput | userUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: userUpdateManyWithWhereWithoutCompanyInput | userUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: userScalarWhereInput | userScalarWhereInput[]
+  }
+
   export type jobUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<jobCreateWithoutCompanyInput, jobUncheckedCreateWithoutCompanyInput> | jobCreateWithoutCompanyInput[] | jobUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: jobCreateOrConnectWithoutCompanyInput | jobCreateOrConnectWithoutCompanyInput[]
@@ -9343,6 +9719,20 @@ export namespace Prisma {
     update?: reviewUpdateWithWhereUniqueWithoutCompanyInput | reviewUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: reviewUpdateManyWithWhereWithoutCompanyInput | reviewUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: reviewScalarWhereInput | reviewScalarWhereInput[]
+  }
+
+  export type userUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<userCreateWithoutCompanyInput, userUncheckedCreateWithoutCompanyInput> | userCreateWithoutCompanyInput[] | userUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: userCreateOrConnectWithoutCompanyInput | userCreateOrConnectWithoutCompanyInput[]
+    upsert?: userUpsertWithWhereUniqueWithoutCompanyInput | userUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: userCreateManyCompanyInputEnvelope
+    set?: userWhereUniqueInput | userWhereUniqueInput[]
+    disconnect?: userWhereUniqueInput | userWhereUniqueInput[]
+    delete?: userWhereUniqueInput | userWhereUniqueInput[]
+    connect?: userWhereUniqueInput | userWhereUniqueInput[]
+    update?: userUpdateWithWhereUniqueWithoutCompanyInput | userUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: userUpdateManyWithWhereWithoutCompanyInput | userUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: userScalarWhereInput | userScalarWhereInput[]
   }
 
   export type companyCreateNestedOneWithoutJobsInput = {
@@ -9458,11 +9848,6 @@ export namespace Prisma {
     create?: XOR<ResumeCreateWithoutApplicationsInput, ResumeUncheckedCreateWithoutApplicationsInput>
     connectOrCreate?: ResumeCreateOrConnectWithoutApplicationsInput
     connect?: ResumeWhereUniqueInput
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-    unset?: boolean
   }
 
   export type userUpdateOneRequiredWithoutApplied_jobsNestedInput = {
@@ -9597,6 +9982,21 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    isSet?: boolean
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9623,6 +10023,36 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -9676,51 +10106,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-    isSet?: boolean
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-    isSet?: boolean
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-    isSet?: boolean
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
     isSet?: boolean
   }
 
@@ -9813,6 +10198,45 @@ export namespace Prisma {
   export type ResumeCreateOrConnectWithoutUserInput = {
     where: ResumeWhereUniqueInput
     create: XOR<ResumeCreateWithoutUserInput, ResumeUncheckedCreateWithoutUserInput>
+  }
+
+  export type companyCreateWithoutEmployersInput = {
+    id?: string
+    name: string
+    description: string
+    ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
+    jobs?: jobCreateNestedManyWithoutCompanyInput
+    review?: reviewCreateNestedManyWithoutCompanyInput
+  }
+
+  export type companyUncheckedCreateWithoutEmployersInput = {
+    id?: string
+    name: string
+    description: string
+    ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
+    jobs?: jobUncheckedCreateNestedManyWithoutCompanyInput
+    review?: reviewUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type companyCreateOrConnectWithoutEmployersInput = {
+    where: companyWhereUniqueInput
+    create: XOR<companyCreateWithoutEmployersInput, companyUncheckedCreateWithoutEmployersInput>
   }
 
   export type reviewUpsertWithWhereUniqueWithoutUserInput = {
@@ -9915,6 +10339,49 @@ export namespace Prisma {
     applications?: ApplicationsUncheckedUpdateManyWithoutResumeNestedInput
   }
 
+  export type companyUpsertWithoutEmployersInput = {
+    update: XOR<companyUpdateWithoutEmployersInput, companyUncheckedUpdateWithoutEmployersInput>
+    create: XOR<companyCreateWithoutEmployersInput, companyUncheckedCreateWithoutEmployersInput>
+    where?: companyWhereInput
+  }
+
+  export type companyUpdateToOneWithWhereWithoutEmployersInput = {
+    where?: companyWhereInput
+    data: XOR<companyUpdateWithoutEmployersInput, companyUncheckedUpdateWithoutEmployersInput>
+  }
+
+  export type companyUpdateWithoutEmployersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    jobs?: jobUpdateManyWithoutCompanyNestedInput
+    review?: reviewUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type companyUncheckedUpdateWithoutEmployersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    jobs?: jobUncheckedUpdateManyWithoutCompanyNestedInput
+    review?: reviewUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
   export type jobCreateWithoutCompanyInput = {
     id?: string
     title: string
@@ -9971,6 +10438,37 @@ export namespace Prisma {
     data: reviewCreateManyCompanyInput | reviewCreateManyCompanyInput[]
   }
 
+  export type userCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    role: string
+    review?: reviewCreateNestedManyWithoutUserInput
+    applied_jobs?: ApplicationsCreateNestedManyWithoutUserInput
+    Resume?: ResumeCreateNestedOneWithoutUserInput
+  }
+
+  export type userUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    role: string
+    review?: reviewUncheckedCreateNestedManyWithoutUserInput
+    applied_jobs?: ApplicationsUncheckedCreateNestedManyWithoutUserInput
+    Resume?: ResumeUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type userCreateOrConnectWithoutCompanyInput = {
+    where: userWhereUniqueInput
+    create: XOR<userCreateWithoutCompanyInput, userUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type userCreateManyCompanyInputEnvelope = {
+    data: userCreateManyCompanyInput | userCreateManyCompanyInput[]
+  }
+
   export type jobUpsertWithWhereUniqueWithoutCompanyInput = {
     where: jobWhereUniqueInput
     update: XOR<jobUpdateWithoutCompanyInput, jobUncheckedUpdateWithoutCompanyInput>
@@ -10019,12 +10517,49 @@ export namespace Prisma {
     data: XOR<reviewUpdateManyMutationInput, reviewUncheckedUpdateManyWithoutCompanyInput>
   }
 
+  export type userUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: userWhereUniqueInput
+    update: XOR<userUpdateWithoutCompanyInput, userUncheckedUpdateWithoutCompanyInput>
+    create: XOR<userCreateWithoutCompanyInput, userUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type userUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: userWhereUniqueInput
+    data: XOR<userUpdateWithoutCompanyInput, userUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type userUpdateManyWithWhereWithoutCompanyInput = {
+    where: userScalarWhereInput
+    data: XOR<userUpdateManyMutationInput, userUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type userScalarWhereInput = {
+    AND?: userScalarWhereInput | userScalarWhereInput[]
+    OR?: userScalarWhereInput[]
+    NOT?: userScalarWhereInput | userScalarWhereInput[]
+    id?: StringFilter<"user"> | string
+    name?: StringFilter<"user"> | string
+    email?: StringFilter<"user"> | string
+    password?: StringFilter<"user"> | string
+    role?: StringFilter<"user"> | string
+    companyId?: StringNullableFilter<"user"> | string | null
+  }
+
   export type companyCreateWithoutJobsInput = {
     id?: string
     name: string
     description: string
     ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
     review?: reviewCreateNestedManyWithoutCompanyInput
+    employers?: userCreateNestedManyWithoutCompanyInput
   }
 
   export type companyUncheckedCreateWithoutJobsInput = {
@@ -10032,7 +10567,16 @@ export namespace Prisma {
     name: string
     description: string
     ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
     review?: reviewUncheckedCreateNestedManyWithoutCompanyInput
+    employers?: userUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type companyCreateOrConnectWithoutJobsInput = {
@@ -10086,14 +10630,32 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     review?: reviewUpdateManyWithoutCompanyNestedInput
+    employers?: userUpdateManyWithoutCompanyNestedInput
   }
 
   export type companyUncheckedUpdateWithoutJobsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     review?: reviewUncheckedUpdateManyWithoutCompanyNestedInput
+    employers?: userUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ApplicationsUpsertWithWhereUniqueWithoutJobsInput = {
@@ -10120,6 +10682,7 @@ export namespace Prisma {
     role: string
     applied_jobs?: ApplicationsCreateNestedManyWithoutUserInput
     Resume?: ResumeCreateNestedOneWithoutUserInput
+    company?: companyCreateNestedOneWithoutEmployersInput
   }
 
   export type userUncheckedCreateWithoutReviewInput = {
@@ -10128,6 +10691,7 @@ export namespace Prisma {
     email: string
     password: string
     role: string
+    companyId?: string | null
     applied_jobs?: ApplicationsUncheckedCreateNestedManyWithoutUserInput
     Resume?: ResumeUncheckedCreateNestedOneWithoutUserInput
   }
@@ -10142,7 +10706,16 @@ export namespace Prisma {
     name: string
     description: string
     ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
     jobs?: jobCreateNestedManyWithoutCompanyInput
+    employers?: userCreateNestedManyWithoutCompanyInput
   }
 
   export type companyUncheckedCreateWithoutReviewInput = {
@@ -10150,7 +10723,16 @@ export namespace Prisma {
     name: string
     description: string
     ownerId: string
+    website?: string | null
+    location?: string | null
+    logoUrl?: string | null
+    industry?: string | null
+    companySize?: string | null
+    founded?: string | null
+    phone?: string | null
+    email?: string | null
     jobs?: jobUncheckedCreateNestedManyWithoutCompanyInput
+    employers?: userUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type companyCreateOrConnectWithoutReviewInput = {
@@ -10176,6 +10758,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     applied_jobs?: ApplicationsUpdateManyWithoutUserNestedInput
     Resume?: ResumeUpdateOneWithoutUserNestedInput
+    company?: companyUpdateOneWithoutEmployersNestedInput
   }
 
   export type userUncheckedUpdateWithoutReviewInput = {
@@ -10183,6 +10766,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     applied_jobs?: ApplicationsUncheckedUpdateManyWithoutUserNestedInput
     Resume?: ResumeUncheckedUpdateOneWithoutUserNestedInput
   }
@@ -10202,14 +10786,32 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     jobs?: jobUpdateManyWithoutCompanyNestedInput
+    employers?: userUpdateManyWithoutCompanyNestedInput
   }
 
   export type companyUncheckedUpdateWithoutReviewInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    founded?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     jobs?: jobUncheckedUpdateManyWithoutCompanyNestedInput
+    employers?: userUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type userCreateWithoutApplied_jobsInput = {
@@ -10220,6 +10822,7 @@ export namespace Prisma {
     role: string
     review?: reviewCreateNestedManyWithoutUserInput
     Resume?: ResumeCreateNestedOneWithoutUserInput
+    company?: companyCreateNestedOneWithoutEmployersInput
   }
 
   export type userUncheckedCreateWithoutApplied_jobsInput = {
@@ -10228,6 +10831,7 @@ export namespace Prisma {
     email: string
     password: string
     role: string
+    companyId?: string | null
     review?: reviewUncheckedCreateNestedManyWithoutUserInput
     Resume?: ResumeUncheckedCreateNestedOneWithoutUserInput
   }
@@ -10325,6 +10929,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     review?: reviewUpdateManyWithoutUserNestedInput
     Resume?: ResumeUpdateOneWithoutUserNestedInput
+    company?: companyUpdateOneWithoutEmployersNestedInput
   }
 
   export type userUncheckedUpdateWithoutApplied_jobsInput = {
@@ -10332,6 +10937,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     review?: reviewUncheckedUpdateManyWithoutUserNestedInput
     Resume?: ResumeUncheckedUpdateOneWithoutUserNestedInput
   }
@@ -10422,6 +11028,7 @@ export namespace Prisma {
     role: string
     review?: reviewCreateNestedManyWithoutUserInput
     applied_jobs?: ApplicationsCreateNestedManyWithoutUserInput
+    company?: companyCreateNestedOneWithoutEmployersInput
   }
 
   export type userUncheckedCreateWithoutResumeInput = {
@@ -10430,6 +11037,7 @@ export namespace Prisma {
     email: string
     password: string
     role: string
+    companyId?: string | null
     review?: reviewUncheckedCreateNestedManyWithoutUserInput
     applied_jobs?: ApplicationsUncheckedCreateNestedManyWithoutUserInput
   }
@@ -10488,6 +11096,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     review?: reviewUpdateManyWithoutUserNestedInput
     applied_jobs?: ApplicationsUpdateManyWithoutUserNestedInput
+    company?: companyUpdateOneWithoutEmployersNestedInput
   }
 
   export type userUncheckedUpdateWithoutResumeInput = {
@@ -10495,6 +11104,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     review?: reviewUncheckedUpdateManyWithoutUserNestedInput
     applied_jobs?: ApplicationsUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -10595,6 +11205,14 @@ export namespace Prisma {
     userId: string
   }
 
+  export type userCreateManyCompanyInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    role: string
+  }
+
   export type jobUpdateWithoutCompanyInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -10643,6 +11261,33 @@ export namespace Prisma {
   export type reviewUncheckedUpdateManyWithoutCompanyInput = {
     content?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type userUpdateWithoutCompanyInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    review?: reviewUpdateManyWithoutUserNestedInput
+    applied_jobs?: ApplicationsUpdateManyWithoutUserNestedInput
+    Resume?: ResumeUpdateOneWithoutUserNestedInput
+  }
+
+  export type userUncheckedUpdateWithoutCompanyInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    review?: reviewUncheckedUpdateManyWithoutUserNestedInput
+    applied_jobs?: ApplicationsUncheckedUpdateManyWithoutUserNestedInput
+    Resume?: ResumeUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type userUncheckedUpdateManyWithoutCompanyInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
   }
 
   export type ApplicationsCreateManyJobsInput = {

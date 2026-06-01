@@ -39,11 +39,11 @@ export type PlatformStats = {
 };
 
 const trendingTags = [
-  { label: "Remote", query: "Remote" },
-  { label: "React", query: "React" },
-  { label: "Full Stack", query: "Developer" },
-  { label: "Designer", query: "Designer" },
-  { label: "Hybrid", query: "Hybrid" },
+  { label: "Remote", key: "jt", value: "Remote" },
+  { label: "React", key: "q", value: "React" },
+  { label: "Full Stack", key: "q", value: "Developer" },
+  { label: "Designer", key: "q", value: "Designer" },
+  { label: "Hybrid", key: "jt", value: "Hybrid" },
 ];
 
 const containerVariants = {
@@ -113,7 +113,7 @@ export default function HomePage({
   ];
 
   return (
-    <main className="relative min-h-screen px-4 md:px-16 lg:px-24 py-10 md:py-14 space-y-20 md:space-y-28 overflow-hidden">
+    <main className="relative min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 space-y-20 md:space-y-28 overflow-hidden">
       <div className="absolute top-[-8%] left-[15%] w-[320px] h-[320px] rounded-full bg-indigo-500/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[15%] right-[-5%] w-[380px] h-[380px] rounded-full bg-purple-500/10 blur-[110px] pointer-events-none" />
 
@@ -192,7 +192,7 @@ export default function HomePage({
             <span>Popular searches:</span>
           </Flex>
           {trendingTags.map((tag) => (
-            <Link key={tag.label} href={`/jobs?q=${encodeURIComponent(tag.query)}`}>
+            <Link key={tag.label} href={`/jobs?${tag.key}=${encodeURIComponent(tag.value)}`}>
               <Badge size="2" color="indigo" variant="surface" className="cursor-pointer rounded-full hover:bg-indigo-soft/20">
                 {tag.label}
               </Badge>
@@ -313,14 +313,14 @@ export default function HomePage({
         <div className="text-center">
           <Heading as="h2" size="7">Why teams choose Jobzz</Heading>
         </div>
-        <Flex wrap="wrap" gap="5" justify="center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { icon: Rocket, title: "Fast applications", desc: "Apply with your saved profile and skip repetitive forms." },
             { icon: Zap, title: "AI cover letters", desc: "Generate job-specific cover letters powered by Gemini AI." },
             { icon: ShieldCheck, title: "Structured hiring", desc: "Employers manage listings and applicants from one dashboard." },
             { icon: HeartHandshake, title: "Modern UX", desc: "Clean search, filters, dark mode, and mobile-friendly design." },
           ].map(({ icon: Icon, title, desc }) => (
-            <motion.div key={title} variants={itemVariants} className="w-full sm:w-72">
+            <motion.div key={title} variants={itemVariants} className="h-full">
               <div className="h-full bg-card-bg border border-card-border p-6 rounded-2xl hover:border-indigo-500/30 transition-colors">
                 <div className="p-2.5 bg-indigo-soft/15 text-indigo-600 w-fit rounded-xl mb-3">
                   <Icon size={22} />
@@ -330,7 +330,7 @@ export default function HomePage({
               </div>
             </motion.div>
           ))}
-        </Flex>
+        </div>
       </motion.section>
 
       {/* Featured jobs from DB */}
