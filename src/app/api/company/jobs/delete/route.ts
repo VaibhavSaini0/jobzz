@@ -15,19 +15,19 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // const company = await prismaclient.company.findUnique({
-    //   where: {
-    //     id: job.companyId,
-    //     ownerId: user.id,
-    //   },
-    // });
+    const company = await prismaclient.company.findUnique({
+      where: {
+        id: job.companyId,
+        ownerId: user.id,
+      },
+    });
 
-    // if (!company) {
-    //   return NextResponse.json({
-    //     success: false,
-    //     message: "You do not own this job's company",
-    //   });
-    // }
+    if (!company) {
+      return NextResponse.json({
+        success: false,
+        message: "You do not own this job's company",
+      });
+    }
 
     const deleted = await prismaclient.job.delete({
       where: {

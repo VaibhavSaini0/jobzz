@@ -1,15 +1,9 @@
 "use client";
-import {
-  Button,
-  Dialog,
-  Flex,
-  Heading,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+
 import { Check } from "lucide-react";
 import BtnLoading from "./lodingstate/BtnLoading";
 import { useState } from "react";
+import { useToast } from "@/context/ToastContext";
 
 export default function WithdrawlBtn({
   job,
@@ -20,64 +14,78 @@ export default function WithdrawlBtn({
   setIsApplied: (value: boolean) => void;
 }) {
   const [isloading, setIsloading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { toast } = useToast();
 
   async function handleWithdrawl() {
     setIsloading(true);
     try {
-      const res = await fetch(`/api/job/withdrawal/${job?.id}`);
+      const res = await fetch(`/api/job/withdrawal/${job?.id}`, {
+        method: "POST",
+      });
       const data = await res.json();
       if (data.success) {
         setIsApplied(false);
-        alert("Withdrawal successful.");
+        toast("Withdrawal successful.", "success");
+        setIsOpen(false);
       } else {
-        alert(data.message || "Something went wrong");
+        toast(data.message || "Something went wrong", "error");
       }
     } catch (error) {
-      alert("Something went wrong");
+      toast("Something went wrong", "error");
     } finally {
       setIsloading(false);
     }
   }
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger>
-        <Button
-          className="flex justify-center items-center border-2"
-          color="green"
-          size={"3"}
-        >
-          {isloading ? (
-            <BtnLoading />
-          ) : (
-            <div className="flex gap-3 items-center">
-              Applied
-              <Check />
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="cursor-pointer flex items-center justify-center gap-2 border border-emerald-500/30 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md transition active:scale-[0.98]"
+      >
+        {isloading ? (
+          <BtnLoading />
+        ) : (
+          <>
+            Applied
+            <Check size={16} />
+          </>
+        )}
+      </button>
+
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
+            onClick={() => setIsOpen(false)}
+          />
+          {/* Content */}
+          <div className="relative w-full max-w-[450px] p-6 bg-card-bg border border-card-border shadow-2xl rounded-2xl animate-in fade-in zoom-in-95 duration-200 z-10 mx-4 text-left">
+            <h2 className="text-xl font-bold text-foreground">Withdraw Application</h2>
+            <p className="text-sm text-text-muted mt-2 mb-6">
+              Are you sure you want to withdraw your application for this position? This action cannot be undone.
+            </p>
+
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="cursor-pointer px-4 py-2 text-xs font-bold border border-card-border hover:bg-card-border/30 rounded-xl transition text-text-muted active:scale-[0.98]"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleWithdrawl}
+                disabled={isloading}
+                className="cursor-pointer px-4 py-2 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-md transition active:scale-[0.98]"
+              >
+                Withdrawal
+              </button>
             </div>
-          )}
-        </Button>
-      </Dialog.Trigger>
-
-      <Dialog.Content maxWidth="450px">
-        <Dialog.Title className="text-4xl">
-          <Text className="my-2 text-2xl">Withdrawl Application</Text>
-        </Dialog.Title>
-
-        <Dialog.Description size="2" mb="4" className="text-2xl">
-          Are you sure you want to Withdrawl the application
-        </Dialog.Description>
-
-        <Flex gap="7" mt="4" justify="center">
-          <Dialog.Close>
-            <Button size={"3"} variant="soft" color="gray">
-              Cancel
-            </Button>
-          </Dialog.Close>
-          <Dialog.Close>
-            <Button onClick={handleWithdrawl} color="red" size={"3"}>Withdrawal</Button>
-          </Dialog.Close>
-        </Flex>
-      </Dialog.Content>
-    </Dialog.Root>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

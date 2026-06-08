@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import { AUTH_COOKIE_OPTIONS } from "@/lib/auth-cookies";
 
 export async function DeleteAccfromSwitch(id: string) {
   const userCookie = await cookies();
@@ -17,40 +18,38 @@ export async function DeleteAccfromSwitch(id: string) {
   if (existingToken) {
     try {
       userdata = JSON.parse(existingToken);
-    } catch (e) {
-      console.warn("Failed to parse existing token payload");
+    } catch {
       return { success: false, message: "Invalid token format" };
     }
   }
 
   const filteredTokens: Record<string, string> = {};
   let i = 0;
-  for (const [key, token] of Object.entries(userdata)) {
+  for (const [, token] of Object.entries(userdata)) {
     try {
-      const decoded: any = jwt.verify(token, TokenKey);
+      const decoded = jwt.verify(token, TokenKey) as { id: string };
       if (decoded.id !== id) {
-        const newKey = `User_${i}`;
-        filteredTokens[newKey] = token;
+        filteredTokens[`User_${i}`] = token;
         i++;
       }
     } catch {
       continue;
     }
   }
-  userCookie.set("token", JSON.stringify(filteredTokens));
+
+  userCookie.set("token", JSON.stringify(filteredTokens), AUTH_COOKIE_OPTIONS);
+
   const active = userCookie.get("Active_User")?.value;
   if (active) {
     try {
-      const activeDecoded: any = jwt.verify(active, TokenKey);
+      const activeDecoded = jwt.verify(active, TokenKey) as { id: string };
       if (activeDecoded.id === id) {
         userCookie.delete("Active_User");
-
       }
-    } catch {}
+    } catch {
+      // ignore invalid active token
+    }
   }
 
-  return {
-    success: true,
-    message: "Account deleted from switch list",
-  };
+  return { success: true, message: "Account removed from switch list" };
 }

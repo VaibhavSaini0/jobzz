@@ -1,9 +1,8 @@
 "use client";
-import { UserContext } from '@/app/(group)/layout';
-import { Box, Flex, Heading, Separator, Text } from '@radix-ui/themes';
+
+import { UserContext } from '@/context/UserContext';
 import { useContext, useEffect, useState } from 'react';
 import CompanyJobCard from './cards/CompanyJobCard';
-import Loading from './lodingstate/Loading';
 import SectionLoader from './lodingstate/SectionLoader';
 
 export default function CompanyDetailTab() {
@@ -34,22 +33,24 @@ export default function CompanyDetailTab() {
                 fetchjobs();
             }
     }, [company]);
-if (isLoading) return <SectionLoader/>;
+
+    if (isLoading) return <SectionLoader/>;
+
     return (
         <div>
-            <Flex justify="between" align="start">
-                <Box pt={"20px"}>
-                    <Heading size="7">{company?.name}</Heading>
-                    <Text size="2" className="text-muted-foreground">{company?.description}</Text>
-                    <Heading size="6" mt={"20px"}>Job Opening</Heading>
-                    <Separator my="3" size="4" />
-                    <Flex direction={"column"} gap={"5"}>
+            <div className="flex justify-between items-start">
+                <div className="pt-[20px] w-full text-left">
+                    <h1 className="text-3xl font-extrabold text-foreground">{company?.name}</h1>
+                    <p className="text-sm text-text-muted mt-1 leading-relaxed">{company?.description}</p>
+                    <h2 className="text-xl font-bold text-foreground mt-[20px]">Job Opening</h2>
+                    <hr className="border-card-border my-3 w-full" />
+                    <div className="flex flex-col gap-5 mt-4">
                         {companyJobs.map((job, index) => (
                             <CompanyJobCard key={index} job={job}/>
                         ))}
-                    </Flex>
-                </Box>
-            </Flex>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

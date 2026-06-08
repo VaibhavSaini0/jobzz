@@ -1,30 +1,21 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Separator,
-  Text,
-  TextArea,
-} from "@radix-ui/themes";
 import React, { useContext, useEffect, useState } from "react";
 import { review, user } from "../../generated/prisma";
-import { UserContext } from "@/app/(group)/layout";
+import { UserContext } from "@/context/UserContext";
 import Loading from "./lodingstate/Loading";
+import { useToast } from "@/context/ToastContext";
 
-type ReviewWithUser = review & {
-  user: user;
-};
+type ReviewWithUser = review & { user: user };
 
 export default function Compreviews({
   companyId,
   isloading,
 }: {
-  companyId: any;
+  companyId: string;
   isloading: boolean;
 }) {
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState("");
   const { user } = useContext(UserContext);
+  const { toast } = useToast();
   const [companyReview, setCompanyReview] = useState<ReviewWithUser[]>([]);
 
   useEffect(() => {
@@ -32,23 +23,31 @@ export default function Compreviews({
       try {
         const res = await fetch(`/api/review/${companyId}`);
         const data = await res.json();
-        if (data.success) {
-          setCompanyReview(data.data);
-        }
+        if (data.success) setCompanyReview(data.data);
       } catch {
-        alert("Failed to fetch reviews.");
+        toast("Failed to fetch reviews.", "error");
       }
     }
-    fetchReviews();
-  }, [companyId]);
+    if (companyId) fetchReviews();
+  }, [companyId, toast]);
 
   async function handleclick(e: React.MouseEvent) {
     e.preventDefault();
 
+    if (!user) {
+      toast("Please log in to leave a review.", "error");
+      return;
+    }
+
+    if (!content.trim()) {
+      toast("Please write a review first.", "error");
+      return;
+    }
+
     try {
       const res = await fetch("/api/review/add", {
         method: "POST",
-        body: JSON.stringify({ content, userId: user.id, companyId }),
+        body: JSON.stringify({ content, companyId }),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -56,59 +55,58 @@ export default function Compreviews({
       if (data.success) {
         setCompanyReview([...companyReview, { ...data.data, user }]);
         setContent("");
+        toast("Review posted!", "success");
+      } else {
+        toast(data.message || "Could not post review.", "error");
       }
     } catch {
-      alert("Something went wrong.");
+      toast("Something went wrong.", "error");
     }
   }
 
   return (
-    <Box className="max-w-7xl mx-auto w-full flex flex-col items-end">
-      <Flex
-        direction="column"
-        gap="3"
-        mb="5"
-        align="end"
-        className="w-full sm:w-[70%] lg:w-[50%]"
-      >
-        <TextArea
+    <div className="max-w-7xl mx-auto w-full flex flex-col items-end">
+      <div className="w-full sm:w-[70%] lg:w-[50%] flex flex-col gap-3 mb-5 items-end">
+        <textarea
           placeholder="Leave a review..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full"
+          rows={3}
+          className="w-full px-3 py-2 bg-input-bg border border-card-border rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm resize-none"
         />
-        <Button variant="surface" onClick={handleclick}>
+        <button
+          onClick={handleclick}
+          disabled={!user}
+          className="cursor-pointer px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition active:scale-[0.98] disabled:opacity-50"
+        >
           Add Review
-        </Button>
-      </Flex>
-      <Separator size="4" className="mb-4" />
+        </button>
+      </div>
+      <hr className="border-card-border mb-4 w-full" />
 
       {isloading ? (
         <Loading />
       ) : companyReview?.length > 0 ? (
-        <div className="flex flex-col gap-4 w-full sm:w-[70%] lg:w-[50%]">
+        <div className="flex flex-col gap-4 w-full sm:w-[70%] lg:w-[50%] text-left">
           {companyReview.map((rev) => (
             <div
               key={rev.id}
-              className="relative bg-zinc-900 text-white rounded-2xl shadow-lg p-4 transition duration-300 hover:scale-[1.02] hover:shadow-xl cursor-pointer"
+              className="relative bg-card-bg border border-card-border rounded-2xl shadow-sm p-4"
             >
-              <Badge
-                color="green"
-                className="rounded-xl absolute top-[-10px] left-0 mb-2 block"
-              >
+              <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 mb-2">
                 {rev.user?.name ?? "Anonymous"}
-              </Badge>
-              <Text size="2" color="gray" className="leading-relaxed">
+              </span>
+              <p className="text-sm text-text-muted leading-relaxed">
                 {rev.content}
-              </Text>
+              </p>
             </div>
           ))}
         </div>
       ) : (
-        <Text size="2" color="gray">
+        <span className="text-sm text-text-muted w-full text-center py-4 block">
           No reviews yet.
-        </Text>
+        </span>
       )}
-    </Box>
+    </div>
   );
 }

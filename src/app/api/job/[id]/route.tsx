@@ -1,21 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import prismaclient from "@/services/prisma";
+import { serverError } from "@/lib/api-error";
 
-export async function GET(req: NextRequest, { params }: { params: any }) {
-  const {id} = await params;
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+
   try {
     const job = await prismaclient.job.findUnique({
       where: { id },
       include: { company: true },
     });
 
-    if (job) {
-      return NextResponse.json(job);
-    } else {
-      return new NextResponse("Job not found", { status: 404 });
+    if (!job) {
+      return NextResponse.json(
+        { success: false, message: "Job not found" },
+        { status: 404 }
+      );
     }
+
+    return NextResponse.json({ success: true, data: job });
   } catch (error) {
-    console.error(error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return serverError("Job fetch error:", error);
   }
 }

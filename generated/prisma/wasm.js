@@ -118,14 +118,23 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   password: 'password',
-  role: 'role'
+  role: 'role',
+  companyId: 'companyId'
 };
 
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  ownerId: 'ownerId'
+  ownerId: 'ownerId',
+  website: 'website',
+  location: 'location',
+  logoUrl: 'logoUrl',
+  industry: 'industry',
+  companySize: 'companySize',
+  founded: 'founded',
+  phone: 'phone',
+  email: 'email'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -137,7 +146,8 @@ exports.Prisma.JobScalarFieldEnum = {
   employment_type: 'employment_type',
   job_type: 'job_type',
   apply_through: 'apply_through',
-  companyId: 'companyId'
+  companyId: 'companyId',
+  lastDate: 'lastDate'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -151,19 +161,35 @@ exports.Prisma.ApplicationsScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
   job_id: 'job_id',
-  resumeId: 'resumeId'
+  resumeId: 'resumeId',
+  status: 'status',
+  appliedAt: 'appliedAt',
+  statusNote: 'statusNote',
+  notes: 'notes',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ResumeScalarFieldEnum = {
   id: 'id',
   title: 'title',
   summary: 'summary',
+  phone: 'phone',
+  location: 'location',
+  website: 'website',
   userId: 'userId',
-  applicationId: 'applicationId',
   educations: 'educations',
   experiences: 'experiences',
   skills: 'skills',
-  projects: 'projects'
+  projects: 'projects',
+  resumePdfUrl: 'resumePdfUrl',
+  resumePdfName: 'resumePdfName',
+  profileImageUrl: 'profileImageUrl'
+};
+
+exports.Prisma.StaticOptionScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  value: 'value'
 };
 
 exports.Prisma.SortOrder = {
@@ -183,7 +209,8 @@ exports.Prisma.ModelName = {
   job: 'job',
   review: 'review',
   Applications: 'Applications',
-  Resume: 'Resume'
+  Resume: 'Resume',
+  StaticOption: 'StaticOption'
 };
 
 /**

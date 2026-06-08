@@ -12,14 +12,18 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const company = await prismaclient.company.findUnique({
-      where: {
-        ownerId: user.id,
-      },
-      include: {
-        jobs: true,
-      },
-    });
+    let company = null;
+    if (user.companyId) {
+      company = await prismaclient.company.findUnique({
+        where: { id: user.companyId },
+        include: { jobs: true },
+      });
+    } else {
+      company = await prismaclient.company.findUnique({
+        where: { ownerId: user.id },
+        include: { jobs: true },
+      });
+    }
 
     if (!company) {
       return NextResponse.json({

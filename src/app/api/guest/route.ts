@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 export async function GET() {
-  const cookieStore =await cookies();
+  const cookieStore = await cookies();
   const guest = cookieStore.get("guest_user");
 
   if (guest?.value === "true") {
