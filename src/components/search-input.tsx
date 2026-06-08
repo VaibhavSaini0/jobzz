@@ -1,5 +1,5 @@
 "use client";
-import { Box, TextField } from "@radix-ui/themes";
+
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -57,24 +57,24 @@ export default function SearchInput() {
   }, []);
 
   return (
-    <Box
+    <div
       ref={wrapperRef}
       className="relative w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto"
     >
-      <TextField.Root
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        size="2"
-        placeholder="Search jobs..."
-        className="w-full"
-      >
-        <TextField.Slot>
-          <Search className="h-5 w-5" />
-        </TextField.Slot>
-      </TextField.Root>
+      <div className="relative flex items-center w-full">
+        <Search className="absolute left-3.5 h-5 w-5 text-text-muted pointer-events-none" />
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Search jobs..."
+          className="w-full pl-11 pr-4 py-2.5 bg-input-bg border border-card-border rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm sm:text-base shadow-sm"
+        />
+      </div>
 
       {input.trim() && suggestion.length > 0 && (
-        <Box className="absolute left-0 right-0 mt-2 z-50 bg-card-bg border border-card-border rounded-xl shadow-lg overflow-hidden transition-all">
+        <div className="absolute left-0 right-0 mt-2 z-50 bg-card-bg border border-card-border rounded-xl shadow-lg overflow-hidden transition-all">
           {suggestion.map((item, index) => (
             <p
               key={index}
@@ -88,8 +88,8 @@ export default function SearchInput() {
               {item.title}
             </p>
           ))}
-        </Box>
+        </div>
       )}
-    </Box>
+    </div>
   );
 }

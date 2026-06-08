@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  Box,
-  Flex,
-  Heading,
-  Separator,
-  Tabs,
-  Text,
-} from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { job, user, review, company } from "../../../../../../generated/prisma";
@@ -32,6 +24,7 @@ export default function Page() {
   const [company, setCompany] = useState<CompanyWithRelations | null>(null);
   const [companyJobs, setCompanyJobs] = useState<job[] | null>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<"about" | "jobopening" | "reviews">("about");
 
   useEffect(() => {
     async function fetchCompany() {
@@ -58,80 +51,94 @@ export default function Page() {
 
   if (isLoading) {
     return (
-      <Box p="5" className="min-h-screen flex items-center justify-center">
+      <div className="p-5 min-h-screen flex items-center justify-center">
         <Loading />
-      </Box>
+      </div>
     );
   }
 
   if (!company) {
     return (
-      <Box p="5" className="min-h-screen flex items-center justify-center">
-        <Text size="2" color="gray">
+      <div className="p-5 min-h-screen flex items-center justify-center">
+        <span className="text-sm text-text-muted">
           No company information available.
-        </Text>
-      </Box>
+        </span>
+      </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto w-full">
-      <Box p="5" className="min-h-screen">
-        <Flex justify="between" align="start">
-          <Box mr="5" className="w-full">
-            <Box mb="4">
-              <Heading size="7">{company?.name || "Company Name"}</Heading>
-              <Text size="2" color="gray">
+      <div className="p-5 min-h-screen">
+        <div className="flex justify-between items-start">
+          <div className="mr-5 w-full">
+            <div className="mb-6">
+              <h1 className="text-3xl font-extrabold text-foreground">{company?.name || "Company Name"}</h1>
+              <p className="text-sm text-text-muted mt-1 leading-relaxed">
                 {company?.description || "Company description goes here."}
-              </Text>
-            </Box>
+              </p>
+            </div>
 
-            <Tabs.Root defaultValue="about">
-              <Tabs.List size="2" mb="4">
-                <Tabs.Trigger value="about">About</Tabs.Trigger>
-                <Tabs.Trigger value="jobopening">Job Openings</Tabs.Trigger>
-                <Tabs.Trigger value="reviews">Reviews</Tabs.Trigger>
-              </Tabs.List>
+            <div className="mb-4 border-b border-card-border/60 flex gap-6 overflow-x-auto scrollbar-hidden">
+              {[
+                { id: "about", label: "About" },
+                { id: "jobopening", label: "Job Openings" },
+                { id: "reviews", label: "Reviews" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`cursor-pointer pb-3 text-sm font-bold border-b-2 transition-all duration-200 whitespace-nowrap active:scale-[0.98] ${
+                    activeTab === tab.id
+                      ? "border-indigo-500 text-indigo-500"
+                      : "border-transparent text-text-muted hover:text-foreground"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
-              <Box>
-                <Tabs.Content value="about">
-                  <AboutCompany company={company} isLoading={isLoading} />
-                </Tabs.Content>
+            <div className="mt-4">
+              {activeTab === "about" && (
+                <AboutCompany company={company} isLoading={isLoading} />
+              )}
 
-                <Tabs.Content value="jobopening">
+              {activeTab === "jobopening" && (
+                <div>
                   {!isLoading ? (
                     companyJobs && companyJobs.length > 0 ? (
-                      <Box>
-                        <Heading size="6" mb="3">
+                      <div>
+                        <h2 className="text-xl font-bold text-foreground mb-3">
                           Open Positions
-                        </Heading>
-                        <Separator size="4" mb="4" />
-                        <Flex direction="column" gap="4">
+                        </h2>
+                        <hr className="border-card-border mb-4" />
+                        <div className="flex flex-col gap-4">
                           {companyJobs?.map((job) => (
                             <UserEndComJob key={job.id} job={job} />
                           ))}
-                        </Flex>
-                      </Box>
+                        </div>
+                      </div>
                     ) : (
-                      <Box>
-                        <Heading size="6" mb="3">
+                      <div>
+                        <h2 className="text-xl font-bold text-foreground mb-3">
                           No Job Found
-                        </Heading>
-                      </Box>
+                        </h2>
+                      </div>
                     )
                   ) : (
                     <Loading />
                   )}
-                </Tabs.Content>
+                </div>
+              )}
 
-                <Tabs.Content value="reviews">
-                  <Compreviews companyId={company?.id} isloading={isLoading} />
-                </Tabs.Content>
-              </Box>
-            </Tabs.Root>
-          </Box>
-        </Flex>
-      </Box>
+              {activeTab === "reviews" && (
+                <Compreviews companyId={company?.id} isloading={isLoading} />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

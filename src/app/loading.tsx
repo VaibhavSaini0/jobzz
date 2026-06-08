@@ -1,6 +1,5 @@
 "use client";
 
-import { Box, Card, Flex, Text, Heading } from "@radix-ui/themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { Briefcase, Loader2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -30,7 +29,7 @@ export default function RootLoading() {
       <div className="absolute top-[20%] left-[25%] w-[350px] h-[350px] rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-[20%] right-[25%] w-[400px] h-[400px] rounded-full bg-purple-500/10 blur-[130px] pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
 
-      <Flex direction="column" align="center" gap="5" className="relative z-10 w-full max-w-sm px-6">
+      <div className="flex flex-col items-center gap-5 relative z-10 w-full max-w-sm px-6">
         
         {/* Animated Brand Pulse Container */}
         <motion.div
@@ -46,16 +45,16 @@ export default function RootLoading() {
         </motion.div>
 
         {/* Glassmorphic Loading Detail Box */}
-        <Card className="w-full p-6 border border-card-border/50 bg-card-bg/40 backdrop-blur-md shadow-2xl rounded-3xl relative overflow-hidden flex flex-col items-center text-center gap-4">
-          <Flex direction="column" align="center" gap="1">
-            <Heading size="6" weight="bold" className="text-foreground tracking-tight flex items-center gap-1.5 justify-center">
+        <div className="w-full p-6 border border-card-border/50 bg-card-bg/40 backdrop-blur-md shadow-2xl rounded-3xl relative overflow-hidden flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center gap-1">
+            <h1 className="text-2xl font-bold text-foreground tracking-tight flex items-center gap-1.5 justify-center">
               Jobzz
               <Sparkles size={16} className="text-indigo-500 animate-bounce" />
-            </Heading>
-            <Text size="1" className="text-text-muted tracking-widest uppercase font-semibold">
+            </h1>
+            <span className="text-xs text-text-muted tracking-widest uppercase font-semibold block">
               PREMIUM TECH PORTAL
-            </Text>
-          </Flex>
+            </span>
+          </div>
 
           {/* Core Infinite Progress Loader */}
           <div className="w-full h-1 bg-card-border rounded-full overflow-hidden relative mt-2">
@@ -83,9 +82,9 @@ export default function RootLoading() {
               </motion.span>
             </AnimatePresence>
           </div>
-        </Card>
+        </div>
 
-      </Flex>
+      </div>
     </div>
   );
 }

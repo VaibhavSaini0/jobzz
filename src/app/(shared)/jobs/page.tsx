@@ -2,7 +2,6 @@ import JobCard from "@/components/cards/job-card";
 import FilterSidebar from "@/components/filter-sidebar";
 import prismaclient from "@/services/prisma";
 import Link from "next/link";
-import { Button, Flex, Text } from "@radix-ui/themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 import { Checkcookie } from "@/HelperFun/Checkcookie";
@@ -114,35 +113,35 @@ export default async function Page({
           </div>
 
           {totalPages > 1 && (
-            <Flex justify="center" align="center" gap="4" mt="8" className="pt-6 border-t border-card-border/50">
+            <div className="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-card-border/50">
               {page > 1 ? (
-                <Link href={buildPageUrl(page - 1)}>
-                  <Button variant="outline" color="indigo" className="cursor-pointer flex items-center gap-1">
+                <Link href={buildPageUrl(page - 1)} className="inline-flex">
+                  <button className="inline-flex items-center gap-1 px-4 py-2 border border-indigo-500/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 rounded-xl text-sm font-semibold transition duration-200 cursor-pointer">
                     <ChevronLeft size={16} /> Previous
-                  </Button>
+                  </button>
                 </Link>
               ) : (
-                <Button variant="outline" color="gray" disabled className="flex items-center gap-1 opacity-50">
+                <button disabled className="inline-flex items-center gap-1 px-4 py-2 border border-card-border text-text-muted rounded-xl text-sm font-semibold opacity-50 cursor-not-allowed">
                   <ChevronLeft size={16} /> Previous
-                </Button>
+                </button>
               )}
 
-              <Text size="2" className="text-text-muted font-medium">
+              <span className="text-sm text-text-muted font-medium">
                 Page <span className="text-foreground font-semibold">{page}</span> of <span className="text-foreground font-semibold">{totalPages}</span>
-              </Text>
+              </span>
 
               {page < totalPages ? (
-                <Link href={buildPageUrl(page + 1)}>
-                  <Button variant="outline" color="indigo" className="cursor-pointer flex items-center gap-1">
+                <Link href={buildPageUrl(page + 1)} className="inline-flex">
+                  <button className="inline-flex items-center gap-1 px-4 py-2 border border-indigo-500/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 rounded-xl text-sm font-semibold transition duration-200 cursor-pointer">
                     Next <ChevronRight size={16} />
-                  </Button>
+                  </button>
                 </Link>
               ) : (
-                <Button variant="outline" color="gray" disabled className="flex items-center gap-1 opacity-50">
+                <button disabled className="inline-flex items-center gap-1 px-4 py-2 border border-card-border text-text-muted rounded-xl text-sm font-semibold opacity-50 cursor-not-allowed">
                   Next <ChevronRight size={16} />
-                </Button>
+                </button>
               )}
-            </Flex>
+            </div>
           )}
         </main>
       </div>

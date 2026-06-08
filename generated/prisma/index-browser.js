@@ -186,6 +186,12 @@ exports.Prisma.ResumeScalarFieldEnum = {
   profileImageUrl: 'profileImageUrl'
 };
 
+exports.Prisma.StaticOptionScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  value: 'value'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -203,7 +209,8 @@ exports.Prisma.ModelName = {
   job: 'job',
   review: 'review',
   Applications: 'Applications',
-  Resume: 'Resume'
+  Resume: 'Resume',
+  StaticOption: 'StaticOption'
 };
 
 /**

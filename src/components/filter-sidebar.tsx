@@ -1,5 +1,4 @@
 "use client";
-import { Button, RadioGroup, Text, Flex } from "@radix-ui/themes";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Filter, X } from "lucide-react";
@@ -23,7 +22,6 @@ export default function FilterSidebar() {
   }, [searchparams]);
 
   function handleclick() {
-    let url = `${pathname}?`;
     const params = new URLSearchParams();
     if (q) params.set("q", q);
     if (employmentType) params.set("et", employmentType);
@@ -45,11 +43,11 @@ export default function FilterSidebar() {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-6 bg-card-bg border border-card-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
-        <Flex justify="between" align="center" className="pb-3 border-b border-card-border/50">
-          <Flex align="center" gap="2">
+        <div className="flex justify-between items-center pb-3 border-b border-card-border/50">
+          <div className="flex items-center gap-2">
             <Filter size={18} className="text-indigo-600 dark:text-indigo-400" />
-            <Text className="font-bold text-foreground" size="4">Filters</Text>
-          </Flex>
+            <span className="font-bold text-foreground text-lg">Filters</span>
+          </div>
           {hasFilters && (
             <button
               onClick={handleClear}
@@ -58,78 +56,116 @@ export default function FilterSidebar() {
               <X size={12} /> Clear
             </button>
           )}
-        </Flex>
+        </div>
 
         <div className="space-y-6">
           <div className="space-y-3">
-            <Text className="font-bold text-foreground text-sm tracking-wide uppercase block" color="gray">
+            <span className="font-bold text-text-muted text-xs tracking-wide uppercase block">
               Job Type
-            </Text>
-            <RadioGroup.Root
-              value={jobType}
-              onValueChange={(val) => setJobType(val)}
-              className="space-y-2.5"
-            >
-              <Flex gap="2" align="center">
-                <RadioGroup.Item value="Remote" id="jt-remote" className="cursor-pointer" />
+            </span>
+            <div className="space-y-2.5">
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  name="jobType"
+                  value="Remote"
+                  id="jt-remote"
+                  checked={jobType === "Remote"}
+                  onChange={(e) => setJobType(e.target.value)}
+                  className="h-4 w-4 text-indigo-600 border-card-border bg-input-bg focus:ring-indigo-500 cursor-pointer accent-indigo-600 dark:accent-indigo-400"
+                />
                 <label htmlFor="jt-remote" className="text-sm text-foreground cursor-pointer font-medium hover:text-indigo-500 transition">
                   Remote
                 </label>
-              </Flex>
-              <Flex gap="2" align="center">
-                <RadioGroup.Item value="On-site" id="jt-onsite" className="cursor-pointer" />
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  name="jobType"
+                  value="On-site"
+                  id="jt-onsite"
+                  checked={jobType === "On-site"}
+                  onChange={(e) => setJobType(e.target.value)}
+                  className="h-4 w-4 text-indigo-600 border-card-border bg-input-bg focus:ring-indigo-500 cursor-pointer accent-indigo-600 dark:accent-indigo-400"
+                />
                 <label htmlFor="jt-onsite" className="text-sm text-foreground cursor-pointer font-medium hover:text-indigo-500 transition">
                   On-site
                 </label>
-              </Flex>
-              <Flex gap="2" align="center">
-                <RadioGroup.Item value="Hybrid" id="jt-hybrid" className="cursor-pointer" />
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  name="jobType"
+                  value="Hybrid"
+                  id="jt-hybrid"
+                  checked={jobType === "Hybrid"}
+                  onChange={(e) => setJobType(e.target.value)}
+                  className="h-4 w-4 text-indigo-600 border-card-border bg-input-bg focus:ring-indigo-500 cursor-pointer accent-indigo-600 dark:accent-indigo-400"
+                />
                 <label htmlFor="jt-hybrid" className="text-sm text-foreground cursor-pointer font-medium hover:text-indigo-500 transition">
                   Hybrid
                 </label>
-              </Flex>
-            </RadioGroup.Root>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-3">
-            <Text className="font-bold text-foreground text-sm tracking-wide uppercase block" color="gray">
+            <span className="font-bold text-text-muted text-xs tracking-wide uppercase block">
               Employment Type
-            </Text>
-            <RadioGroup.Root
-              value={employmentType}
-              onValueChange={(val) => setEmploymentType(val)}
-              className="space-y-2.5"
-            >
-              <Flex gap="2" align="center">
-                <RadioGroup.Item value="Full-Time" id="et-fulltime" className="cursor-pointer" />
+            </span>
+            <div className="space-y-2.5">
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  name="employmentType"
+                  value="Full-Time"
+                  id="et-fulltime"
+                  checked={employmentType === "Full-Time"}
+                  onChange={(e) => setEmploymentType(e.target.value)}
+                  className="h-4 w-4 text-indigo-600 border-card-border bg-input-bg focus:ring-indigo-500 cursor-pointer accent-indigo-600 dark:accent-indigo-400"
+                />
                 <label htmlFor="et-fulltime" className="text-sm text-foreground cursor-pointer font-medium hover:text-indigo-500 transition">
                   Full-Time
                 </label>
-              </Flex>
-              <Flex gap="2" align="center">
-                <RadioGroup.Item value="Part-Time" id="et-parttime" className="cursor-pointer" />
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  name="employmentType"
+                  value="Part-Time"
+                  id="et-parttime"
+                  checked={employmentType === "Part-Time"}
+                  onChange={(e) => setEmploymentType(e.target.value)}
+                  className="h-4 w-4 text-indigo-600 border-card-border bg-input-bg focus:ring-indigo-500 cursor-pointer accent-indigo-600 dark:accent-indigo-400"
+                />
                 <label htmlFor="et-parttime" className="text-sm text-foreground cursor-pointer font-medium hover:text-indigo-500 transition">
                   Part-Time
                 </label>
-              </Flex>
-              <Flex gap="2" align="center">
-                <RadioGroup.Item value="Contract" id="et-contract" className="cursor-pointer" />
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  name="employmentType"
+                  value="Contract"
+                  id="et-contract"
+                  checked={employmentType === "Contract"}
+                  onChange={(e) => setEmploymentType(e.target.value)}
+                  className="h-4 w-4 text-indigo-600 border-card-border bg-input-bg focus:ring-indigo-500 cursor-pointer accent-indigo-600 dark:accent-indigo-400"
+                />
                 <label htmlFor="et-contract" className="text-sm text-foreground cursor-pointer font-medium hover:text-indigo-500 transition">
                   Contract
                 </label>
-              </Flex>
-            </RadioGroup.Root>
+              </div>
+            </div>
           </div>
         </div>
 
-        <Button
+        <button
           onClick={handleclick}
-          size="3"
-          color="indigo"
-          className="w-full cursor-pointer hover:shadow-lg transition-all duration-300 font-semibold"
+          className="w-full py-3 bg-indigo-600 text-white rounded-xl cursor-pointer hover:bg-indigo-700 hover:shadow-lg transition-all duration-300 font-semibold active:scale-[0.98]"
         >
           Apply Filters
-        </Button>
+        </button>
       </div>
     </div>
   );

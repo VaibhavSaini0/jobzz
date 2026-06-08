@@ -1,5 +1,4 @@
 'use client';
-import { Theme } from "@radix-ui/themes";
 import { createContext, useEffect, useState } from "react";
 
 type ThemeContextType = {
@@ -38,13 +37,11 @@ export default function ThemeContext({
 
   return (
     <ThemeModeContext.Provider value={{ theme, toggleTheme }}>
-      <Theme appearance={theme}>
-        <div className={theme}>
-          <div className="bg-background text-foreground min-h-screen transition-colors duration-300">
-            {children}
-          </div>
+      <div className={theme}>
+        <div className="bg-background text-foreground min-h-screen transition-colors duration-300">
+          {children}
         </div>
-      </Theme>
+      </div>
     </ThemeModeContext.Provider>
   );
 }

@@ -1,17 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Dialog,
-  Button,
-  Flex,
-  Text,
-  Box,
-  Heading,
-  Separator,
-  Callout,
-} from "@radix-ui/themes";
-import { Sparkles, Copy, Check, Loader2, FileText, AlertCircle } from "lucide-react";
+import { Sparkles, Copy, Check, Loader2, FileText, AlertCircle, X } from "lucide-react";
 
 export default function AICoverLetterModal({
   job,
@@ -60,107 +50,113 @@ export default function AICoverLetterModal({
     }
   }
 
-  return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Content
-        maxWidth="600px"
-        style={{
-          borderRadius: "16px",
-          padding: "24px",
-          boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
-        }}
-      >
-        <Flex gap="3" align="center" className="mb-2">
-          <Box className="p-2 bg-blue-100 dark:bg-blue-950 rounded-lg text-blue-600 dark:text-blue-400">
-            <Sparkles size={24} />
-          </Box>
-          <Box>
-            <Dialog.Title className="m-0">AI Cover Letter Generator</Dialog.Title>
-            <Dialog.Description size="2">
-              Generate a tailored cover letter for **{job.title}** at **{job.company.name}**
-            </Dialog.Description>
-          </Box>
-        </Flex>
+  if (!isOpen) return null;
 
-        <Separator size="4" className="my-4" />
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
+        onClick={() => setIsOpen(false)}
+      />
+      {/* Content */}
+      <div
+        className="
+          relative
+          w-full
+          max-w-[600px]
+          p-6
+          bg-card-bg
+          border border-card-border/60
+          shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),_0_8px_10px_-6px_rgba(0,0,0,0.1)]
+          rounded-3xl
+          animate-in fade-in zoom-in-95 duration-200
+          z-10
+          mx-4
+          text-left
+          text-foreground
+        "
+      >
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex gap-3 items-center">
+            <div className="p-2 bg-indigo-500/10 rounded-xl text-indigo-500 shrink-0">
+              <Sparkles size={24} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold leading-tight m-0">AI Cover Letter Generator</h2>
+              <p className="text-sm text-text-muted mt-1">
+                Generate a tailored cover letter for <strong>{job.title}</strong> at <strong>{job.company.name}</strong>
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="cursor-pointer p-1.5 rounded-full hover:bg-card-border/40 transition-colors text-text-muted hover:text-foreground active:scale-95"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <hr className="border-card-border/50 my-4" />
 
         {/* Action / State Area */}
-        <Box className="min-h-[250px] flex flex-col justify-center">
+        <div className="min-h-[250px] flex flex-col justify-center">
           {!loading && !coverLetter && !error && (
-            <Flex direction="column" align="center" gap="4" py="6" className="text-center">
-              <FileText size={48} className="text-gray-400 animate-pulse" />
-              <Box maxWidth="400px">
-                <Text size="3" color="gray" as="p">
-                  Our Career AI will analyze your skills, experience, and the target job description to draft a high-impact cover letter.
-                </Text>
-              </Box>
-              <Button
-                size="3"
-                color="blue"
-                className="cursor-pointer"
+            <div className="flex flex-col items-center gap-4 py-6 text-center">
+              <FileText size={48} className="text-text-muted/60 animate-pulse" />
+              <p className="text-sm text-text-muted max-w-[400px] leading-relaxed">
+                Our Career AI will analyze your skills, experience, and the target job description to draft a high-impact cover letter.
+              </p>
+              <button
                 onClick={generateCoverLetter}
+                className="cursor-pointer inline-flex items-center gap-2 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md px-4 py-2.5 text-xs transition active:scale-[0.98]"
               >
                 <Sparkles size={16} /> Draft My Cover Letter
-              </Button>
-            </Flex>
+              </button>
+            </div>
           )}
 
           {loading && (
-            <Flex direction="column" align="center" gap="3" py="8">
-              <Loader2 size={40} className="animate-spin text-blue-600" />
-              <Text size="3" className="font-medium text-blue-600 animate-pulse">
+            <div className="flex flex-col items-center gap-3 py-8 text-center">
+              <Loader2 size={40} className="animate-spin text-indigo-600" />
+              <p className="text-sm font-semibold text-indigo-500 animate-pulse">
                 Analyzing resume and drafting cover letter...
-              </Text>
-            </Flex>
+              </p>
+            </div>
           )}
 
           {error && (
-            <Callout.Root color="red" role="alert" className="my-4">
-              <Callout.Icon>
-                <AlertCircle />
-              </Callout.Icon>
-              <Callout.Text>{error}</Callout.Text>
-            </Callout.Root>
+            <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-2xl text-xs flex items-center gap-2.5 my-4">
+              <AlertCircle size={16} className="shrink-0" />
+              <span>{error}</span>
+            </div>
           )}
 
           {coverLetter && (
-            <Box className="space-y-4">
+            <div className="space-y-4">
               {isDemo && (
-                <Callout.Root color="yellow" className="mb-3">
-                  <Callout.Icon>
-                    <AlertCircle />
-                  </Callout.Icon>
-                  <Callout.Text>
-                    <strong>Demo Mode Active:</strong> Add `GEMINI_API_KEY` to your `.env` file to experience real-time Gemini AI tailoring!
-                  </Callout.Text>
-                </Callout.Root>
+                <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 text-yellow-600 rounded-xl text-xs leading-relaxed">
+                  <strong>Demo Mode Active:</strong> Add `GEMINI_API_KEY` to your `.env` file to experience real-time Gemini AI tailoring!
+                </div>
               )}
 
-              <Box
-                style={{
-                  maxHeight: "350px",
-                  overflowY: "auto",
-                  padding: "16px",
-                  borderRadius: "12px",
-                  border: "1px solid var(--gray-5)",
-                  backgroundColor: "var(--gray-2)",
-                  fontFamily: "var(--font-sans)",
-                  whiteSpace: "pre-line",
-                }}
-                className="text-sm leading-relaxed text-gray-800 dark:text-gray-200"
-              >
+              <div className="max-h-[300px] overflow-y-auto p-4 rounded-xl border border-card-border/60 bg-input-bg text-sm leading-relaxed whitespace-pre-line text-foreground scrollbar-thin">
                 {coverLetter}
-              </Box>
+              </div>
 
-              <Flex justify="between" align="center">
-                <Button variant="outline" color="gray" onClick={() => setCoverLetter(null)}>
+              <div className="flex justify-between items-center pt-2">
+                <button
+                  onClick={() => setCoverLetter(null)}
+                  className="cursor-pointer px-4 py-2 text-xs font-bold border border-card-border hover:bg-card-border/30 rounded-xl transition text-text-muted active:scale-[0.98]"
+                >
                   Regenerate
-                </Button>
-                <Flex gap="3">
-                  <Button
-                    variant="soft"
-                    color={copied ? "green" : "blue"}
+                </button>
+                <div className="flex gap-2">
+                  <button
                     onClick={handleCopy}
+                    className={`cursor-pointer px-4 py-2 text-xs font-bold rounded-xl shadow-md transition active:scale-[0.98] flex items-center gap-1.5 ${
+                      copied ? "bg-emerald-600 text-white hover:bg-emerald-700" : "bg-indigo-600 text-white hover:bg-indigo-700"
+                    }`}
                   >
                     {copied ? (
                       <>
@@ -171,16 +167,19 @@ export default function AICoverLetterModal({
                         <Copy size={16} /> Copy to Clipboard
                       </>
                     )}
-                  </Button>
-                  <Dialog.Close>
-                    <Button color="blue">Done</Button>
-                  </Dialog.Close>
-                </Flex>
-              </Flex>
-            </Box>
+                  </button>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="cursor-pointer px-4 py-2 text-xs font-bold bg-card-border/50 hover:bg-card-border/70 border border-card-border rounded-xl transition text-text-muted active:scale-[0.98]"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
-        </Box>
-      </Dialog.Content>
-    </Dialog.Root>
+        </div>
+      </div>
+    </div>
   );
 }

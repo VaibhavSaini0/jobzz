@@ -4,17 +4,6 @@ import JobApplyBtn from "@/components/JobApplyBtn";
 import AppliedUserList, {
   type ApplicantRecord,
 } from "@/components/modals/AppliedUserList";
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Separator,
-  Button,
-  Card,
-  Avatar,
-  Badge,
-} from "@radix-ui/themes";
 import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { Sparkles, TrendingUp, Users } from "lucide-react";
@@ -110,59 +99,62 @@ export default function JobDetailPage() {
   }
 
   if (loading) return <Loading />;
-  if (!job) return <Text color="red">Job not found.</Text>;
+  if (!job) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <p className="text-red-500 font-semibold">Job not found.</p>
+      </div>
+    );
+  }
 
   const isOwner = company?.id === job.companyId;
   const isCandidate = user && !isOwner;
   const isExpired = job.lastDate ? new Date() > new Date(job.lastDate) : false;
 
   return (
-    <Box className="max-w-4xl mx-auto p-6 space-y-6">
-      <Flex align="center" justify="between" wrap="wrap" className="gap-4">
-        <Box>
-          <Heading size="6" className="mb-1">{job.title}</Heading>
-          <Text size="3" color="gray">
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-foreground mb-1 tracking-tight">{job.title}</h1>
+          <p className="text-sm text-text-muted">
             {job.location} • {job.job_type} • {job.employment_type}
-          </Text>
-        </Box>
-        <Flex gap="2" wrap="wrap" align="center">
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
           {isOwner && (
-            <Button
+            <button
               onClick={() => setIsAppModal(true)}
-              size="3"
-              variant="outline"
-              color="indigo"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/40 rounded-xl text-sm font-semibold transition duration-200"
             >
               <Users size={16} />
               Applicants ({applicants.length})
-            </Button>
+            </button>
           )}
           {isCandidate && (
             <>
-              <Button
+              <button
                 onClick={() => setIsMatchModalOpen(true)}
-                size="3"
-                variant="soft"
-                color="purple"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 rounded-xl text-sm font-semibold transition duration-200"
               >
                 <TrendingUp size={16} /> AI Match
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={() => setIsAiModalOpen(true)}
-                size="3"
-                variant="soft"
-                color="indigo"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-xl text-sm font-semibold transition duration-200"
               >
                 <Sparkles size={16} /> AI Cover Letter
-              </Button>
+              </button>
             </>
           )}
           {isCandidate && (
             isExpired ? (
               !isApplied ? (
-                <Button size="3" variant="solid" color="gray" disabled>
+                <button
+                  disabled
+                  className="px-4 py-2 bg-border-muted/50 text-text-muted rounded-xl text-sm font-semibold cursor-not-allowed"
+                >
                   Deadline Passed
-                </Button>
+                </button>
               ) : (
                 <WithdrawalBtn job={job} isApplied={isApplied} setIsApplied={setIsApplied} />
               )
@@ -174,47 +166,51 @@ export default function JobDetailPage() {
               )
             )
           )}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
 
       {isCandidate && (
-        <Card className="p-4 bg-indigo-500/5 border border-indigo-500/20">
-          <Flex align="center" gap="2">
-            <Sparkles size={16} className="text-indigo-500" />
-            <Text size="2" className="text-text-muted">
+        <div className="p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-2xl">
+          <div className="flex items-center gap-2">
+            <Sparkles size={16} className="text-indigo-500 shrink-0" />
+            <p className="text-sm text-text-muted">
               Use <strong>AI Match</strong> to see how well your profile fits this role, then generate a tailored cover letter.
-            </Text>
-          </Flex>
-        </Card>
+            </p>
+          </div>
+        </div>
       )}
 
-      <Separator size="4" />
+      <hr className="border-card-border/50" />
 
-      <Card size="2" className="bg-card-bg border border-card-border">
-        <Flex align="center" gap="4">
-          <Avatar fallback={job.company.name.charAt(0).toUpperCase()} size="4" radius="full" />
-          <Text size="4" weight="medium">{job.company.name}</Text>
-        </Flex>
-      </Card>
+      <div className="p-4 bg-card-bg border border-card-border rounded-2xl shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-500 text-lg border border-indigo-500/20 shrink-0">
+            {job.company.name.charAt(0).toUpperCase()}
+          </div>
+          <span className="text-lg font-semibold text-foreground">{job.company.name}</span>
+        </div>
+      </div>
 
-      <Box>
-        <Heading size="4" mb="2">Job Description</Heading>
-        <Text as="p" size="3" color="gray" className="whitespace-pre-line">{job.description}</Text>
-      </Box>
+      <div className="space-y-2">
+        <h2 className="text-xl font-bold text-foreground">Job Description</h2>
+        <p className="text-sm text-text-muted leading-relaxed whitespace-pre-line bg-card-bg/25 border border-card-border/40 p-5 rounded-2xl">{job.description}</p>
+      </div>
 
-      <Box>
-        <Heading size="4" mb="2">Details</Heading>
-        <Flex direction="column" gap="2">
-          <Text><strong>Salary:</strong> ₹{job.salary.toLocaleString()}</Text>
-          <Text><strong>Employment Type:</strong> {job.employment_type}</Text>
-          <Text><strong>Job Type:</strong> {job.job_type}</Text>
-          <Text><strong>Location:</strong> {job.location}</Text>
-          <Flex align="center" gap="2">
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-foreground">Details</h2>
+        <div className="flex flex-col gap-2.5 bg-card-bg/25 border border-card-border/40 p-5 rounded-2xl text-sm text-text-muted">
+          <p><strong>Salary:</strong> ₹{job.salary.toLocaleString()}</p>
+          <p><strong>Employment Type:</strong> {job.employment_type}</p>
+          <p><strong>Job Type:</strong> {job.job_type}</p>
+          <p><strong>Location:</strong> {job.location}</p>
+          <div className="flex items-center gap-2">
             <strong>Apply via:</strong>
-            <Badge variant="soft">{job.apply_through}</Badge>
-          </Flex>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
+              {job.apply_through}
+            </span>
+          </div>
           {job.lastDate && (
-            <Text>
+            <p>
               <strong>Application Deadline:</strong>{" "}
               <span className={isExpired ? "text-red-500 font-semibold" : "text-indigo-600 dark:text-indigo-400 font-semibold"}>
                 {new Date(job.lastDate).toLocaleDateString("en-US", {
@@ -224,10 +220,10 @@ export default function JobDetailPage() {
                 })}
                 {isExpired && " (Passed)"}
               </span>
-            </Text>
+            </p>
           )}
-        </Flex>
-      </Box>
+        </div>
+      </div>
 
       {isAppModal && (
         <AppliedUserList
@@ -243,6 +239,6 @@ export default function JobDetailPage() {
       {isMatchModalOpen && (
         <AIJobMatchModal job={job} isOpen={isMatchModalOpen} setIsOpen={setIsMatchModalOpen} />
       )}
-    </Box>
+    </div>
   );
 }

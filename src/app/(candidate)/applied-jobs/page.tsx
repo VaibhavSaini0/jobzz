@@ -2,23 +2,10 @@
 
 import { useEffect, useState, useMemo } from "react";
 import {
-  Flex,
-  Heading,
-  Text,
-  Card,
-  Button,
-  Box,
-  Dialog,
-  TextArea,
-  Badge,
-  Separator,
-} from "@radix-ui/themes";
-import {
   MapPin,
   Briefcase,
   FolderHeart,
   Loader2,
-  ExternalLink,
   Sparkles,
   Clock,
   CheckCircle2,
@@ -28,7 +15,6 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/context/ToastContext";
 import WithdrawlBtn from "@/components/WithdrawalBtn";
 import ApplicationStatusBadge from "@/components/ApplicationStatusBadge";
@@ -52,7 +38,7 @@ type Application = {
 export default function AppliedJobsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Single active detail/edit modal state
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [tempNotes, setTempNotes] = useState("");
@@ -175,10 +161,10 @@ export default function AppliedJobsPage() {
 
   if (loading) {
     return (
-      <Flex justify="center" align="center" minHeight="70vh" direction="column" gap="3">
+      <div className="flex flex-col justify-center items-center min-h-[70vh] gap-3">
         <Loader2 size={40} className="animate-spin text-indigo-600" />
-        <Text size="3" className="text-text-muted">Loading your tracker...</Text>
-      </Flex>
+        <span className="text-sm text-text-muted font-medium">Loading your tracker...</span>
+      </div>
     );
   }
 
@@ -186,20 +172,20 @@ export default function AppliedJobsPage() {
     <main className="max-w-7xl mx-auto py-8 px-6 min-h-screen space-y-6 relative">
       {/* Background aesthetics */}
       <div className="absolute top-[-5%] left-[5%] w-[300px] h-[300px] rounded-full bg-indigo-500/5 blur-[90px] pointer-events-none" />
-      <div className="absolute bottom-[10%] right-[5%] w-[350px] h-[350px] rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[5%] w-[350px] h-[350px] rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" style={{ animationDuration: '4s' }} />
 
       {/* Simplified, Clean Header */}
-      <Flex justify="between" align="end" className="flex-wrap gap-4 border-b border-card-border/40 pb-4 relative z-10">
-        <Box className="space-y-1">
-          <Heading size="6" className="tracking-tight font-extrabold text-foreground">
+      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-card-border/40 pb-4 relative z-10">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
             Applications Board
-          </Heading>
-          <Text size="2" className="text-text-muted">
+          </h1>
+          <p className="text-sm text-text-muted">
             Track hiring status in real-time. Click any card to view details or add preparation notes.
-          </Text>
-        </Box>
+          </p>
+        </div>
         {/* Slim, Minimal Metrics row */}
-        <Flex gap="3" align="center" className="text-xs font-semibold text-text-muted shrink-0">
+        <div className="flex items-center gap-3 text-xs font-semibold text-text-muted shrink-0">
           <span>Total: <strong className="text-foreground">{stats.total}</strong></span>
           <span className="text-card-border/60">|</span>
           <span>Pending: <strong className="text-foreground">{stats.pending}</strong></span>
@@ -207,8 +193,8 @@ export default function AppliedJobsPage() {
           <span>In Progress: <strong className="text-purple-500">{stats.active}</strong></span>
           <span className="text-card-border/60">|</span>
           <span>Hired: <strong className="text-green-500">{stats.hired}</strong></span>
-        </Flex>
-      </Flex>
+        </div>
+      </div>
 
       {/* Kanban Columns Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start relative z-10">
@@ -223,61 +209,59 @@ export default function AppliedJobsPage() {
               className={`p-3 rounded-xl border border-card-border/40 bg-card-bg/15 ${col.border} space-y-3`}
             >
               {/* Column Header */}
-              <Flex justify="between" align="center" className="px-1">
-                <Flex align="center" gap="2">
+              <div className="flex justify-between items-center px-1">
+                <div className="flex items-center gap-2">
                   <col.icon size={14} className={col.colorClass} />
-                  <Heading size="2" className="font-extrabold text-foreground text-xs uppercase tracking-wider">
+                  <h2 className="font-extrabold text-foreground text-xs uppercase tracking-wider">
                     {col.title}
-                  </Heading>
-                </Flex>
-                <Badge size="1" color="gray" variant="soft" className="rounded-full font-bold">
+                  </h2>
+                </div>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-neutral-100 dark:bg-neutral-800 text-foreground">
                   {colApps.length}
-                </Badge>
-              </Flex>
+                </span>
+              </div>
 
               {/* Column Cards Container */}
               <div className="space-y-2.5 min-h-[350px]">
                 {colApps.length > 0 ? (
                   colApps.map((app) => (
-                    <Card
+                    <div
                       key={app.id}
                       onClick={() => openDetailModal(app)}
-                      className="p-3 border border-card-border/80 bg-card-bg hover:bg-card-bg-hover hover:border-indigo-500/30 cursor-pointer transition-all duration-200 shadow-sm rounded-lg active:scale-[0.98]"
+                      className="p-3 border border-card-border/80 bg-card-bg hover:bg-card-bg-hover hover:border-indigo-500/30 cursor-pointer transition-all duration-200 shadow-sm rounded-lg active:scale-[0.98] flex flex-col gap-2"
                     >
-                      <Flex direction="column" className="gap-2">
-                        <Flex justify="between" align="start" gap="2">
-                          <Heading size="3" className="text-foreground font-bold tracking-tight text-xs leading-tight">
-                            {app.jobs.title}
-                          </Heading>
-                          <ApplicationStatusBadge status={app.status} />
-                        </Flex>
+                      <div className="flex justify-between items-start gap-2">
+                        <h3 className="text-foreground font-bold tracking-tight text-xs leading-tight line-clamp-2">
+                          {app.jobs.title}
+                        </h3>
+                        <ApplicationStatusBadge status={app.status} />
+                      </div>
 
-                        <Text size="1" className="text-text-muted font-medium truncate block">
-                          {app.jobs.company.name}
-                        </Text>
+                      <span className="text-xs text-text-muted font-medium truncate block">
+                        {app.jobs.company.name}
+                      </span>
 
-                        <Flex justify="between" align="center" className="pt-1.5 border-t border-card-border/30 text-[10px] text-text-muted">
-                          <span>
-                            Applied {app.appliedAt ? new Date(app.appliedAt).toLocaleDateString("en-US", {
-                              month: "short", day: "numeric"
-                            }) : "recently"}
-                          </span>
-                          
-                          {/* Note icon if candidate has preparation notes */}
-                          {app.notes && (
-                            <Flex align="center" gap="0.5" className="text-indigo-500 font-bold">
-                              <FileText size={10} />
-                              <span>Prep Note</span>
-                            </Flex>
-                          )}
-                        </Flex>
-                      </Flex>
-                    </Card>
+                      <div className="flex justify-between items-center pt-1.5 border-t border-card-border/30 text-[10px] text-text-muted">
+                        <span>
+                          Applied {app.appliedAt ? new Date(app.appliedAt).toLocaleDateString("en-US", {
+                            month: "short", day: "numeric"
+                          }) : "recently"}
+                        </span>
+
+                        {/* Note icon if candidate has preparation notes */}
+                        {app.notes && (
+                          <div className="flex items-center gap-0.5 text-indigo-500 font-bold">
+                            <FileText size={10} />
+                            <span>Prep Note</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   ))
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-card-border/30 rounded-lg bg-background/5">
                     <FolderHeart size={18} className="text-text-muted/30 mb-1.5" />
-                    <Text size="1" className="text-text-muted/50 italic text-[11px]">No applications</Text>
+                    <span className="text-xs text-text-muted/50 italic text-[11px]">No applications</span>
                   </div>
                 )}
               </div>
@@ -287,84 +271,109 @@ export default function AppliedJobsPage() {
       </div>
 
       {/* 4. Unified Card Detail Modal */}
-      <Dialog.Root open={!!selectedApp} onOpenChange={(open) => !open && setSelectedApp(null)}>
-        <Dialog.Content
-          style={{ maxWidth: "520px" }}
-          className="backdrop-blur-md bg-card-bg/95 border border-card-border rounded-xl shadow-xl p-6"
+      {selectedApp && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setSelectedApp(null)}
         >
-          {/* Header */}
-          <div className="space-y-1 mb-4">
-            <Flex justify="between" align="start">
-              <div>
-                <Heading size="4" className="font-extrabold text-foreground">{selectedApp?.jobs.title}</Heading>
-                <Text size="2" className="text-indigo-500 font-semibold">{selectedApp?.jobs.company.name}</Text>
+          <div
+            className="relative bg-card-bg border border-card-border w-full max-w-[520px] rounded-2xl shadow-xl overflow-hidden p-6 animate-in zoom-in-95 duration-200 text-foreground max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedApp(null)}
+              className="absolute top-4 right-4 text-text-muted hover:text-foreground transition-colors"
+              aria-label="Close details"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Header */}
+            <div className="space-y-1 pr-8">
+              <div className="flex justify-between items-start gap-2 flex-wrap">
+                <div>
+                  <h2 className="text-xl font-extrabold text-foreground leading-snug">{selectedApp.jobs.title}</h2>
+                  <span className="text-sm text-indigo-500 font-semibold">{selectedApp.jobs.company.name}</span>
+                </div>
+                <ApplicationStatusBadge status={selectedApp.status || "pending"} />
               </div>
-              <ApplicationStatusBadge status={selectedApp?.status || "pending"} />
-            </Flex>
-            <Flex gap="3" className="text-xs text-text-muted pt-1">
-              <Flex gap="1" align="center"><MapPin size={11} />{selectedApp?.jobs.location}</Flex>
-              <Flex gap="1" align="center"><Briefcase size={11} />{selectedApp?.jobs.employment_type}</Flex>
-            </Flex>
-          </div>
+              <div className="flex gap-3 text-xs text-text-muted pt-2 flex-wrap">
+                <span className="flex gap-1 items-center"><MapPin size={11} />{selectedApp.jobs.location}</span>
+                <span className="flex gap-1 items-center"><Briefcase size={11} />{selectedApp.jobs.employment_type}</span>
+              </div>
+            </div>
 
-          <Separator size="4" className="opacity-20 my-3" />
+            <hr className="border-card-border/30 my-4" />
 
-          {/* Recruiter feedback notes */}
-          {selectedApp?.statusNote && (
-            <Box className="p-3 bg-indigo-500/5 rounded-xl border border-indigo-500/10 mb-4 space-y-1">
-              <Text size="1" className="text-indigo-500 font-bold uppercase tracking-wider text-[9px]">Recruiter Official Update</Text>
-              <Text size="2" className="text-text-muted leading-relaxed italic">"{selectedApp.statusNote}"</Text>
-            </Box>
-          )}
-
-          {/* Prep notes text area */}
-          <Box className="space-y-1.5 mb-4">
-            <Text size="1" className="text-text-muted font-bold uppercase tracking-wider text-[9px] block">My Interview Preparation Notes</Text>
-            <TextArea
-              placeholder="Jot down interview dates, key questions to prepare, portfolio links, or salary expectations..."
-              value={tempNotes}
-              onChange={(e) => setTempNotes(e.target.value)}
-              className="h-28 text-sm font-medium scrollbar-thin"
-            />
-          </Box>
-
-          {/* Footer Actions */}
-          <Flex gap="3" justify="between" align="center" className="mt-5 border-t border-card-border/30 pt-4">
-            {/* Withdraw button (only shown for pending status) */}
-            {selectedApp && normalizeStatus(selectedApp.status) === "pending" ? (
-              <WithdrawlBtn
-                job={selectedApp.jobs}
-                isApplied
-                setIsApplied={(val) => {
-                  if (!val) handleWithdrawalSuccess(selectedApp.jobs.id);
-                }}
-              />
-            ) : (
-              <div />
+            {/* Recruiter feedback notes */}
+            {selectedApp.statusNote && (
+              <div className="p-3 bg-indigo-500/5 rounded-xl border border-indigo-500/10 mb-4 space-y-1">
+                <span className="text-indigo-500 font-bold uppercase tracking-wider text-[9px] block">Recruiter Official Update</span>
+                <p className="text-sm text-text-muted leading-relaxed italic">"{selectedApp.statusNote}"</p>
+              </div>
             )}
 
-            <Flex gap="2">
-              <Button variant="soft" color="gray" onClick={() => setSelectedApp(null)} className="cursor-pointer" disabled={savingNotes}>
-                <X size={14} /> Close
-              </Button>
-              <Button variant="solid" color="indigo" onClick={handleSaveNotes} className="cursor-pointer" disabled={savingNotes}>
-                {savingNotes ? "Saving..." : <><Save size={14} /> Save Notes</>}
-              </Button>
-            </Flex>
-          </Flex>
-        </Dialog.Content>
-      </Dialog.Root>
+            {/* Prep notes text area */}
+            <div className="space-y-1.5 mb-4">
+              <label htmlFor="prep-notes" className="text-text-muted font-bold uppercase tracking-wider text-[9px] block cursor-pointer">My Interview Preparation Notes</label>
+              <textarea
+                id="prep-notes"
+                placeholder="Jot down interview dates, key questions to prepare, portfolio links, or salary expectations..."
+                value={tempNotes}
+                onChange={(e) => setTempNotes(e.target.value)}
+                className="w-full p-3 border border-card-border/60 bg-background/50 text-text-muted rounded-2xl h-28 text-sm outline-none focus:ring-2 focus:ring-indigo-500 font-medium transition-all focus:border-indigo-500/50 resize-none scrollbar-thin"
+              />
+            </div>
+
+            {/* Footer Actions */}
+            <div className="flex justify-between items-center gap-3 mt-5 border-t border-card-border/30 pt-4">
+              {/* Withdraw button (only shown for pending status) */}
+              {selectedApp && normalizeStatus(selectedApp.status) === "pending" ? (
+                <WithdrawlBtn
+                  job={selectedApp.jobs}
+                  isApplied
+                  setIsApplied={(val) => {
+                    if (!val) handleWithdrawalSuccess(selectedApp.jobs.id);
+                  }}
+                />
+              ) : (
+                <div />
+              )}
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setSelectedApp(null)}
+                  disabled={savingNotes}
+                  className="px-4 py-2 border border-card-border text-text-muted rounded-xl text-sm font-semibold hover:bg-neutral-500/10 transition duration-200 inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <X size={14} /> Close
+                </button>
+                <button
+                  onClick={handleSaveNotes}
+                  disabled={savingNotes}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition duration-200 inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-indigo-500/10"
+                >
+                  {savingNotes ? "Saving..." : <><Save size={14} /> Save Notes</>}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* No Applications Redirect Card */}
       {applications.length === 0 && (
         <div className="flex flex-col items-center py-20 text-center border border-dashed border-card-border rounded-2xl relative z-10 bg-card-bg/40 backdrop-blur-sm">
           <FolderHeart size={48} className="text-text-muted/60 mb-3" />
-          <Text weight="bold" size="4">No active applications yet</Text>
-          <Text size="2" className="text-text-muted mt-2 mb-6 max-w-sm">
+          <h2 className="font-bold text-lg text-foreground">No active applications yet</h2>
+          <p className="text-sm text-text-muted mt-2 mb-6 max-w-sm">
             Browse current jobs, run matching scores, and apply with custom AI cover letters.
-          </Text>
+          </p>
           <Link href="/jobs">
-            <Button color="indigo" className="cursor-pointer shadow-md">Browse Jobs</Button>
+            <button className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition duration-200 shadow-md shadow-indigo-500/20 active:scale-95 cursor-pointer">
+              Browse Jobs
+            </button>
           </Link>
         </div>
       )}

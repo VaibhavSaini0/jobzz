@@ -1,7 +1,5 @@
 "use client";
 
-import { Box, Heading, Separator, Text, Flex, Grid, Card } from "@radix-ui/themes";
-import { company } from "../../generated/prisma";
 import Loading from "./lodingstate/Loading";
 import {
   Globe,
@@ -26,95 +24,95 @@ export default function AboutCompany({
 
   if (!company) {
     return (
-      <Box className="max-w-7xl mx-auto w-full">
-        <Text size="2" color="gray">
+      <div className="max-w-7xl mx-auto w-full">
+        <p className="text-sm text-text-muted">
           No company information available.
-        </Text>
-      </Box>
+        </p>
+      </div>
     );
   }
 
   return (
-    <Box className="max-w-7xl mx-auto w-full space-y-6">
+    <div className="max-w-7xl mx-auto w-full space-y-6">
       
       {/* Description / About Us */}
-      <Box className="space-y-3">
-        <Heading size="5" className="text-foreground tracking-tight font-extrabold flex items-center gap-2">
+      <div className="space-y-3">
+        <h2 className="text-xl text-foreground tracking-tight font-extrabold flex items-center gap-2">
           <Building2 className="text-indigo-500" size={20} /> About Our Organization
-        </Heading>
-        <Separator size="4" className="bg-card-border/50" />
-        <Text size="2" className="text-text-muted leading-relaxed block whitespace-pre-line bg-card-bg/25 border border-card-border/40 p-5 rounded-2xl">
+        </h2>
+        <hr className="border-card-border/50" />
+        <p className="text-sm text-text-muted leading-relaxed block whitespace-pre-line bg-card-bg/25 border border-card-border/40 p-5 rounded-2xl">
           {company.description || "No company overview provided yet. Click 'Edit Settings' to add a corporate description."}
-        </Text>
-      </Box>
+        </p>
+      </div>
 
       {/* Corporate Metadata Grid */}
-      <Box className="space-y-3 pt-2">
-        <Heading size="5" className="text-foreground tracking-tight font-extrabold flex items-center gap-2">
+      <div className="space-y-3 pt-2">
+        <h2 className="text-xl text-foreground tracking-tight font-extrabold flex items-center gap-2">
           <Calendar className="text-indigo-500" size={20} /> Corporate Profile Details
-        </Heading>
-        <Separator size="4" className="bg-card-border/50" />
+        </h2>
+        <hr className="border-card-border/50" />
 
-        <Grid columns={{ initial: "1", sm: "2" }} gap="4" className="mt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
           {/* Industry */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-indigo-500/5 text-indigo-500 rounded-xl">
               <Building2 size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Industry Sector</Text>
-              <Text size="2" weight="medium" className="text-foreground">
+              <span className="block text-xs font-semibold text-text-muted">Industry Sector</span>
+              <span className="text-sm font-medium text-foreground block">
                 {company.industry || "Not Specified"}
-              </Text>
+              </span>
             </div>
-          </Card>
+          </div>
 
           {/* Founded */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-indigo-500/5 text-indigo-500 rounded-xl">
               <Calendar size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Founded In</Text>
-              <Text size="2" weight="medium" className="text-foreground">
+              <span className="block text-xs font-semibold text-text-muted">Founded In</span>
+              <span className="text-sm font-medium text-foreground block">
                 {company.founded || "Not Specified"}
-              </Text>
+              </span>
             </div>
-          </Card>
+          </div>
 
           {/* Size */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-indigo-500/5 text-indigo-500 rounded-xl">
               <Users size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Teammate Count</Text>
-              <Text size="2" weight="medium" className="text-foreground">
+              <span className="block text-xs font-semibold text-text-muted">Teammate Count</span>
+              <span className="text-sm font-medium text-foreground block">
                 {company.companySize || "Not Specified"}
-              </Text>
+              </span>
             </div>
-          </Card>
+          </div>
 
           {/* Location */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-red-500/5 text-red-500 rounded-xl">
               <MapPin size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Headquarters</Text>
-              <Text size="2" weight="medium" className="text-foreground">
+              <span className="block text-xs font-semibold text-text-muted">Headquarters</span>
+              <span className="text-sm font-medium text-foreground block">
                 {company.location || "Not Specified"}
-              </Text>
+              </span>
             </div>
-          </Card>
+          </div>
 
           {/* Website */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-indigo-500/5 text-indigo-500 rounded-xl">
               <Globe size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Official Website</Text>
+              <span className="block text-xs font-semibold text-text-muted">Official Website</span>
               {company.website ? (
                 <a
                   href={company.website}
@@ -125,18 +123,18 @@ export default function AboutCompany({
                   {company.website.replace(/^https?:\/\//, "")}
                 </a>
               ) : (
-                <Text size="2" className="text-text-muted">Not Specified</Text>
+                <span className="text-sm text-text-muted block">Not Specified</span>
               )}
             </div>
-          </Card>
+          </div>
 
           {/* Email */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-indigo-500/5 text-indigo-500 rounded-xl">
               <Mail size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Contact Email</Text>
+              <span className="block text-xs font-semibold text-text-muted">Contact Email</span>
               {company.email ? (
                 <a
                   href={`mailto:${company.email}`}
@@ -145,39 +143,39 @@ export default function AboutCompany({
                   {company.email}
                 </a>
               ) : (
-                <Text size="2" className="text-text-muted">Not Specified</Text>
+                <span className="text-sm text-text-muted block">Not Specified</span>
               )}
             </div>
-          </Card>
+          </div>
 
           {/* Phone */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-indigo-500/5 text-indigo-500 rounded-xl">
               <Phone size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Contact Phone</Text>
-              <Text size="2" weight="medium" className="text-foreground">
+              <span className="block text-xs font-semibold text-text-muted">Contact Phone</span>
+              <span className="text-sm font-medium text-foreground block">
                 {company.phone || "Not Specified"}
-              </Text>
+              </span>
             </div>
-          </Card>
+          </div>
 
           {/* Owner Identity */}
-          <Card className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 transition-all duration-300">
+          <div className="p-4 border border-card-border/60 bg-card-bg/40 backdrop-blur-sm shadow-sm flex items-center gap-3.5 hover:border-indigo-500/20 rounded-2xl transition-all duration-300">
             <div className="p-2.5 bg-indigo-500/5 text-indigo-500 rounded-xl">
               <Users size={18} />
             </div>
             <div>
-              <Text size="1" color="gray" className="block font-semibold">Primary Administrator</Text>
-              <Text size="2" weight="medium" className="text-foreground truncate block max-w-[200px]">
+              <span className="block text-xs font-semibold text-text-muted">Primary Administrator</span>
+              <span className="text-sm font-medium text-foreground truncate block max-w-[200px]">
                 Owner ID: {company.ownerId}
-              </Text>
+              </span>
             </div>
-          </Card>
-        </Grid>
-      </Box>
+          </div>
+        </div>
+      </div>
 
-    </Box>
+    </div>
   );
 }

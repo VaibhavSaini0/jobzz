@@ -43,6 +43,11 @@ export type Applications = $Result.DefaultSelection<Prisma.$ApplicationsPayload>
  * 
  */
 export type Resume = $Result.DefaultSelection<Prisma.$ResumePayload>
+/**
+ * Model StaticOption
+ * 
+ */
+export type StaticOption = $Result.DefaultSelection<Prisma.$StaticOptionPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -195,6 +200,16 @@ export class PrismaClient<
     * ```
     */
   get resume(): Prisma.ResumeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.staticOption`: Exposes CRUD operations for the **StaticOption** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StaticOptions
+    * const staticOptions = await prisma.staticOption.findMany()
+    * ```
+    */
+  get staticOption(): Prisma.StaticOptionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -640,7 +655,8 @@ export namespace Prisma {
     job: 'job',
     review: 'review',
     Applications: 'Applications',
-    Resume: 'Resume'
+    Resume: 'Resume',
+    StaticOption: 'StaticOption'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -659,7 +675,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "company" | "job" | "review" | "applications" | "resume"
+      modelProps: "user" | "company" | "job" | "review" | "applications" | "resume" | "staticOption"
       txIsolationLevel: never
     }
     model: {
@@ -1107,6 +1123,80 @@ export namespace Prisma {
           }
         }
       }
+      StaticOption: {
+        payload: Prisma.$StaticOptionPayload<ExtArgs>
+        fields: Prisma.StaticOptionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StaticOptionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StaticOptionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload>
+          }
+          findFirst: {
+            args: Prisma.StaticOptionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StaticOptionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload>
+          }
+          findMany: {
+            args: Prisma.StaticOptionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload>[]
+          }
+          create: {
+            args: Prisma.StaticOptionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload>
+          }
+          createMany: {
+            args: Prisma.StaticOptionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.StaticOptionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload>
+          }
+          update: {
+            args: Prisma.StaticOptionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload>
+          }
+          deleteMany: {
+            args: Prisma.StaticOptionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StaticOptionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StaticOptionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticOptionPayload>
+          }
+          aggregate: {
+            args: Prisma.StaticOptionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStaticOption>
+          }
+          groupBy: {
+            args: Prisma.StaticOptionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StaticOptionGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.StaticOptionFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.StaticOptionAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.StaticOptionCountArgs<ExtArgs>
+            result: $Utils.Optional<StaticOptionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1192,6 +1282,7 @@ export namespace Prisma {
     review?: reviewOmit
     applications?: ApplicationsOmit
     resume?: ResumeOmit
+    staticOption?: StaticOptionOmit
   }
 
   /* Types for Logging */
@@ -7882,6 +7973,916 @@ export namespace Prisma {
 
 
   /**
+   * Model StaticOption
+   */
+
+  export type AggregateStaticOption = {
+    _count: StaticOptionCountAggregateOutputType | null
+    _min: StaticOptionMinAggregateOutputType | null
+    _max: StaticOptionMaxAggregateOutputType | null
+  }
+
+  export type StaticOptionMinAggregateOutputType = {
+    id: string | null
+    type: string | null
+    value: string | null
+  }
+
+  export type StaticOptionMaxAggregateOutputType = {
+    id: string | null
+    type: string | null
+    value: string | null
+  }
+
+  export type StaticOptionCountAggregateOutputType = {
+    id: number
+    type: number
+    value: number
+    _all: number
+  }
+
+
+  export type StaticOptionMinAggregateInputType = {
+    id?: true
+    type?: true
+    value?: true
+  }
+
+  export type StaticOptionMaxAggregateInputType = {
+    id?: true
+    type?: true
+    value?: true
+  }
+
+  export type StaticOptionCountAggregateInputType = {
+    id?: true
+    type?: true
+    value?: true
+    _all?: true
+  }
+
+  export type StaticOptionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StaticOption to aggregate.
+     */
+    where?: StaticOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticOptions to fetch.
+     */
+    orderBy?: StaticOptionOrderByWithRelationInput | StaticOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StaticOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StaticOptions
+    **/
+    _count?: true | StaticOptionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StaticOptionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StaticOptionMaxAggregateInputType
+  }
+
+  export type GetStaticOptionAggregateType<T extends StaticOptionAggregateArgs> = {
+        [P in keyof T & keyof AggregateStaticOption]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStaticOption[P]>
+      : GetScalarType<T[P], AggregateStaticOption[P]>
+  }
+
+
+
+
+  export type StaticOptionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StaticOptionWhereInput
+    orderBy?: StaticOptionOrderByWithAggregationInput | StaticOptionOrderByWithAggregationInput[]
+    by: StaticOptionScalarFieldEnum[] | StaticOptionScalarFieldEnum
+    having?: StaticOptionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StaticOptionCountAggregateInputType | true
+    _min?: StaticOptionMinAggregateInputType
+    _max?: StaticOptionMaxAggregateInputType
+  }
+
+  export type StaticOptionGroupByOutputType = {
+    id: string
+    type: string
+    value: string
+    _count: StaticOptionCountAggregateOutputType | null
+    _min: StaticOptionMinAggregateOutputType | null
+    _max: StaticOptionMaxAggregateOutputType | null
+  }
+
+  type GetStaticOptionGroupByPayload<T extends StaticOptionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StaticOptionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StaticOptionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StaticOptionGroupByOutputType[P]>
+            : GetScalarType<T[P], StaticOptionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StaticOptionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    value?: boolean
+  }, ExtArgs["result"]["staticOption"]>
+
+
+
+  export type StaticOptionSelectScalar = {
+    id?: boolean
+    type?: boolean
+    value?: boolean
+  }
+
+  export type StaticOptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "value", ExtArgs["result"]["staticOption"]>
+
+  export type $StaticOptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StaticOption"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: string
+      value: string
+    }, ExtArgs["result"]["staticOption"]>
+    composites: {}
+  }
+
+  type StaticOptionGetPayload<S extends boolean | null | undefined | StaticOptionDefaultArgs> = $Result.GetResult<Prisma.$StaticOptionPayload, S>
+
+  type StaticOptionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StaticOptionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StaticOptionCountAggregateInputType | true
+    }
+
+  export interface StaticOptionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StaticOption'], meta: { name: 'StaticOption' } }
+    /**
+     * Find zero or one StaticOption that matches the filter.
+     * @param {StaticOptionFindUniqueArgs} args - Arguments to find a StaticOption
+     * @example
+     * // Get one StaticOption
+     * const staticOption = await prisma.staticOption.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StaticOptionFindUniqueArgs>(args: SelectSubset<T, StaticOptionFindUniqueArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StaticOption that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StaticOptionFindUniqueOrThrowArgs} args - Arguments to find a StaticOption
+     * @example
+     * // Get one StaticOption
+     * const staticOption = await prisma.staticOption.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StaticOptionFindUniqueOrThrowArgs>(args: SelectSubset<T, StaticOptionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StaticOption that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticOptionFindFirstArgs} args - Arguments to find a StaticOption
+     * @example
+     * // Get one StaticOption
+     * const staticOption = await prisma.staticOption.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StaticOptionFindFirstArgs>(args?: SelectSubset<T, StaticOptionFindFirstArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StaticOption that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticOptionFindFirstOrThrowArgs} args - Arguments to find a StaticOption
+     * @example
+     * // Get one StaticOption
+     * const staticOption = await prisma.staticOption.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StaticOptionFindFirstOrThrowArgs>(args?: SelectSubset<T, StaticOptionFindFirstOrThrowArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StaticOptions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticOptionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StaticOptions
+     * const staticOptions = await prisma.staticOption.findMany()
+     * 
+     * // Get first 10 StaticOptions
+     * const staticOptions = await prisma.staticOption.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const staticOptionWithIdOnly = await prisma.staticOption.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StaticOptionFindManyArgs>(args?: SelectSubset<T, StaticOptionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StaticOption.
+     * @param {StaticOptionCreateArgs} args - Arguments to create a StaticOption.
+     * @example
+     * // Create one StaticOption
+     * const StaticOption = await prisma.staticOption.create({
+     *   data: {
+     *     // ... data to create a StaticOption
+     *   }
+     * })
+     * 
+     */
+    create<T extends StaticOptionCreateArgs>(args: SelectSubset<T, StaticOptionCreateArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StaticOptions.
+     * @param {StaticOptionCreateManyArgs} args - Arguments to create many StaticOptions.
+     * @example
+     * // Create many StaticOptions
+     * const staticOption = await prisma.staticOption.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StaticOptionCreateManyArgs>(args?: SelectSubset<T, StaticOptionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a StaticOption.
+     * @param {StaticOptionDeleteArgs} args - Arguments to delete one StaticOption.
+     * @example
+     * // Delete one StaticOption
+     * const StaticOption = await prisma.staticOption.delete({
+     *   where: {
+     *     // ... filter to delete one StaticOption
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StaticOptionDeleteArgs>(args: SelectSubset<T, StaticOptionDeleteArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StaticOption.
+     * @param {StaticOptionUpdateArgs} args - Arguments to update one StaticOption.
+     * @example
+     * // Update one StaticOption
+     * const staticOption = await prisma.staticOption.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StaticOptionUpdateArgs>(args: SelectSubset<T, StaticOptionUpdateArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StaticOptions.
+     * @param {StaticOptionDeleteManyArgs} args - Arguments to filter StaticOptions to delete.
+     * @example
+     * // Delete a few StaticOptions
+     * const { count } = await prisma.staticOption.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StaticOptionDeleteManyArgs>(args?: SelectSubset<T, StaticOptionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StaticOptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticOptionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StaticOptions
+     * const staticOption = await prisma.staticOption.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StaticOptionUpdateManyArgs>(args: SelectSubset<T, StaticOptionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StaticOption.
+     * @param {StaticOptionUpsertArgs} args - Arguments to update or create a StaticOption.
+     * @example
+     * // Update or create a StaticOption
+     * const staticOption = await prisma.staticOption.upsert({
+     *   create: {
+     *     // ... data to create a StaticOption
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StaticOption we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StaticOptionUpsertArgs>(args: SelectSubset<T, StaticOptionUpsertArgs<ExtArgs>>): Prisma__StaticOptionClient<$Result.GetResult<Prisma.$StaticOptionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StaticOptions that matches the filter.
+     * @param {StaticOptionFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const staticOption = await prisma.staticOption.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: StaticOptionFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a StaticOption.
+     * @param {StaticOptionAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const staticOption = await prisma.staticOption.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: StaticOptionAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of StaticOptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticOptionCountArgs} args - Arguments to filter StaticOptions to count.
+     * @example
+     * // Count the number of StaticOptions
+     * const count = await prisma.staticOption.count({
+     *   where: {
+     *     // ... the filter for the StaticOptions we want to count
+     *   }
+     * })
+    **/
+    count<T extends StaticOptionCountArgs>(
+      args?: Subset<T, StaticOptionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StaticOptionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StaticOption.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticOptionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StaticOptionAggregateArgs>(args: Subset<T, StaticOptionAggregateArgs>): Prisma.PrismaPromise<GetStaticOptionAggregateType<T>>
+
+    /**
+     * Group by StaticOption.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticOptionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StaticOptionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StaticOptionGroupByArgs['orderBy'] }
+        : { orderBy?: StaticOptionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StaticOptionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStaticOptionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StaticOption model
+   */
+  readonly fields: StaticOptionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StaticOption.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StaticOptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StaticOption model
+   */
+  interface StaticOptionFieldRefs {
+    readonly id: FieldRef<"StaticOption", 'String'>
+    readonly type: FieldRef<"StaticOption", 'String'>
+    readonly value: FieldRef<"StaticOption", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StaticOption findUnique
+   */
+  export type StaticOptionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticOption to fetch.
+     */
+    where: StaticOptionWhereUniqueInput
+  }
+
+  /**
+   * StaticOption findUniqueOrThrow
+   */
+  export type StaticOptionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticOption to fetch.
+     */
+    where: StaticOptionWhereUniqueInput
+  }
+
+  /**
+   * StaticOption findFirst
+   */
+  export type StaticOptionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticOption to fetch.
+     */
+    where?: StaticOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticOptions to fetch.
+     */
+    orderBy?: StaticOptionOrderByWithRelationInput | StaticOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StaticOptions.
+     */
+    cursor?: StaticOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaticOptions.
+     */
+    distinct?: StaticOptionScalarFieldEnum | StaticOptionScalarFieldEnum[]
+  }
+
+  /**
+   * StaticOption findFirstOrThrow
+   */
+  export type StaticOptionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticOption to fetch.
+     */
+    where?: StaticOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticOptions to fetch.
+     */
+    orderBy?: StaticOptionOrderByWithRelationInput | StaticOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StaticOptions.
+     */
+    cursor?: StaticOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaticOptions.
+     */
+    distinct?: StaticOptionScalarFieldEnum | StaticOptionScalarFieldEnum[]
+  }
+
+  /**
+   * StaticOption findMany
+   */
+  export type StaticOptionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticOptions to fetch.
+     */
+    where?: StaticOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticOptions to fetch.
+     */
+    orderBy?: StaticOptionOrderByWithRelationInput | StaticOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StaticOptions.
+     */
+    cursor?: StaticOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticOptions.
+     */
+    skip?: number
+    distinct?: StaticOptionScalarFieldEnum | StaticOptionScalarFieldEnum[]
+  }
+
+  /**
+   * StaticOption create
+   */
+  export type StaticOptionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * The data needed to create a StaticOption.
+     */
+    data: XOR<StaticOptionCreateInput, StaticOptionUncheckedCreateInput>
+  }
+
+  /**
+   * StaticOption createMany
+   */
+  export type StaticOptionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StaticOptions.
+     */
+    data: StaticOptionCreateManyInput | StaticOptionCreateManyInput[]
+  }
+
+  /**
+   * StaticOption update
+   */
+  export type StaticOptionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * The data needed to update a StaticOption.
+     */
+    data: XOR<StaticOptionUpdateInput, StaticOptionUncheckedUpdateInput>
+    /**
+     * Choose, which StaticOption to update.
+     */
+    where: StaticOptionWhereUniqueInput
+  }
+
+  /**
+   * StaticOption updateMany
+   */
+  export type StaticOptionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StaticOptions.
+     */
+    data: XOR<StaticOptionUpdateManyMutationInput, StaticOptionUncheckedUpdateManyInput>
+    /**
+     * Filter which StaticOptions to update
+     */
+    where?: StaticOptionWhereInput
+    /**
+     * Limit how many StaticOptions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StaticOption upsert
+   */
+  export type StaticOptionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * The filter to search for the StaticOption to update in case it exists.
+     */
+    where: StaticOptionWhereUniqueInput
+    /**
+     * In case the StaticOption found by the `where` argument doesn't exist, create a new StaticOption with this data.
+     */
+    create: XOR<StaticOptionCreateInput, StaticOptionUncheckedCreateInput>
+    /**
+     * In case the StaticOption was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StaticOptionUpdateInput, StaticOptionUncheckedUpdateInput>
+  }
+
+  /**
+   * StaticOption delete
+   */
+  export type StaticOptionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+    /**
+     * Filter which StaticOption to delete.
+     */
+    where: StaticOptionWhereUniqueInput
+  }
+
+  /**
+   * StaticOption deleteMany
+   */
+  export type StaticOptionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StaticOptions to delete
+     */
+    where?: StaticOptionWhereInput
+    /**
+     * Limit how many StaticOptions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StaticOption findRaw
+   */
+  export type StaticOptionFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * StaticOption aggregateRaw
+   */
+  export type StaticOptionAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * StaticOption without action
+   */
+  export type StaticOptionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticOption
+     */
+    select?: StaticOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticOption
+     */
+    omit?: StaticOptionOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -7974,6 +8975,15 @@ export namespace Prisma {
   };
 
   export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum]
+
+
+  export const StaticOptionScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    value: 'value'
+  };
+
+  export type StaticOptionScalarFieldEnum = (typeof StaticOptionScalarFieldEnum)[keyof typeof StaticOptionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8543,6 +9553,48 @@ export namespace Prisma {
     profileImageUrl?: StringNullableWithAggregatesFilter<"Resume"> | string | null
   }
 
+  export type StaticOptionWhereInput = {
+    AND?: StaticOptionWhereInput | StaticOptionWhereInput[]
+    OR?: StaticOptionWhereInput[]
+    NOT?: StaticOptionWhereInput | StaticOptionWhereInput[]
+    id?: StringFilter<"StaticOption"> | string
+    type?: StringFilter<"StaticOption"> | string
+    value?: StringFilter<"StaticOption"> | string
+  }
+
+  export type StaticOptionOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+  }
+
+  export type StaticOptionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StaticOptionWhereInput | StaticOptionWhereInput[]
+    OR?: StaticOptionWhereInput[]
+    NOT?: StaticOptionWhereInput | StaticOptionWhereInput[]
+    type?: StringFilter<"StaticOption"> | string
+    value?: StringFilter<"StaticOption"> | string
+  }, "id">
+
+  export type StaticOptionOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    _count?: StaticOptionCountOrderByAggregateInput
+    _max?: StaticOptionMaxOrderByAggregateInput
+    _min?: StaticOptionMinOrderByAggregateInput
+  }
+
+  export type StaticOptionScalarWhereWithAggregatesInput = {
+    AND?: StaticOptionScalarWhereWithAggregatesInput | StaticOptionScalarWhereWithAggregatesInput[]
+    OR?: StaticOptionScalarWhereWithAggregatesInput[]
+    NOT?: StaticOptionScalarWhereWithAggregatesInput | StaticOptionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StaticOption"> | string
+    type?: StringWithAggregatesFilter<"StaticOption"> | string
+    value?: StringWithAggregatesFilter<"StaticOption"> | string
+  }
+
   export type userCreateInput = {
     id?: string
     name: string
@@ -9054,6 +10106,44 @@ export namespace Prisma {
     profileImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type StaticOptionCreateInput = {
+    id?: string
+    type: string
+    value: string
+  }
+
+  export type StaticOptionUncheckedCreateInput = {
+    id?: string
+    type: string
+    value: string
+  }
+
+  export type StaticOptionUpdateInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type StaticOptionUncheckedUpdateInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type StaticOptionCreateManyInput = {
+    id?: string
+    type: string
+    value: string
+  }
+
+  export type StaticOptionUpdateManyMutationInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type StaticOptionUncheckedUpdateManyInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9466,6 +10556,24 @@ export namespace Prisma {
     resumePdfUrl?: SortOrder
     resumePdfName?: SortOrder
     profileImageUrl?: SortOrder
+  }
+
+  export type StaticOptionCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+  }
+
+  export type StaticOptionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+  }
+
+  export type StaticOptionMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
   }
 
   export type reviewCreateNestedManyWithoutUserInput = {

@@ -102,3 +102,9 @@ model Resume {
   resumePdfName String?
   profileImageUrl String?
 }
+
+model StaticOption {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  type  String
+  value String
+}

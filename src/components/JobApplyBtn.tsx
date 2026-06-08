@@ -1,8 +1,8 @@
 "use client";
-import { Button, ThickChevronRightIcon } from "@radix-ui/themes";
+
 import { useState } from "react";
-import BtnLoading from "./lodingstate/BtnLoading";
-import { useToast } from "@/context/ToastContext";
+import { ChevronRight } from "lucide-react";
+import JobApplyModal from "./modals/JobApplyModal";
 
 export default function JobApplyBtn({
   job,
@@ -12,49 +12,25 @@ export default function JobApplyBtn({
   isApplied: boolean;
   setIsApplied: (value: boolean) => void;
 }) {
-  const [isloading, setIsloading] = useState(false);
-  const { toast } = useToast();
-
-  async function handleSubmit() {
-    setIsloading(true);
-    try {
-      const res = await fetch("/api/job/apply/" + job?.id, {
-        method: "POST",
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        toast("Applied Successfully.", "success");
-        setIsApplied(true);
-      } else if (data.message === "The user already applied for this job") {
-        toast("You have already applied for this job.", "info");
-        setIsApplied(true);
-      } else {
-        toast(data.message || "Failed to apply", "error");
-      }
-    } catch (error) {
-      console.error(error);
-      toast("Something went wrong.", "error");
-    } finally {
-      setIsloading(false);
-    }
-  }
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Button
-      className="flex justify-center items-center border-2"
-      color="green"
-      size="3"
-      onClick={handleSubmit}
-    >
-      {isloading ? (
-        <BtnLoading />
-      ) : (
-        <div className="flex gap-3 items-center">
-          Apply
-          <ThickChevronRightIcon />
-        </div>
-      )}
-    </Button>
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="cursor-pointer flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md transition active:scale-[0.98]"
+      >
+        <span>Apply Now</span>
+        <ChevronRight size={18} />
+      </button>
+
+      {/* Reusable, Polished Apply Modal Component */}
+      <JobApplyModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        job={job}
+        setIsApplied={setIsApplied}
+      />
+    </>
   );
 }

@@ -1,25 +1,16 @@
 "use client";
 
-import {
-  Dialog,
-  Text,
-  Box,
-  Heading,
-  Flex,
-  Button,
-  TextField,
-  TextArea,
-  Badge,
-  Grid,
-  Separator,
-} from "@radix-ui/themes";
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Save, X, ChevronRight, ChevronLeft } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
+import {
+  profileService,
+  type ExperienceEntry,
+  type EducationEntry,
+  type ProjectEntry,
+} from "@/services/profileService";
 
-export type ExperienceEntry = { role: string; company: string; duration: string };
-export type EducationEntry = { school: string; degree: string; year: string };
-export type ProjectEntry = { name: string; description: string; link: string };
+export type { ExperienceEntry, EducationEntry, ProjectEntry };
 
 type EditProfileModalProps = {
   isOpen: boolean;
@@ -157,23 +148,18 @@ export default function EditProfileModal({
   async function handleSave() {
     setSaving(true);
     try {
-      const res = await fetch("/api/profile/resume", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          summary,
-          location,
-          phone,
-          website,
-          skills,
-          experiences: experiences.map((e) => JSON.stringify(e)),
-          educations: educations.map((e) => JSON.stringify(e)),
-          projects: projects.map((p) => JSON.stringify(p)),
-          profileImageUrl: initialData.profileImageUrl || null,
-        }),
+      const data = await profileService.updateProfile({
+        title,
+        summary,
+        location,
+        phone,
+        website,
+        skills,
+        experiences: experiences.map((e) => JSON.stringify(e)),
+        educations: educations.map((e) => JSON.stringify(e)),
+        projects: projects.map((p) => JSON.stringify(p)),
+        profileImageUrl: initialData.profileImageUrl || undefined,
       });
-      const data = await res.json();
       if (data.success) {
         toast("Profile saved successfully!", "success");
         onSaveSuccess();
@@ -196,372 +182,446 @@ export default function EditProfileModal({
     { num: 5, label: "Projects" },
   ];
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Content
-        style={{
-          maxHeight: "85vh",
-          maxWidth: "680px",
-          display: "flex",
-          flexDirection: "column",
-          padding: "24px",
-        }}
-        className="backdrop-blur-md bg-card-bg/95 border border-card-border rounded-2xl shadow-xl"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
+        onClick={() => setIsOpen(false)}
+      />
+      {/* Content */}
+      <div
+        className="
+          relative
+          w-full
+          max-w-[720px]
+          max-h-[85vh]
+          overflow-hidden
+          rounded-3xl
+          border border-card-border/60
+          bg-card-bg/95
+          backdrop-blur-xl
+          shadow-[0_20px_80px_rgba(0,0,0,0.25)]
+          p-0
+          text-foreground
+          flex
+          flex-col
+          animate-in fade-in zoom-in-95 duration-200
+        "
       >
-        <Dialog.Title size="5" className="tracking-tight text-foreground font-extrabold m-0">
-          Edit Your Profile
-        </Dialog.Title>
-        <Dialog.Description size="2" className="text-text-muted mb-3">
-          Complete each section to maintain a standout candidate profile.
-        </Dialog.Description>
-
-        {/* Dynamic Progress Bar */}
-        <Box className="w-full bg-card-border/40 h-2 rounded-full overflow-hidden mb-4 relative shrink-0">
-          <div
-            className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full transition-all duration-300 ease-out rounded-full"
-            style={{ width: `${(currentStep / steps.length) * 100}%` }}
-          />
-        </Box>
-
-        {/* Dynamic Step Tabs */}
-        <Flex gap="1" justify="between" className="mb-5 overflow-x-auto pb-2 scrollbar-none border-b border-card-border/40 shrink-0">
-          {steps.map((s) => (
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-20 border-b border-card-border/50 bg-card-bg/90 backdrop-blur-xl px-6 py-5 shrink-0 text-left">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-bold leading-tight m-0 text-foreground">
+                Edit Your Profile
+              </h2>
+              <p className="text-sm text-text-muted mt-1">
+                Complete each section to maintain a standout candidate profile.
+              </p>
+            </div>
             <button
-              key={s.num}
-              onClick={() => setCurrentStep(s.num)}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
-                currentStep === s.num
-                  ? "bg-indigo-600 text-white shadow-md"
-                  : "bg-background/20 text-text-muted hover:text-foreground hover:bg-background/45"
-              }`}
+              onClick={() => setIsOpen(false)}
+              className="rounded-xl p-1.5 text-text-muted hover:text-foreground hover:bg-card-border/40 transition-colors cursor-pointer active:scale-95"
             >
-              Step {s.num}: {s.label}
+              ✕
             </button>
-          ))}
-        </Flex>
+          </div>
+        </div>
+
+        {/* Sticky Step Wizard Navigation */}
+        <div className="px-6 pt-4 pb-2 shrink-0 bg-card-bg/90 border-b border-card-border/30 text-left">
+          {/* Dynamic Progress Bar */}
+          <div className="w-full bg-card-border/40 h-2 rounded-full overflow-hidden mb-4 relative shrink-0">
+            <div
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full transition-all duration-300 ease-out rounded-full"
+              style={{ width: `${(currentStep / steps.length) * 100}%` }}
+            />
+          </div>
+
+          {/* Dynamic Step Tabs */}
+          <div className="flex justify-between items-center gap-1.5 overflow-x-auto pb-2 scrollbar-hidden shrink-0">
+            {steps.map((s) => (
+              <button
+                key={s.num}
+                onClick={() => setCurrentStep(s.num)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer active:scale-95 ${
+                  currentStep === s.num
+                    ? "bg-indigo-600 text-white shadow-md"
+                    : "bg-background/25 text-text-muted hover:text-foreground hover:bg-background/45"
+                }`}
+              >
+                Step {s.num}: {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* Scrollable Form Body */}
-        <Box style={{ overflowY: "auto", flexGrow: 1 }} className="pr-1 scrollbar-thin">
-          
+        <div
+          className="
+            px-6
+            py-5
+            overflow-y-auto
+            max-h-[calc(85vh-260px)]
+            space-y-5
+            flex-grow
+            scrollbar-thin
+            text-left
+          "
+        >
           {/* STEP 1: Personal Details */}
           {currentStep === 1 && (
-            <Box className="space-y-4 animate-fadeIn">
-              <Heading size="4" className="text-indigo-600 dark:text-indigo-400">Personal Details</Heading>
-              <Grid columns={{ initial: "1", sm: "2" }} gap="3">
-                <Box className="grid gap-1">
-                  <Text size="1" weight="bold" className="text-text-muted">PROFESSIONAL TITLE</Text>
-                  <TextField.Root
+            <div className="space-y-4 animate-in fade-in duration-200">
+              <h3 className="text-lg font-bold text-indigo-500 dark:text-indigo-400">Personal Details</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-muted uppercase tracking-wider block">PROFESSIONAL TITLE</label>
+                  <input
+                    type="text"
                     placeholder="e.g. Lead Full Stack Developer"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
                   />
-                </Box>
-                <Box className="grid gap-1">
-                  <Text size="1" weight="bold" className="text-text-muted">LOCATION</Text>
-                  <TextField.Root
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-muted uppercase tracking-wider block">LOCATION (CITY, COUNTRY)</label>
+                  <input
+                    type="text"
                     placeholder="e.g. Bangalore, India"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
+                    className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
                   />
-                </Box>
-                <Box className="grid gap-1">
-                  <Text size="1" weight="bold" className="text-text-muted">PHONE NUMBER</Text>
-                  <TextField.Root
-                    placeholder="e.g. +91 9876543210"
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-muted uppercase tracking-wider block">PHONE NUMBER</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. +91 98765 43210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
                   />
-                </Box>
-                <Box className="grid gap-1">
-                  <Text size="1" weight="bold" className="text-text-muted">PERSONAL WEBSITE</Text>
-                  <TextField.Root
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-muted uppercase tracking-wider block">PERSONAL WEBSITE / PORTFOLIO</label>
+                  <input
+                    type="text"
                     placeholder="e.g. https://johndoe.dev"
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
+                    className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
                   />
-                </Box>
-              </Grid>
-            </Box>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* STEP 2: Summary & Skills */}
           {currentStep === 2 && (
-            <Box className="space-y-5 animate-fadeIn">
-              <Heading size="4" className="text-indigo-600 dark:text-indigo-400">Summary & Skills</Heading>
-              
-              <Box className="grid gap-1">
-                <Text size="1" weight="bold" className="text-text-muted font-bold">PROFESSIONAL SUMMARY</Text>
-                <TextArea
-                  placeholder="Introduce yourself, your technical experience, and key achievements..."
+            <div className="space-y-5 animate-in fade-in duration-200">
+              <h3 className="text-lg font-bold text-indigo-500 dark:text-indigo-400">Professional Summary & Skills</h3>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-text-muted uppercase tracking-wider block">SHORT BIO / SUMMARY</label>
+                <textarea
+                  placeholder="Outline your tech specialties, leadership strengths, and work goals..."
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
-                  className="h-28"
+                  rows={4}
+                  className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm resize-none"
                 />
-              </Box>
+              </div>
 
-              <Separator size="4" className="opacity-20" />
+              <hr className="border-card-border/50 my-2" />
 
-              <Box className="space-y-3">
-                <Text size="1" weight="bold" className="text-text-muted font-bold block">SKILLS STACK</Text>
-                <Flex gap="1.5" wrap="wrap" className="min-h-[40px] p-2 bg-background/20 rounded-xl border border-card-border/50">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-text-muted uppercase tracking-wider block">SKILL STACK</label>
+                <div className="flex gap-2 flex-wrap mb-2">
                   {skills.length > 0 ? (
-                    skills.map((skill) => (
-                      <Badge
-                        key={skill}
-                        size="2"
-                        color="gray"
-                        variant="surface"
-                        className="rounded-md flex items-center gap-1.5 py-1 px-2 text-xs"
+                    skills.map((s) => (
+                      <span
+                        key={s}
+                        className="inline-flex items-center rounded-lg bg-card-border/50 dark:bg-card-border/30 px-2.5 py-1 text-xs font-bold text-text-muted border border-card-border/25 gap-1.5"
                       >
-                        <span>{skill}</span>
+                        {s}
                         <button
-                          onClick={() => removeSkill(skill)}
-                          className="text-red-500 hover:text-red-700 cursor-pointer ml-1 font-bold text-xs"
+                          onClick={() => removeSkill(s)}
+                          className="text-rose-500 hover:text-rose-700 font-extrabold ml-1 cursor-pointer"
                         >
-                          ×
+                          ✕
                         </button>
-                      </Badge>
+                      </span>
                     ))
                   ) : (
-                    <Text size="1" className="text-text-muted italic self-center">No skills added yet.</Text>
+                    <span className="text-xs text-text-muted italic">No skills added yet.</span>
                   )}
-                </Flex>
-                <Flex gap="2" className="max-w-sm">
-                  <TextField.Root
-                    placeholder="Add skill (e.g. Next.js)..."
+                </div>
+                
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="e.g. TypeScript"
                     value={newSkill}
                     onChange={(e) => setNewSkill(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && addSkill()}
-                    className="flex-grow"
+                    className="flex-grow px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
                   />
-                  <Button onClick={addSkill} color="indigo" className="cursor-pointer">
-                    <Plus size={14} /> Add
-                  </Button>
-                </Flex>
-              </Box>
-            </Box>
+                  <button
+                    onClick={addSkill}
+                    className="cursor-pointer px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition active:scale-[0.98]"
+                  >
+                    Add Skill
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* STEP 3: Education */}
           {currentStep === 3 && (
-            <Box className="space-y-5 animate-fadeIn">
-              <Heading size="4" className="text-indigo-600 dark:text-indigo-400">Education (College / University)</Heading>
+            <div className="space-y-5 animate-in fade-in duration-200">
+              <h3 className="text-lg font-bold text-indigo-500 dark:text-indigo-400">Education Credentials</h3>
               
               <div className="space-y-2">
                 {educations.length > 0 ? (
                   educations.map((edu, idx) => (
-                    <Flex key={idx} justify="between" align="center" className="p-3.5 bg-background/40 border border-card-border rounded-xl">
-                      <Box>
-                        <Text className="font-bold text-foreground text-sm block">{edu.degree}</Text>
-                        <Text size="1" className="text-text-muted">{edu.school} · {edu.year}</Text>
-                      </Box>
-                      <Button
+                    <div key={idx} className="p-3 bg-card-bg/40 border border-card-border rounded-xl flex justify-between items-center">
+                      <div>
+                        <span className="font-bold text-foreground text-sm block">{edu.degree}</span>
+                        <span className="text-xs text-indigo-500 font-medium block mt-0.5">{edu.school} • {edu.year}</span>
+                      </div>
+                      <button
                         onClick={() => removeEducation(idx)}
-                        variant="ghost"
-                        color="red"
-                        size="1"
-                        className="cursor-pointer"
+                        className="cursor-pointer p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-500/5 rounded-xl transition active:scale-95"
                       >
                         <Trash2 size={14} />
-                      </Button>
-                    </Flex>
+                      </button>
+                    </div>
                   ))
                 ) : (
-                  <Text size="2" className="text-text-muted italic block text-center py-4 bg-background/10 rounded-xl border border-dashed border-card-border/50">
-                    No education records added yet. Add one below!
-                  </Text>
+                  <span className="text-xs text-text-muted italic block text-center py-6 bg-background/10 rounded-xl border border-dashed border-card-border/50">
+                    No education credentials listed yet. Add one below!
+                  </span>
                 )}
               </div>
 
-              <Box className="p-4 bg-background/20 border border-dashed border-card-border rounded-xl space-y-3">
-                <Text size="1" weight="bold" className="text-text-muted block font-bold">ADD NEW EDUCATION</Text>
-                <Grid columns={{ initial: "1", sm: "3" }} gap="2">
-                  <TextField.Root
-                    placeholder="Degree (e.g. B.Tech CSE)"
-                    value={newDegree}
-                    onChange={(e) => setNewDegree(e.target.value)}
-                  />
-                  <TextField.Root
-                    placeholder="School / College"
+              <div className="p-4 bg-background/20 border border-dashed border-card-border rounded-2xl space-y-3">
+                <span className="text-xs font-bold text-text-muted block">ADD EDUCATION RECORD</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <input
+                    type="text"
+                    placeholder="School (Stanford University)"
                     value={newSchool}
                     onChange={(e) => setNewSchool(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                   />
-                  <TextField.Root
-                    placeholder="Year (e.g. 2020 - 2024)"
+                  <input
+                    type="text"
+                    placeholder="Degree (B.S. CS)"
+                    value={newDegree}
+                    onChange={(e) => setNewDegree(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Graduation Year (2022)"
                     value={newYear}
                     onChange={(e) => setNewYear(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                   />
-                </Grid>
-                <Button size="1" color="indigo" onClick={addEducation} className="cursor-pointer mt-1">
-                  <Plus size={12} /> Add Education
-                </Button>
-              </Box>
-            </Box>
+                </div>
+                <button
+                  onClick={addEducation}
+                  className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition active:scale-95"
+                >
+                  <Plus size={12} /> Add Education Record
+                </button>
+              </div>
+            </div>
           )}
 
           {/* STEP 4: Experience */}
           {currentStep === 4 && (
-            <Box className="space-y-5 animate-fadeIn">
-              <Heading size="4" className="text-indigo-600 dark:text-indigo-400">Work Experience</Heading>
+            <div className="space-y-5 animate-in fade-in duration-200">
+              <h3 className="text-lg font-bold text-indigo-500 dark:text-indigo-400">Professional Work Experience</h3>
               
               <div className="space-y-2">
                 {experiences.length > 0 ? (
                   experiences.map((exp, idx) => (
-                    <Flex key={idx} justify="between" align="center" className="p-3.5 bg-background/40 border border-card-border rounded-xl">
-                      <Box>
-                        <Text className="font-bold text-foreground text-sm block">{exp.role}</Text>
-                        <Text size="1" className="text-text-muted">{exp.company} · {exp.duration}</Text>
-                      </Box>
-                      <Button
+                    <div key={idx} className="p-3 bg-card-bg/40 border border-card-border rounded-xl flex justify-between items-center">
+                      <div>
+                        <span className="font-bold text-foreground text-sm block">{exp.role}</span>
+                        <span className="text-xs text-indigo-500 font-medium block mt-0.5">{exp.company} • {exp.duration}</span>
+                      </div>
+                      <button
                         onClick={() => removeExperience(idx)}
-                        variant="ghost"
-                        color="red"
-                        size="1"
-                        className="cursor-pointer"
+                        className="cursor-pointer p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-500/5 rounded-xl transition active:scale-95"
                       >
                         <Trash2 size={14} />
-                      </Button>
-                    </Flex>
+                      </button>
+                    </div>
                   ))
                 ) : (
-                  <Text size="2" className="text-text-muted italic block text-center py-4 bg-background/10 rounded-xl border border-dashed border-card-border/50">
-                    No work experience listed yet. Add one below!
-                  </Text>
+                  <span className="text-xs text-text-muted italic block text-center py-6 bg-background/10 rounded-xl border border-dashed border-card-border/50">
+                    No work history records listed yet. Add one below!
+                  </span>
                 )}
               </div>
 
-              <Box className="p-4 bg-background/20 border border-dashed border-card-border rounded-xl space-y-3">
-                <Text size="1" weight="bold" className="text-text-muted block font-bold">ADD WORK EXPERIENCE</Text>
-                <Grid columns={{ initial: "1", sm: "3" }} gap="2">
-                  <TextField.Root
-                    placeholder="Role (e.g. Software Engineer)"
+              <div className="p-4 bg-background/20 border border-dashed border-card-border rounded-2xl space-y-3">
+                <span className="text-xs font-bold text-text-muted block">ADD WORK EXPERIENCE</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <input
+                    type="text"
+                    placeholder="Role (Senior SWE)"
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                   />
-                  <TextField.Root
-                    placeholder="Company"
+                  <input
+                    type="text"
+                    placeholder="Company (Google)"
                     value={newComp}
                     onChange={(e) => setNewComp(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                   />
-                  <TextField.Root
-                    placeholder="Duration (e.g. 2022 - Present)"
+                  <input
+                    type="text"
+                    placeholder="Duration (2022 - Present)"
                     value={newDur}
                     onChange={(e) => setNewDur(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                   />
-                </Grid>
-                <Button size="1" color="indigo" onClick={addExperience} className="cursor-pointer mt-1">
+                </div>
+                <button
+                  onClick={addExperience}
+                  className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition active:scale-95"
+                >
                   <Plus size={12} /> Add Experience
-                </Button>
-              </Box>
-            </Box>
+                </button>
+              </div>
+            </div>
           )}
 
           {/* STEP 5: Projects */}
           {currentStep === 5 && (
-            <Box className="space-y-5 animate-fadeIn">
-              <Heading size="4" className="text-indigo-600 dark:text-indigo-400">Portfolio Projects</Heading>
+            <div className="space-y-5 animate-in fade-in duration-200">
+              <h3 className="text-lg font-bold text-indigo-500 dark:text-indigo-400">Portfolio Projects</h3>
               
               <div className="space-y-2">
                 {projects.length > 0 ? (
                   projects.map((proj, idx) => (
-                    <Flex key={idx} justify="between" align="center" className="p-3.5 bg-background/40 border border-card-border rounded-xl">
-                      <Box className="flex-grow pr-4">
-                        <Text className="font-bold text-foreground text-sm block">{proj.name}</Text>
-                        <Text size="1" className="text-text-muted block">{proj.description}</Text>
+                    <div key={idx} className="p-3.5 bg-card-bg/40 border border-card-border rounded-xl flex justify-between items-center">
+                      <div className="flex-grow pr-4">
+                        <span className="font-bold text-foreground text-sm block">{proj.name}</span>
+                        <span className="text-xs text-text-muted block mt-0.5 leading-relaxed">{proj.description}</span>
                         {proj.link && (
-                          <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-indigo-500 text-xs font-semibold hover:underline block mt-0.5">
+                          <a
+                            href={proj.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-indigo-500 text-xs font-semibold hover:underline block mt-1"
+                          >
                             {proj.link}
                           </a>
                         )}
-                      </Box>
-                      <Button
+                      </div>
+                      <button
                         onClick={() => removeProject(idx)}
-                        variant="ghost"
-                        color="red"
-                        size="1"
-                        className="cursor-pointer shrink-0"
+                        className="cursor-pointer p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-500/5 rounded-xl transition active:scale-95 shrink-0"
                       >
                         <Trash2 size={14} />
-                      </Button>
-                    </Flex>
+                      </button>
+                    </div>
                   ))
                 ) : (
-                  <Text size="2" className="text-text-muted italic block text-center py-4 bg-background/10 rounded-xl border border-dashed border-card-border/50">
+                  <span className="text-xs text-text-muted italic block text-center py-6 bg-background/10 rounded-xl border border-dashed border-card-border/50">
                     No portfolio projects listed yet. Add one below!
-                  </Text>
+                  </span>
                 )}
               </div>
 
-              <Box className="p-4 bg-background/20 border border-dashed border-card-border rounded-xl space-y-3">
-                <Text size="1" weight="bold" className="text-text-muted block font-bold">ADD NEW PROJECT</Text>
-                <Grid columns={{ initial: "1", sm: "2" }} gap="2">
-                  <TextField.Root
-                    placeholder="Project Name (e.g. Chat App)"
+              <div className="p-4 bg-background/20 border border-dashed border-card-border rounded-2xl space-y-3">
+                <span className="text-xs font-bold text-text-muted block">ADD NEW PROJECT</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="Project Name (Chat App)"
                     value={newProjName}
                     onChange={(e) => setNewProjName(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                   />
-                  <TextField.Root
-                    placeholder="Project Link (e.g. GitHub URL)"
+                  <input
+                    type="text"
+                    placeholder="Project Link (GitHub URL)"
                     value={newProjLink}
                     onChange={(e) => setNewProjLink(e.target.value)}
+                    className="px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                   />
-                </Grid>
-                <TextField.Root
+                </div>
+                <input
+                  type="text"
                   placeholder="Brief description of tech stack and features..."
                   value={newProjDesc}
                   onChange={(e) => setNewProjDesc(e.target.value)}
+                  className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-xs shadow-sm"
                 />
-                <Button size="1" color="indigo" onClick={addProject} className="cursor-pointer mt-1">
+                <button
+                  onClick={addProject}
+                  className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition active:scale-95"
+                >
                   <Plus size={12} /> Add Project Record
-                </Button>
-              </Box>
-            </Box>
+                </button>
+              </div>
+            </div>
           )}
 
-        </Box>
+        </div>
 
         {/* Footer Wizard Controls */}
-        <Flex gap="3" justify="between" className="mt-4 border-t border-card-border/50 pt-4 shrink-0">
-          <Button variant="soft" color="gray" onClick={() => setIsOpen(false)} className="cursor-pointer" disabled={saving}>
+        <div className="px-6 py-4 border-t border-card-border/50 shrink-0 bg-card-bg/90 rounded-b-3xl flex justify-between items-center">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="cursor-pointer rounded-xl font-semibold border border-card-border px-4 py-2 text-xs hover:bg-card-border/40 transition-colors text-text-muted active:scale-[0.98] flex items-center gap-1.5"
+            disabled={saving}
+          >
             <X size={16} /> Close
-          </Button>
+          </button>
 
-          <Flex gap="2">
+          <div className="flex gap-2">
             {currentStep > 1 && (
-              <Button
-                variant="outline"
-                color="indigo"
+              <button
                 onClick={() => setCurrentStep(currentStep - 1)}
-                className="cursor-pointer"
+                className="cursor-pointer rounded-xl font-semibold border border-indigo-500/15 hover:bg-indigo-500/10 px-4 py-2 text-xs text-indigo-500 transition active:scale-[0.98] flex items-center gap-1.5"
                 disabled={saving}
               >
                 <ChevronLeft size={16} /> Back
-              </Button>
+              </button>
             )}
 
             {currentStep < steps.length ? (
-              <Button
-                variant="solid"
-                color="indigo"
+              <button
                 onClick={() => setCurrentStep(currentStep + 1)}
-                className="cursor-pointer"
+                className="cursor-pointer rounded-xl font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md px-4 py-2 text-xs flex items-center gap-1.5 transition active:scale-[0.98]"
               >
                 Next <ChevronRight size={16} />
-              </Button>
+              </button>
             ) : (
-              <Button
-                variant="solid"
-                color="indigo"
+              <button
                 onClick={handleSave}
-                className="cursor-pointer"
+                className="cursor-pointer rounded-xl font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md px-4 py-2 text-xs flex items-center gap-1.5 transition active:scale-[0.98] disabled:opacity-50"
                 disabled={saving}
               >
                 {saving ? "Saving..." : <><Save size={16} /> Save Profile</>}
-              </Button>
+              </button>
             )}
-          </Flex>
-        </Flex>
-      </Dialog.Content>
-    </Dialog.Root>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

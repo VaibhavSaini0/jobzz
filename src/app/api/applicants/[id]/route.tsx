@@ -44,20 +44,40 @@ export async function GET(
     const applications = await prismaClient.applications.findMany({
       where: { job_id: id },
       orderBy: { appliedAt: "desc" },
-      select: {
-        id: true,
-        status: true,
-        appliedAt: true,
-        statusNote: true,
+      include: {
         user: {
-          select: { id: true, name: true, email: true, role: true },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+        jobs: {
+          select: {
+            id: true,
+            title: true,
+            location: true,
+            salary: true,
+            employment_type: true,
+            job_type: true,
+          },
         },
         Resume: {
           select: {
+            id: true,
+            title: true,
+            summary: true,
+            phone: true,
+            location: true,
+            website: true,
+            educations: true,
+            experiences: true,
+            skills: true,
+            projects: true,
             resumePdfUrl: true,
             resumePdfName: true,
-            skills: true,
-            experiences: true,
+            profileImageUrl: true,
           },
         },
       },

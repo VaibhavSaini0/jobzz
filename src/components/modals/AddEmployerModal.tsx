@@ -1,14 +1,5 @@
 "use client";
 
-import {
-  Dialog,
-  Text,
-  Box,
-  Heading,
-  Flex,
-  Button,
-  TextField,
-} from "@radix-ui/themes";
 import { useState, useEffect } from "react";
 import { UserPlus, X } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
@@ -40,7 +31,8 @@ export default function AddEmployerModal({
     }
   }, [isOpen]);
 
-  async function handleAdd() {
+  async function handleAdd(e: React.FormEvent) {
+    e.preventDefault();
     if (!name.trim()) {
       toast("Name is required", "error");
       return;
@@ -85,106 +77,113 @@ export default function AddEmployerModal({
     }
   }
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Content className="max-w-[460px] bg-card-bg border border-card-border shadow-2xl rounded-2xl p-6 text-foreground">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
+        onClick={() => setIsOpen(false)}
+      />
+      {/* Content */}
+      <div className="relative w-full max-w-[460px] p-6 bg-card-bg border border-card-border shadow-2xl rounded-2xl animate-in fade-in zoom-in-95 duration-200 z-10 mx-4 text-left text-foreground">
         
         {/* Header */}
-        <Flex justify="between" align="center" mb="4">
-          <Box>
-            <Dialog.Title size="5" className="text-foreground font-extrabold tracking-tight m-0">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h2 className="text-xl font-extrabold tracking-tight text-foreground m-0">
               Add Recruiter Teammate
-            </Dialog.Title>
-            <Dialog.Description size="1" className="text-text-muted mt-1.5 block">
+            </h2>
+            <span className="text-xs text-text-muted mt-1.5 block leading-relaxed">
               Grant backend recruiter permissions to another employee.
-            </Dialog.Description>
-          </Box>
-          <Button
-            variant="ghost"
-            color="gray"
+            </span>
+          </div>
+          <button
             onClick={() => setIsOpen(false)}
-            className="cursor-pointer p-1 rounded-full hover:bg-card-border/40 transition-colors"
+            className="cursor-pointer p-1.5 rounded-full hover:bg-card-border/40 transition-colors text-text-muted hover:text-foreground active:scale-95"
           >
             <X size={18} />
-          </Button>
-        </Flex>
+          </button>
+        </div>
 
-        <Box className="space-y-4 pr-1">
+        <form onSubmit={handleAdd} className="space-y-4">
           {/* Teammate Name */}
-          <Box className="space-y-1.5">
-            <Text size="1" className="font-bold text-foreground block">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-foreground block">
               Full Name <span className="text-red-500">*</span>
-            </Text>
-            <TextField.Root
+            </label>
+            <input
+              type="text"
+              required
               placeholder="e.g. Jane Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-background border border-card-border/60 rounded-xl"
+              className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
             />
-          </Box>
+          </div>
 
           {/* Teammate Email */}
-          <Box className="space-y-1.5">
-            <Text size="1" className="font-bold text-foreground block">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-foreground block">
               Teammate Email Address <span className="text-red-500">*</span>
-            </Text>
-            <TextField.Root
+            </label>
+            <input
               type="email"
+              required
               placeholder="jane@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-background border border-card-border/60 rounded-xl"
+              className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
             />
-          </Box>
+          </div>
 
           {/* Teammate Temporary Password */}
-          <Box className="space-y-1.5">
-            <Text size="1" className="font-bold text-foreground block">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-foreground block">
               Temporary Password <span className="text-red-500">*</span>
-            </Text>
-            <TextField.Root
+            </label>
+            <input
               type="password"
+              required
               placeholder="Must be at least 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-background border border-card-border/60 rounded-xl"
+              className="w-full px-3 py-2 bg-input-bg border border-card-border/60 rounded-xl text-foreground placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm shadow-sm"
             />
-          </Box>
-        </Box>
+          </div>
 
-        {/* Footer Actions */}
-        <Flex justify="end" gap="3" mt="6" className="border-t border-card-border/50 pt-4">
-          <Button
-            variant="soft"
-            color="gray"
-            onClick={() => setIsOpen(false)}
-            disabled={saving}
-            className="cursor-pointer rounded-xl font-semibold shadow-sm px-4 py-2 hover:bg-card-border/40 transition-colors"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="solid"
-            color="indigo"
-            onClick={handleAdd}
-            disabled={saving}
-            className="cursor-pointer rounded-xl font-semibold shadow-md px-4 py-2 flex items-center gap-1.5 hover:bg-indigo-700 transition"
-          >
-            {saving ? (
-              <>
-                <span className="w-3.5 h-3.5 border-2 border-t-transparent border-white rounded-full animate-spin mr-1" />
-                Adding...
-              </>
-            ) : (
-              <>
-                <UserPlus size={14} />
-                Add Recruiter
-              </>
-            )}
-          </Button>
-        </Flex>
+          {/* Footer Actions */}
+          <div className="flex justify-end gap-3 mt-6 border-t border-card-border/50 pt-4">
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              disabled={saving}
+              className="cursor-pointer rounded-xl font-semibold border border-card-border px-4 py-2 text-xs hover:bg-card-border/40 transition-colors text-text-muted active:scale-[0.98]"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="cursor-pointer rounded-xl font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md px-4 py-2 text-xs flex items-center gap-1.5 transition active:scale-[0.98] disabled:opacity-50"
+            >
+              {saving ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-t-transparent border-white rounded-full animate-spin mr-1" />
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <UserPlus size={14} />
+                  Add Recruiter
+                </>
+              )}
+            </button>
+          </div>
+        </form>
 
-      </Dialog.Content>
-    </Dialog.Root>
+      </div>
+    </div>
   );
 }

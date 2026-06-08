@@ -1,16 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Dialog,
-  Button,
-  Flex,
-  Text,
-  Box,
-  Separator,
-  Callout,
-} from "@radix-ui/themes";
-import { Sparkles, Loader2, AlertCircle, Wand2 } from "lucide-react";
+import { Sparkles, Loader2, AlertCircle, Wand2, X } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
 
 type ImproveData = {
@@ -53,77 +44,132 @@ export default function AIResumeImproveModal({
     }
   }
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Content maxWidth="520px">
-        <Flex gap="2" align="center" mb="2">
+    <div
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+      onClick={() => setIsOpen(false)}
+    >
+      <div
+        className="relative bg-card-bg border border-card-border w-full max-w-[520px] rounded-2xl shadow-xl overflow-hidden p-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={() => setIsOpen(false)}
+          className="absolute top-4 right-4 text-text-muted hover:text-foreground transition-colors"
+          aria-label="Close modal"
+        >
+          <X size={20} />
+        </button>
+
+        <div className="flex items-center gap-2 mb-2">
           <Wand2 size={20} className="text-purple-500" />
-          <Dialog.Title>AI Resume Coach</Dialog.Title>
-        </Flex>
-        <Dialog.Description size="2" mb="3">
+          <h2 className="text-xl font-semibold text-foreground">AI Resume Coach</h2>
+        </div>
+        
+        <p className="text-sm text-text-muted mb-4">
           Get AI suggestions to strengthen your profile
-        </Dialog.Description>
-        <Separator size="4" mb="4" />
+        </p>
+        
+        <hr className="border-card-border mb-4" />
 
         {!data && !loading && (
-          <Flex direction="column" align="center" gap="3" py="4">
-            <Sparkles size={36} className="text-purple-400" />
-            <Button onClick={improve} color="purple">
+          <div className="flex flex-col items-center gap-3 py-6">
+            <Sparkles size={36} className="text-purple-400 animate-pulse" />
+            <button
+              type="button"
+              onClick={improve}
+              className="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium transition-all duration-200 shadow-md shadow-purple-500/20 active:scale-95"
+            >
               Analyze My Profile
-            </Button>
-          </Flex>
+            </button>
+          </div>
         )}
 
         {loading && (
-          <Flex justify="center" py="6">
-            <Loader2 className="animate-spin text-purple-500" size={32} />
-          </Flex>
+          <div className="flex flex-col items-center justify-center py-10 gap-3">
+            <Loader2 className="animate-spin text-purple-500" size={36} />
+            <span className="text-sm text-text-muted">Analyzing your resume...</span>
+          </div>
         )}
 
         {data && (
-          <Box className="space-y-4">
+          <div className="space-y-5">
             {isDemo && (
-              <Callout.Root color="yellow" size="1">
-                <Callout.Icon><AlertCircle /></Callout.Icon>
-                <Callout.Text>Demo suggestions — set GEMINI_API_KEY for personalized coaching</Callout.Text>
-              </Callout.Root>
+              <div className="flex items-start gap-2.5 p-3 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 rounded-xl text-xs leading-relaxed">
+                <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                <span>Demo suggestions — set GEMINI_API_KEY for personalized coaching</span>
+              </div>
             )}
-            <Box>
-              <Text size="2" weight="bold" mb="1">Suggested Summary</Text>
-              <Text size="2" className="text-text-muted leading-relaxed">{data.improvedSummary}</Text>
+            
+            <div className="space-y-1.5">
+              <h3 className="text-sm font-bold text-foreground">Suggested Summary</h3>
+              <p className="text-sm text-text-muted leading-relaxed bg-background p-3 rounded-xl border border-card-border/50">{data.improvedSummary}</p>
               {onApplySummary && (
-                <Button size="1" variant="soft" mt="2" onClick={() => { onApplySummary(data.improvedSummary); toast("Summary applied!", "success"); }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onApplySummary(data.improvedSummary);
+                    toast("Summary applied!", "success");
+                  }}
+                  className="px-3 py-1.5 text-xs bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 rounded-lg font-medium transition duration-200"
+                >
                   Apply Summary
-                </Button>
+                </button>
               )}
-            </Box>
+            </div>
+
             {data.suggestedSkills?.length > 0 && (
-              <Box>
-                <Text size="2" weight="bold" mb="1">Suggested Skills</Text>
-                <Flex gap="2" wrap="wrap">
+              <div className="space-y-2">
+                <h3 className="text-sm font-bold text-foreground">Suggested Skills</h3>
+                <div className="flex flex-wrap gap-2">
                   {data.suggestedSkills.map((s) => (
-                    <Text key={s} size="1" className="px-2 py-1 bg-purple-500/10 rounded-full">{s}</Text>
+                    <span
+                      key={s}
+                      className="text-xs px-2.5 py-1 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-full font-medium"
+                    >
+                      {s}
+                    </span>
                   ))}
-                </Flex>
+                </div>
                 {onApplySkills && (
-                  <Button size="1" variant="soft" mt="2" onClick={() => { onApplySkills(data.suggestedSkills); toast("Skills added!", "success"); }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onApplySkills(data.suggestedSkills);
+                      toast("Skills added!", "success");
+                    }}
+                    className="px-3 py-1.5 text-xs bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 rounded-lg font-medium transition duration-200"
+                  >
                     Add Suggested Skills
-                  </Button>
+                  </button>
                 )}
-              </Box>
+              </div>
             )}
+
             {data.tips?.length > 0 && (
-              <Box>
-                <Text size="2" weight="bold" mb="1">Tips</Text>
-                <ul className="text-sm text-text-muted list-disc pl-4 space-y-1">
-                  {data.tips.map((t) => <li key={t}>{t}</li>)}
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-foreground">Tips</h3>
+                <ul className="text-sm text-text-muted list-disc pl-5 space-y-1 bg-background p-3 rounded-xl border border-card-border/50">
+                  {data.tips.map((t) => (
+                    <li key={t}>{t}</li>
+                  ))}
                 </ul>
-              </Box>
+              </div>
             )}
-            <Dialog.Close><Button className="w-full">Done</Button></Dialog.Close>
-          </Box>
+
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="w-full mt-4 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium transition duration-200"
+            >
+              Done
+            </button>
+          </div>
         )}
-      </Dialog.Content>
-    </Dialog.Root>
+      </div>
+    </div>
   );
 }

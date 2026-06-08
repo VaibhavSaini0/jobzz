@@ -41,13 +41,19 @@ export async function PATCH(
     }
 
     const company = await prismaclient.company.findUnique({
-      where: {
-        id: application.jobs.companyId,
-        ownerId: user.id,
-      },
+      where: { id: application.jobs.companyId },
     });
 
     if (!company) {
+      return NextResponse.json(
+        { success: false, message: "Company not found for this job" },
+        { status: 404 }
+      );
+    }
+
+    const hasAccess = company.ownerId === user.id || user.companyId === company.id;
+
+    if (!hasAccess) {
       return NextResponse.json(
         { success: false, message: "Only the employer can update application status" },
         { status: 403 }
