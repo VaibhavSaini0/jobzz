@@ -1,7 +1,7 @@
 import { Checkcookie } from "@/HelperFun/Checkcookie";
 import prismaclient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { uploadToS3 } from "@/lib/s3";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
 import { serverError } from "@/lib/api-error";
 
 export async function POST(req: NextRequest) {
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload image file to S3 in 'avatars' folder
-    const profileImageUrl = await uploadToS3(buffer, file.name, file.type, "avatars");
+    const profileImageUrl = await uploadImageToCloudinary(buffer, file.name);
 
     // Update or create the Resume record with the profile image URL
     const resume = await prismaclient.resume.upsert({
@@ -58,6 +58,6 @@ export async function POST(req: NextRequest) {
       data: resume,
     });
   } catch (error) {
-    return serverError("Profile image S3 upload error:", error);
+    return serverError("Profile image Cloudinary upload error:", error);
   }
 }

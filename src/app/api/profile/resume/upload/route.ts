@@ -1,7 +1,7 @@
 import { Checkcookie } from "@/HelperFun/Checkcookie";
 import prismaclient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { uploadToS3 } from "@/lib/s3";
+import { uploadPdfToCloudinary } from "@/lib/cloudinary";
 import { serverError } from "@/lib/api-error";
 
 export async function POST(req: NextRequest) {
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload file to S3 and get the public URL
-    const resumePdfUrl = await uploadToS3(buffer, file.name, file.type);
+    const resumePdfUrl = await uploadPdfToCloudinary(buffer, file.name);
     const resumePdfName = file.name;
 
     // Upsert into Resume table for the authenticated user
@@ -61,6 +61,6 @@ export async function POST(req: NextRequest) {
       data: resume,
     });
   } catch (error) {
-    return serverError("Resume S3 upload error:", error);
+    return serverError("Resume Cloudinary upload error:", error);
   }
 }
