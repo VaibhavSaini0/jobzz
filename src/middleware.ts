@@ -36,5 +36,13 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/add-job/:path*", "/applied-jobs/:path*", "/company/profile/:path*", "/company/applications/:path*", "/adddata/:path*", "/api/seed"],
+  matcher: [
+    "/add-job/:path*",
+    "/applied-jobs/:path*",
+    "/company/profile/:path*",
+    "/company/applications/:path*",
+    "/profile/:path*",
+    "/adddata/:path*",
+    "/api/seed",
+  ],
 };
