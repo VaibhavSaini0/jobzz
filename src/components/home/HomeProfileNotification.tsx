@@ -5,6 +5,7 @@ import { UserContext } from "@/context/UserContext";
 import { isEmployer } from "@/lib/roles";
 import { Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { ProfileBannerSkeleton } from "@/components/skeleton";
 import { profileService } from "@/services/profileService";
 
 export default function HomeProfileNotification() {
@@ -54,9 +55,7 @@ export default function HomeProfileNotification() {
       style={{ minHeight: showBanner ? undefined : loadingResume ? "5.5rem" : 0 }}
       aria-live="polite"
     >
-      {loadingResume && (
-        <div className="h-[5.5rem] rounded-2xl border border-transparent" aria-hidden />
-      )}
+      {loadingResume && <ProfileBannerSkeleton />}
       {showBanner && (
         <div className="bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-amber-500/10 border border-amber-500/30 backdrop-blur-md p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg shadow-amber-500/5 text-left">
           <div className="flex items-center gap-3 flex-1">

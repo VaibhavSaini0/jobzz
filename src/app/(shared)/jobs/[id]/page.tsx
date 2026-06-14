@@ -11,7 +11,8 @@ import WithdrawalBtn from "@/components/WithdrawalBtn";
 import AICoverLetterModal from "@/components/AICoverLetterModal";
 import AIJobMatchModal from "@/components/AIJobMatchModal";
 import { UserContext } from "@/context/UserContext";
-import Loading from "@/components/lodingstate/Loading";
+import JobDetailSkeleton from "@/components/skeleton/JobDetailSkeleton";
+import { cachedFetch } from "@/lib/client-cache";
 
 type Job = {
   id: string;
@@ -52,10 +53,11 @@ export default function JobDetailPage() {
     async function fetchJob() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/job/${id}`);
-        if (!res.ok) throw new Error("Job not found");
-        const json = await res.json();
-        setJob(json.data ?? json);
+        const json = await cachedFetch<{ success?: boolean; data?: Job }>(
+          `/api/job/${id}`,
+          { ttlMs: 60_000 }
+        );
+        setJob(json.data ?? (json as unknown as Job));
       } catch (err) {
         console.error("Failed to load job:", err);
       } finally {
@@ -98,7 +100,7 @@ export default function JobDetailPage() {
     );
   }
 
-  if (loading) return <Loading />;
+  if (loading) return <JobDetailSkeleton />;
   if (!job) {
     return (
       <div className="max-w-4xl mx-auto p-6">

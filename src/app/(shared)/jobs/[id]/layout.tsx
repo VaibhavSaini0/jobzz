@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import prismaclient from "@/services/prisma";
+import { getCachedJobMetadata } from "@/lib/data-cache";
 
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const job = await prismaclient.job.findUnique({
-    where: { id },
-    include: { company: { select: { name: true } } },
-  });
+  const job = await getCachedJobMetadata(id);
 
   if (!job) {
     return { title: "Job Not Found" };

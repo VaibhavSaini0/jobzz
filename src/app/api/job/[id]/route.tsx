@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import prismaclient from "@/services/prisma";
+import { getCachedJobById } from "@/lib/data-cache";
+import { withPublicCache } from "@/lib/http-cache";
 import { serverError } from "@/lib/api-error";
 
 export async function GET(
@@ -9,10 +10,7 @@ export async function GET(
   const { id } = await context.params;
 
   try {
-    const job = await prismaclient.job.findUnique({
-      where: { id },
-      include: { company: true },
-    });
+    const job = await getCachedJobById(id);
 
     if (!job) {
       return NextResponse.json(
@@ -21,7 +19,9 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ success: true, data: job });
+    return withPublicCache(
+      NextResponse.json({ success: true, data: job })
+    );
   } catch (error) {
     return serverError("Job fetch error:", error);
   }

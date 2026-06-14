@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import prismaclient from "@/services/prisma";
+import { getFeaturedJobs, getPlatformStats } from "@/lib/data-cache";
 import HomePage from "@/components/home/HomePage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Checkcookie } from "@/HelperFun/Checkcookie";
 import { redirect } from "next/navigation";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Find Tech Jobs & Hire Developers",
@@ -36,18 +38,10 @@ export default async function Page() {
     redirect("/profile");
   }
 
-  const [featuredJobs, jobCount, companyCount, userCount, applicationCount] =
-    await Promise.all([
-      prismaclient.job.findMany({
-        take: 6,
-        orderBy: { id: "desc" },
-        include: { company: { select: { name: true } } },
-      }),
-      prismaclient.job.count(),
-      prismaclient.company.count(),
-      prismaclient.user.count(),
-      prismaclient.applications.count(),
-    ]);
+  const [featuredJobs, stats] = await Promise.all([
+    getFeaturedJobs(),
+    getPlatformStats(),
+  ]);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jobzz.dev";
 
@@ -81,10 +75,10 @@ export default async function Page() {
       <HomePage
         featuredJobs={featuredJobs}
         stats={{
-          jobs: jobCount,
-          companies: companyCount,
-          users: userCount,
-          applications: applicationCount,
+          jobs: stats.jobs,
+          companies: stats.companies,
+          users: stats.users,
+          applications: stats.applications,
         }}
       />
     </>

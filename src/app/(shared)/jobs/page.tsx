@@ -1,11 +1,11 @@
 import JobCard from "@/components/cards/job-card";
 import FilterSidebar from "@/components/filter-sidebar";
-import prismaclient from "@/services/prisma";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 import { Checkcookie } from "@/HelperFun/Checkcookie";
 import { redirect } from "next/navigation";
+import { getCachedJobsPage } from "@/lib/data-cache";
 
 export const metadata: Metadata = {
   title: "Explore Developer & Tech Jobs",
@@ -64,19 +64,14 @@ export default async function Page({
     delete whereClause.AND;
   }
 
-  const [jobs, totalJobs] = await Promise.all([
-    prismaclient.job.findMany({
-      where: whereClause,
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      include: {
-        company: true,
-      },
-    }),
-    prismaclient.job.count({
-      where: whereClause,
-    }),
+  const [jobsResult] = await Promise.all([
+    getCachedJobsPage(
+      whereClause.AND?.length ? whereClause : undefined,
+      page,
+      pageSize
+    ),
   ]);
+  const { jobs, total: totalJobs } = jobsResult;
 
   const totalPages = Math.ceil(totalJobs / pageSize);
 
@@ -149,4 +144,4 @@ export default async function Page({
   );
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;

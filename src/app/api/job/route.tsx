@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import prismaclient from "@/services/prisma";
 import { Checkcookie } from "@/HelperFun/Checkcookie";
 import { CompanybyUser } from "@/HelperFun/CompanybyUser";
+import { CACHE_TAGS } from "@/lib/data-cache";
 
 export async function POST(req: NextRequest) {
   try {
@@ -65,6 +67,10 @@ export async function POST(req: NextRequest) {
         lastDate: body.lastDate ? new Date(body.lastDate) : null,
       },
     });
+
+    revalidateTag(CACHE_TAGS.jobsList);
+    revalidateTag(CACHE_TAGS.featuredJobs);
+    revalidateTag(CACHE_TAGS.platformStats);
 
     return NextResponse.json({ success: true, job });
   } catch (error) {

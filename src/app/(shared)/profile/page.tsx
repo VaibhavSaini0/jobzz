@@ -2,7 +2,7 @@
 
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "@/context/UserContext";
-import Loading from "@/components/lodingstate/Loading";
+import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 import { useToast } from "@/context/ToastContext";
 import { isEmployer } from "@/lib/roles";
 import AIResumeImproveModal from "@/components/AIResumeImproveModal";
@@ -61,12 +61,14 @@ export default function ProfilePage() {
   const [educations, setEducations] = useState<EducationEntry[]>([]);
   const [projects, setProjects] = useState<ProjectEntry[]>([]);
 
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const [reloadTrigger, setReloadTrigger] = useState(0);
 
   // Load resume/profile details from API
   useEffect(() => {
     async function loadResume() {
       if (!user?.id) return;
+      setProfileLoaded(false);
       try {
         const data = await profileService.getProfile();
         if (data.success && data.data) {
@@ -86,6 +88,8 @@ export default function ProfilePage() {
         }
       } catch {
         toast("Could not load profile.", "error");
+      } finally {
+        setProfileLoaded(true);
       }
     }
     loadResume();
@@ -167,8 +171,8 @@ export default function ProfilePage() {
     }
   }
 
-  if (!user) {
-    return <Loading />;
+  if (!user || !profileLoaded) {
+    return <ProfileSkeleton />;
   }
 
   const isUserEmployer = isEmployer(user.role);

@@ -1,7 +1,8 @@
 "use client";
 
 import JobCard from "@/components/cards/job-card";
-import CardLoading from "@/components/lodingstate/CardLoading";
+import { cachedFetch } from "@/lib/client-cache";
+import { JobCardSkeletonGrid } from "@/components/skeleton";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useContext } from "react";
 import { job } from "../../generated/prisma";
@@ -21,7 +22,6 @@ export default function SearchPageContent() {
   const q = searchparams.get("q") || "";
   const et = searchparams.get("et") || "";
   const jt = searchparams.get("jt") || "";
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const [isLoading, setIsLoading] = useState(true);
   const [jobs, setJobs] = useState<job[]>([]);
@@ -30,8 +30,10 @@ export default function SearchPageContent() {
     async function fetchJobs() {
       try {
         setIsLoading(true);
-        const res = await fetch(`/api/search?q=${q}&et=${et}&jt=${jt}`);
-        const data = await res.json();
+        const data = await cachedFetch<{ success: boolean; data: job[] }>(
+          `/api/search?q=${encodeURIComponent(q)}&et=${encodeURIComponent(et)}&jt=${encodeURIComponent(jt)}`,
+          { ttlMs: 60_000 }
+        );
         if (data.success) {
           setJobs(data.data);
         }
@@ -48,17 +50,15 @@ export default function SearchPageContent() {
     <main className="max-w-7xl m-auto h-screen">
       <div className="h-full overflow-y-auto py-5 px-4 scrollbar-hidden pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {isLoading
-            ? arr.map((item) => (
-                <div key={item} className="h-full">
-                  <CardLoading fromSearch />
-                </div>
-              ))
-            : jobs.map((job) => (
-                <div key={job.id} className="h-full">
-                  <JobCard fromSearch={true} job={job} />
-                </div>
-              ))}
+          {isLoading ? (
+            <JobCardSkeletonGrid count={9} />
+          ) : (
+            jobs.map((job) => (
+              <div key={job.id} className="h-full">
+                <JobCard fromSearch={true} job={job} />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </main>

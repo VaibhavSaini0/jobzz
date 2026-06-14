@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import HeaderWrapper from "@/components/headers/headerWrapper";
 import { UserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
-import Loading from "@/components/lodingstate/Loading";
+import PageShellSkeleton from "@/components/skeleton/PageShellSkeleton";
 
 type AppUser = {
   id: string;
@@ -69,7 +69,7 @@ export default function EmployerLayout({
   }, []);
 
   if (isuserLoading) {
-    return <Loading />;
+    return <PageShellSkeleton />;
   }
 
   return (

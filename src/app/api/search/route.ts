@@ -1,5 +1,6 @@
-import prismaclient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { getCachedJobsPage } from "@/lib/data-cache";
+import { withPublicCache } from "@/lib/http-cache";
 
 export async function GET(req: NextRequest) {
   try {
@@ -29,28 +30,21 @@ export async function GET(req: NextRequest) {
     const where =
       whereClause.AND.length === 0 ? undefined : whereClause;
 
-    const [jobs, total] = await Promise.all([
-      prismaclient.job.findMany({
-        where,
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        include: { company: true },
-        orderBy: { id: "desc" },
-      }),
-      prismaclient.job.count({ where }),
-    ]);
+    const { jobs, total } = await getCachedJobsPage(where, page, pageSize);
 
-    return NextResponse.json({
-      success: true,
-      data: jobs,
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize),
-      },
-      message: "Search completed",
-    });
+    return withPublicCache(
+      NextResponse.json({
+        success: true,
+        data: jobs,
+        pagination: {
+          page,
+          pageSize,
+          total,
+          totalPages: Math.ceil(total / pageSize),
+        },
+        message: "Search completed",
+      })
+    );
   } catch (error) {
     console.error("Search API Error:", error);
     return NextResponse.json(
