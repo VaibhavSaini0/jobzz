@@ -5,6 +5,7 @@ import ThemeContext from "@/context/context/ThemeContext";
 import Footer from "@/components/Footer";
 import { ToastProvider } from "@/context/ToastContext";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
