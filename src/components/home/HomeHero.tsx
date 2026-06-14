@@ -12,13 +12,19 @@ const trendingTags = [
   { label: "Hybrid", key: "jt", value: "Hybrid" },
 ];
 
+const primaryCtaClass =
+  "inline-flex items-center justify-center gap-2 min-h-12 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 active:scale-[0.98] transition cursor-pointer";
+
+const secondaryCtaClass =
+  "inline-flex items-center justify-center gap-2 min-h-12 px-5 py-3 border border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-soft/10 rounded-xl font-bold active:scale-[0.98] transition cursor-pointer";
+
 export default function HomeHero() {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 32 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7 }}
-      className="text-center space-y-6 max-w-4xl mx-auto pt-6 relative z-10 animate-fadeIn"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="text-center space-y-6 max-w-4xl mx-auto pt-6 relative z-10"
     >
       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-soft/10 text-indigo-600 dark:text-indigo-400 text-xs font-semibold tracking-wide">
         <Sparkles size={14} />
@@ -36,16 +42,12 @@ export default function HomeHero() {
         Jobzz connects developers, designers, and engineers with companies hiring for remote, hybrid, and on-site roles — with smart search, profile resumes, and AI cover letters.
       </p>
 
-      <div className="flex flex-wrap justify-center gap-3 mt-6">
-        <Link href="/jobs">
-          <button className="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 active:scale-[0.98] transition cursor-pointer flex items-center gap-2">
-            <Search size={18} /> Browse Jobs
-          </button>
+      <div className="flex flex-wrap justify-center gap-4 mt-6">
+        <Link href="/jobs" prefetch className={primaryCtaClass}>
+          <Search size={18} aria-hidden /> Browse Jobs
         </Link>
-        <Link href="/add-job">
-          <button className="px-5 py-3 border border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-soft/10 rounded-xl font-bold active:scale-[0.98] transition cursor-pointer flex items-center gap-2">
-            Post a Job <ArrowRight size={16} />
-          </button>
+        <Link href="/add-job" prefetch={false} className={secondaryCtaClass}>
+          Post a Job <ArrowRight size={16} aria-hidden />
         </Link>
       </div>
 
@@ -55,10 +57,13 @@ export default function HomeHero() {
           <span>Popular searches:</span>
         </div>
         {trendingTags.map((tag) => (
-          <Link key={tag.label} href={`/jobs?${tag.key}=${encodeURIComponent(tag.value)}`}>
-            <span className="cursor-pointer rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 font-bold px-3 py-1 text-xs transition">
-              {tag.label}
-            </span>
+          <Link
+            key={tag.label}
+            href={`/jobs?${tag.key}=${encodeURIComponent(tag.value)}`}
+            prefetch={false}
+            className="cursor-pointer rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 font-bold px-3 py-1.5 min-h-6 text-xs transition inline-flex items-center"
+          >
+            {tag.label}
           </Link>
         ))}
       </div>

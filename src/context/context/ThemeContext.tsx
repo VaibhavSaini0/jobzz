@@ -38,7 +38,7 @@ export default function ThemeContext({
   return (
     <ThemeModeContext.Provider value={{ theme, toggleTheme }}>
       <div className={theme}>
-        <div className="bg-background text-foreground min-h-screen transition-colors duration-300">
+        <div className="bg-background text-foreground min-h-screen">
           {children}
         </div>
       </div>

@@ -53,6 +53,8 @@ export default function Header() {
 
   const navLinks = getNavLinks();
 
+  const prefetchNav = (href: string) => href === "/" || href === "/jobs";
+
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
@@ -107,7 +109,7 @@ export default function Header() {
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center gap-2.5 ml-auto">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
+                <Link key={link.href} href={link.href} prefetch={prefetchNav(link.href)}>
                   <span
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 cursor-pointer font-semibold text-xs lg:text-sm ${isActive(link.href)
                         ? "bg-indigo-600/10 text-indigo-600 dark:text-indigo-400"
@@ -175,7 +177,7 @@ export default function Header() {
           <div className="md:hidden w-full flex flex-col items-stretch mt-4 py-3 border-t border-card-border space-y-3.5 animate-fadeIn">
             <div className="space-y-1.5">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href} onClick={() => setIsMenuOpen(false)}>
+                <Link key={link.href} href={link.href} prefetch={prefetchNav(link.href)} onClick={() => setIsMenuOpen(false)}>
                   <div
                     className={`flex items-center gap-2.5 w-full py-2.5 px-4 rounded-xl transition-all duration-200 cursor-pointer font-semibold ${isActive(link.href)
                         ? "bg-indigo-600/10 text-indigo-600 dark:text-indigo-400"

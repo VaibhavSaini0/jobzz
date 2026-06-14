@@ -3,7 +3,6 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "@/context/UserContext";
 import { isEmployer } from "@/lib/roles";
-import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { profileService } from "@/services/profileService";
@@ -12,6 +11,8 @@ export default function HomeProfileNotification() {
   const { user } = useContext(UserContext);
   const [isIncomplete, setIsIncomplete] = useState(false);
   const [loadingResume, setLoadingResume] = useState(false);
+
+  const isCandidate = Boolean(user && !isEmployer(user.role));
 
   useEffect(() => {
     async function checkProfile() {
@@ -41,37 +42,45 @@ export default function HomeProfileNotification() {
     checkProfile();
   }, [user]);
 
+  if (!isCandidate) {
+    return null;
+  }
+
+  const showBanner = !loadingResume && isIncomplete;
+
   return (
-    <AnimatePresence>
-      {user && !isEmployer(user.role) && !loadingResume && isIncomplete && (
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          className="w-full max-w-4xl mx-auto z-40 relative -mb-6 mt-2"
-        >
-          <div className="bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-amber-500/10 border border-amber-500/30 backdrop-blur-md p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg shadow-amber-500/5 text-left">
-            <div className="flex items-center gap-3 flex-1">
-              <div className="p-2.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-xl shrink-0">
-                <Sparkles size={20} className="animate-pulse" />
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-sm sm:text-base font-bold text-foreground block">
-                  Complete your candidate profile!
-                </span>
-                <span className="text-xs sm:text-sm text-text-muted block">
-                  Stand out to recruiters! Add your experiences, skills, and upload your PDF resume to unlock full matching capabilities.
-                </span>
-              </div>
-            </div>
-            <Link href="/profile">
-              <button className="cursor-pointer bg-amber-500 hover:bg-amber-600 text-white font-bold whitespace-nowrap px-4 py-2.5 rounded-xl text-sm hover:scale-[1.02] active:scale-[0.98] transition-transform flex items-center gap-1.5 shadow-sm">
-                Update Profile <ArrowRight size={14} />
-              </button>
-            </Link>
-          </div>
-        </motion.div>
+    <div
+      className="w-full max-w-4xl mx-auto z-40 relative mt-2"
+      style={{ minHeight: showBanner ? undefined : loadingResume ? "5.5rem" : 0 }}
+      aria-live="polite"
+    >
+      {loadingResume && (
+        <div className="h-[5.5rem] rounded-2xl border border-transparent" aria-hidden />
       )}
-    </AnimatePresence>
+      {showBanner && (
+        <div className="bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-amber-500/10 border border-amber-500/30 backdrop-blur-md p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg shadow-amber-500/5 text-left">
+          <div className="flex items-center gap-3 flex-1">
+            <div className="p-2.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-xl shrink-0">
+              <Sparkles size={20} />
+            </div>
+            <div className="space-y-0.5">
+              <span className="text-sm sm:text-base font-bold text-foreground block">
+                Complete your candidate profile!
+              </span>
+              <span className="text-xs sm:text-sm text-text-muted block">
+                Stand out to recruiters! Add your experiences, skills, and upload your PDF resume to unlock full matching capabilities.
+              </span>
+            </div>
+          </div>
+          <Link
+            href="/profile"
+            prefetch={false}
+            className="inline-flex items-center justify-center gap-1.5 min-h-11 whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-bold bg-amber-800 hover:bg-amber-900 text-white shadow-sm active:scale-[0.98] transition-transform"
+          >
+            Update Profile <ArrowRight size={14} aria-hidden />
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }

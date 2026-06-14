@@ -13,8 +13,8 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } },
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.4 } },
 };
 
 export default function HomeWorkflow() {
@@ -61,10 +61,12 @@ export default function HomeWorkflow() {
               <span className="text-sm text-text-muted leading-relaxed">{step}</span>
             </div>
           ))}
-          <Link href="/profile" className="inline-block mt-2">
-            <button className="px-4 py-2 text-sm bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/20 rounded-xl font-bold cursor-pointer transition active:scale-[0.98]">
-              Set up your profile
-            </button>
+          <Link
+            href="/profile"
+            prefetch={false}
+            className="inline-flex items-center justify-center min-h-11 mt-2 px-4 py-2 text-sm bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/20 rounded-xl font-bold cursor-pointer transition active:scale-[0.98]"
+          >
+            Set up your profile
           </Link>
         </motion.div>
 
@@ -92,10 +94,12 @@ export default function HomeWorkflow() {
               <span className="text-sm text-text-muted leading-relaxed">{step}</span>
             </div>
           ))}
-          <Link href="/add-job" className="inline-block mt-2">
-            <button className="px-4 py-2 text-sm bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 rounded-xl font-bold cursor-pointer transition active:scale-[0.98]">
-              Post your first job
-            </button>
+          <Link
+            href="/add-job"
+            prefetch={false}
+            className="inline-flex items-center justify-center min-h-11 mt-2 px-4 py-2 text-sm bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 rounded-xl font-bold cursor-pointer transition active:scale-[0.98]"
+          >
+            Post your first job
           </Link>
         </motion.div>
       </div>

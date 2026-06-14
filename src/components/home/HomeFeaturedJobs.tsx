@@ -21,8 +21,8 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } },
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.4 } },
 };
 
 export default function HomeFeaturedJobs({ featuredJobs }: { featuredJobs: FeaturedJob[] }) {
@@ -42,8 +42,8 @@ export default function HomeFeaturedJobs({ featuredJobs }: { featuredJobs: Featu
       {featuredJobs.length === 0 ? (
         <div className="text-center py-12 border border-dashed border-card-border rounded-2xl bg-card-bg/25">
           <span className="text-sm text-text-muted block">No jobs posted yet. Be the first employer to list a role.</span>
-          <Link href="/add-job" className="inline-block mt-4">
-            <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold cursor-pointer transition active:scale-[0.98]">Post a Job</button>
+          <Link href="/add-job" prefetch={false} className="inline-flex items-center justify-center min-h-11 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold cursor-pointer transition active:scale-[0.98] mt-4">
+            Post a Job
           </Link>
         </div>
       ) : (
@@ -70,10 +70,12 @@ export default function HomeFeaturedJobs({ featuredJobs }: { featuredJobs: Featu
       )}
 
       <div className="flex justify-center pt-2">
-        <Link href="/jobs">
-          <button className="px-4 py-2.5 border border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-soft/10 rounded-xl font-bold active:scale-[0.98] transition cursor-pointer flex items-center gap-1.5 text-sm">
-            View all jobs <ArrowRight size={16} />
-          </button>
+        <Link
+          href="/jobs"
+          prefetch
+          className="inline-flex items-center justify-center gap-1.5 min-h-11 px-4 py-2.5 border border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-soft/10 rounded-xl font-bold active:scale-[0.98] transition cursor-pointer text-sm"
+        >
+          View all jobs <ArrowRight size={16} aria-hidden />
         </Link>
       </div>
     </motion.section>
