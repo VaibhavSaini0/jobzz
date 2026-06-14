@@ -242,7 +242,7 @@ export default function EditProfileModal({
           </div>
 
           {/* Dynamic Step Tabs */}
-          <div className="flex justify-between items-center gap-1.5 overflow-x-auto pb-2 scrollbar-hidden shrink-0">
+          <div className="flex justify-between items-center gap-1.5 overflow-x-auto pb-2 scrollbar-jobzz shrink-0">
             {steps.map((s) => (
               <button
                 key={s.num}
@@ -268,7 +268,7 @@ export default function EditProfileModal({
             max-h-[calc(85vh-260px)]
             space-y-5
             flex-grow
-            scrollbar-thin
+            scrollbar-jobzz
             text-left
           "
         >

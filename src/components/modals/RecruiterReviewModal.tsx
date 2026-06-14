@@ -117,7 +117,7 @@ export default function RecruiterReviewModal({
             max-h-[calc(85vh-160px)]
             space-y-5
             flex-grow
-            scrollbar-thin
+            scrollbar-jobzz
             text-left
           "
         >

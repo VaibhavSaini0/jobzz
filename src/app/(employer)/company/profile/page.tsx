@@ -150,7 +150,7 @@ export default function Page() {
 
         {/* Right Column Workspace Tabs */}
         <div className="flex-1 space-y-6 w-full">
-          <div className="border-b border-card-border/60 flex gap-6 overflow-x-auto scrollbar-hidden">
+          <div className="border-b border-card-border/60 flex gap-6 overflow-x-auto scrollbar-jobzz">
             {[
               { id: "about", label: "About Profile" },
               { id: "jobopening", label: "Active Job Openings" },

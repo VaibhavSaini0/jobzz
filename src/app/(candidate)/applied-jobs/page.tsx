@@ -322,7 +322,7 @@ export default function AppliedJobsPage() {
                 placeholder="Jot down interview dates, key questions to prepare, portfolio links, or salary expectations..."
                 value={tempNotes}
                 onChange={(e) => setTempNotes(e.target.value)}
-                className="w-full p-3 border border-card-border/60 bg-background/50 text-text-muted rounded-2xl h-28 text-sm outline-none focus:ring-2 focus:ring-indigo-500 font-medium transition-all focus:border-indigo-500/50 resize-none scrollbar-thin"
+                className="w-full p-3 border border-card-border/60 bg-background/50 text-text-muted rounded-2xl h-28 text-sm outline-none focus:ring-2 focus:ring-indigo-500 font-medium transition-all focus:border-indigo-500/50 resize-none scrollbar-jobzz"
               />
             </div>
 

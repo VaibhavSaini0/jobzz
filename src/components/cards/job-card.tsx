@@ -53,7 +53,7 @@ export default function Jobcard({
 
         <div className="flex justify-between items-center mt-auto gap-3">
           <div className="max-w-[60%] shrink-0">
-            <Link href={`/company/profile/${job.company.id}`}>
+            <Link href={`/companies/${job.company.id}`} prefetch={false}>
               <div className="flex items-center gap-2 p-1.5 rounded-lg border border-card-border bg-background hover:bg-indigo-soft/10 transition duration-200">
                 {(job.employer_logo || job.company?.logoUrl) ? (
                   <img

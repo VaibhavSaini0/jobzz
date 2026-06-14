@@ -103,7 +103,7 @@ export default function ApplicationDetailsModal({
             max-h-[calc(85vh-160px)]
             space-y-5
             flex-grow
-            scrollbar-thin
+            scrollbar-jobzz
           "
         >
           {/* Recruiter feedback notes */}

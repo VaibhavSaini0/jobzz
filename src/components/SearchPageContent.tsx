@@ -48,7 +48,7 @@ export default function SearchPageContent() {
 
   return (
     <main className="max-w-7xl m-auto h-screen">
-      <div className="h-full overflow-y-auto py-5 px-4 scrollbar-hidden pb-20">
+      <div className="h-full overflow-y-auto py-5 px-4 scrollbar-jobzz pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {isLoading ? (
             <JobCardSkeletonGrid count={9} />

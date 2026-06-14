@@ -183,7 +183,7 @@ export default function EditCompanyModal({
               max-h-[calc(85vh-150px)]
               space-y-5
               flex-grow
-              scrollbar-thin
+              scrollbar-jobzz
               text-left
             "
           >

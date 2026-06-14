@@ -150,7 +150,7 @@ export default function AppliedUserList({
         </div>
 
         {/* Scrollable list */}
-        <div className="flex-1 overflow-y-auto scrollbar-hidden pr-1 space-y-4">
+        <div className="flex-1 overflow-y-auto scrollbar-jobzz pr-1 space-y-4">
           {applicants.length > 0 ? (
             applicants.map((app) => {
               const screening = screeningResults[app.id];

@@ -140,7 +140,7 @@ export default function AICoverLetterModal({
                 </div>
               )}
 
-              <div className="max-h-[300px] overflow-y-auto p-4 rounded-xl border border-card-border/60 bg-input-bg text-sm leading-relaxed whitespace-pre-line text-foreground scrollbar-thin">
+              <div className="max-h-[300px] overflow-y-auto p-4 rounded-xl border border-card-border/60 bg-input-bg text-sm leading-relaxed whitespace-pre-line text-foreground scrollbar-jobzz">
                 {coverLetter}
               </div>
 

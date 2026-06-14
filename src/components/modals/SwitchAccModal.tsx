@@ -96,7 +96,7 @@ export default function SwitchAccModal() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto scrollbar-hidden pr-1 space-y-3">
+          <div className="flex-1 overflow-y-auto scrollbar-jobzz pr-1 space-y-3">
             {usersData && usersData.length > 0 ? (
               usersData.map((userdata, idx) => (
                 <div

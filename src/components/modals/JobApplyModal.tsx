@@ -216,7 +216,7 @@ export default function JobApplyModal({
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto pr-1 scrollbar-hidden space-y-4 relative z-10 text-left">
+        <div className="flex-1 overflow-y-auto pr-1 scrollbar-jobzz space-y-4 relative z-10 text-left">
           {loadingProfile ? (
             <div className="flex flex-col items-center justify-center py-12 gap-3 text-text-muted">
               <span className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
